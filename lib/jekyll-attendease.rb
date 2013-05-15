@@ -8,10 +8,16 @@ module Jekyll
       def generate(site)
         if attendease_config = site.config['attendease']
 
-          if attendease_config['api_host'] && !attendease_config['api_host'].match(/^http/)
+          if attendease_config['api_host'] && !attendease_config['api_host'].match(/^http(.*).attendease.com/)
             raise "Is your Attendease api_host site properly in _config.yml? Needs to be something like https://myevent.attendease.com/"
           else
-            attendease_data_path = File.expand_path("../../_attendease_data", __FILE__)
+            # add a trailing slash if we are missing one.
+            if attendease_config['api_host'][-1, 1] != '/'
+              attendease_config['api_host'] += '/'
+            end
+
+            attendease_data_path = "#{site.config['source']}/_attendease_data"
+
             FileUtils.mkdir_p(attendease_data_path)
 
             update_data = true
