@@ -58,5 +58,43 @@ module Jekyll
       end
     end
 
+
+    class EventThemes < Generator
+      def generate(site)
+        puts "Generating theme layout..."
+
+        attendease_precompiled_theme_layouts_path = "#{site.config['source']}/attendease_layouts"
+
+        FileUtils.mkdir_p(attendease_precompiled_theme_layouts_path)
+
+        layouts_to_precompile = ['layout', 'register', 'schedule', 'presenters']
+
+        # Precompiled layout for website sections.
+        layouts_to_precompile.each do |layout|
+          if File.exists?("#{site.config['source']}/_layouts/layout.html")
+
+            # create a layout file if is already doesn't exist.
+            # the layout file will be used by attendease to wrap /register, /schedule, /presnters in the
+            # look the compiled file defines.
+            # ensure {{ content }} is in the file so we can render content in there!
+            if !File.exists?("#{site.config['source']}/attendease_layouts/#{layout}.html")
+              theme_layout_content = <<-eos
+---
+layout: layout
+---
+
+{% raw %}
+{{ content }}
+{% endraw %}
+              eos
+
+              File.open("#{site.config['source']}/attendease_layouts/#{layout}.html", 'w+') { |file| file.write(theme_layout_content) }
+            end
+          end
+        end
+
+      end
+    end
+
   end
 end
