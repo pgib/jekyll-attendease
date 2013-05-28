@@ -5,6 +5,8 @@ module Jekyll
   module Attendease
 
     class EventData < Generator
+      safe true
+
       def generate(site)
         if attendease_config = site.config['attendease']
 
@@ -36,11 +38,27 @@ module Jekyll
               event_data = HTTParty.get("#{attendease_config['api_host']}api/site.json")
 
               if !event_data['error']
-                puts "Saving attendease event data..."
+                puts "                    [Attendease] Saving event data..."
 
                 File.open("#{attendease_data_path}/site.json", 'w+') { |file| file.write(event_data.parsed_response.to_json) }
               else
                 raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
+              end
+
+
+              # Registration test pages, so we can style the forms!
+              pages_to_fetch = ['choose_pass', 'checkout', 'dashboard']
+
+              pages_to_fetch.each do |page|
+                page_data = HTTParty.get("#{attendease_config['api_host']}attendease/preview/#{page}.html")
+
+                if page_data.response.code.to_i == 200
+                  puts "                    [Attendease] Saving test data for register page (#{page})..."
+
+                  File.open("#{attendease_data_path}/attendease_test_register_#{page}.html", 'w+') { |file| file.write(page_data.parsed_response) }
+                else
+                  raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
+                end
               end
             end
 
@@ -53,15 +71,17 @@ module Jekyll
           end
 
         else
-          raise "Please set the Attendease config in your _config.yml"
+          raise "Please set the Attendease event data in your _config.yml"
         end
       end
     end
 
 
     class EventThemes < Generator
+      safe true
+
       def generate(site)
-        puts "Generating theme layout..."
+        puts "                    [Attendease] Generating theme layouts..."
 
         attendease_precompiled_theme_layouts_path = "#{site.config['source']}/attendease_layouts"
 
@@ -83,18 +103,89 @@ module Jekyll
 layout: layout
 ---
 
-{% raw %}
-{{ content }}
-{% endraw %}
+{% attendease_content %}
               eos
 
               File.open("#{site.config['source']}/attendease_layouts/#{layout}.html", 'w+') { |file| file.write(theme_layout_content) }
+
             end
           end
         end
+      end
+    end
 
+
+    class TestPages < Generator
+      safe true
+
+      def generate(site)
+        if attendease_config = site.config['attendease']
+
+          if attendease_config['test_mode']
+            puts "                    [Attendease] Generating pages to test the layouts..."
+
+            puts "                    [Attendease] Generating /register/index.html"
+            site.pages << RegisterTestPage.new(site, site.source, File.join('register'), {:name => 'index.html', :liquid_tag => 'attendease_test_register_choose_pass'})
+
+            puts "                    [Attendease] Generating /register/checkout.html"
+            site.pages << RegisterTestPage.new(site, site.source, File.join('register'), {:name => 'checkout.html', :liquid_tag => 'attendease_test_register_checkout'})
+
+            puts "                    [Attendease] Generating /register/dashboard.html"
+            site.pages << RegisterTestPage.new(site, site.source, File.join('register'), {:name => 'dashboard.html', :liquid_tag => 'attendease_test_register_dashboard'})
+          end
+
+        end
+      end
+    end
+
+    class RegisterTestPage < Page
+      def initialize(site, base, dir, page_data)
+        @site = site
+        @base = base
+        @dir = dir
+        @name = page_data[:name]
+
+        self.process(@name)
+
+        if File.exists?(File.join(base, 'attendease_layouts', 'register.html'))
+          self.read_yaml(File.join(base, 'attendease_layouts'), 'register.html')
+        else
+          self.read_yaml(File.join(base, 'attendease_layouts'), 'layout.html')
+        end
+
+        self.content.gsub! /\{\% attendease_content \%\}/, "{% #{page_data[:liquid_tag]} %}"
+      end
+    end
+
+
+    class AttendeaseTest < Liquid::Tag
+      def initialize(tag_name, text, tokens)
+        super
+        @tag_name = tag_name
+      end
+
+      def render(context)
+        attendease_data_path = "#{context['site']['source']}/_attendease_data"
+
+        if File.exists?("#{attendease_data_path}/#{@tag_name}.html")
+          File.read("#{attendease_data_path}/#{@tag_name}.html")
+        else
+          raise "Please set the Attendease event data in your _config.yml or read documentation about how to use this tag."
+        end
+      end
+    end
+
+
+    class AttendeaseContent < Liquid::Tag
+      def render(context)
+        "{{ content }}"
       end
     end
 
   end
 end
+
+Liquid::Template.register_tag('attendease_content', Jekyll::Attendease::AttendeaseContent)
+Liquid::Template.register_tag('attendease_test_register_choose_pass', Jekyll::Attendease::AttendeaseTest)
+Liquid::Template.register_tag('attendease_test_register_checkout', Jekyll::Attendease::AttendeaseTest)
+Liquid::Template.register_tag('attendease_test_register_dashboard', Jekyll::Attendease::AttendeaseTest)
