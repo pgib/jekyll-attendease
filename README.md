@@ -34,6 +34,7 @@ You will need to configure by editing your `_config.yml`:
 #
 attendease:
   api_host: https://your-event-subdomain.attendease.com/
+  test_mode: true # this generates pages for /regsister, /schedule, and /presenters for local development and styling.
 ```
 
 Remember to replace `https://your-event-subdomain.attendease.com/` with your actual event url, or crazy things will happen!
