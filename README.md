@@ -17,8 +17,7 @@ Or install it yourself as:
     $ gem install jekyll-attendease
 
 
-Next, make sure to require it. Common practice is to add following line
-into `_plugins/ext.rb` file:
+Next, make sure to require it. Add the following file `_plugins/attendease.rb` and content:
 
 ``` ruby
 require "jekyll-attendease"
