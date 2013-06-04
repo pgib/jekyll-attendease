@@ -17,8 +17,7 @@ Or install it yourself as:
     $ gem install jekyll-attendease
 
 
-Next, make sure to require it. Common practice is to add following line
-into `_plugins/ext.rb` file:
+Next, make sure to require it. Add the following file `_plugins/attendease.rb` and content:
 
 ``` ruby
 require "jekyll-attendease"
@@ -34,7 +33,7 @@ You will need to configure by editing your `_config.yml`:
 #
 attendease:
   api_host: https://your-event-subdomain.attendease.com/
-  test_mode: true
+  test_mode: true # this generates pages for /regsister, /schedule, and /presenters for local development and styling.
 ```
 
 Remember to replace `https://your-event-subdomain.attendease.com/` with your actual event url, or crazy things will happen!
