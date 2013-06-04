@@ -60,6 +60,36 @@ module Jekyll
                   raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
                 end
               end
+
+              # Schedule test pages, so we can style the forms!
+              pages_to_fetch = ['schedule', 'session']
+
+              pages_to_fetch.each do |page|
+                page_data = HTTParty.get("#{attendease_config['api_host']}attendease/preview/#{page}.html")
+
+                if page_data.response.code.to_i == 200
+                  puts "                    [Attendease] Saving test data for schedule page (#{page})..."
+
+                  File.open("#{attendease_data_path}/attendease_test_#{page}.html", 'w+') { |file| file.write(page_data.parsed_response) }
+                else
+                  raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
+                end
+              end
+
+              # Presenter test pages, so we can style the forms!
+              pages_to_fetch = ['presenters', 'presenter']
+
+              pages_to_fetch.each do |page|
+                page_data = HTTParty.get("#{attendease_config['api_host']}attendease/preview/#{page}.html")
+
+                if page_data.response.code.to_i == 200
+                  puts "                    [Attendease] Saving test data for presenter page (#{page})..."
+
+                  File.open("#{attendease_data_path}/attendease_test_#{page}.html", 'w+') { |file| file.write(page_data.parsed_response) }
+                else
+                  raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
+                end
+              end
             end
 
             # Adding to site config so we can access these variables globally wihtout using a Liquid Tag so we can use if/else
@@ -132,6 +162,18 @@ layout: layout
 
             puts "                    [Attendease] Generating /register/dashboard.html"
             site.pages << RegisterTestPage.new(site, site.source, File.join('register'), {:name => 'dashboard.html', :liquid_tag => 'attendease_test_register_dashboard'})
+
+            puts "                    [Attendease] Generating /presenters/index.html"
+            site.pages << RegisterTestPage.new(site, site.source, File.join('presenters'), {:name => 'index.html', :liquid_tag => 'attendease_test_presenters'})
+
+            puts "                    [Attendease] Generating /presenters/presenter.html"
+            site.pages << RegisterTestPage.new(site, site.source, File.join('presenters'), {:name => 'presenter.html', :liquid_tag => 'attendease_test_presenter'})
+
+            puts "                    [Attendease] Generating /schedule/index.html"
+            site.pages << RegisterTestPage.new(site, site.source, File.join('schedule'), {:name => 'index.html', :liquid_tag => 'attendease_test_schedule'})
+
+            puts "                    [Attendease] Generating /schedule/session.html"
+            site.pages << RegisterTestPage.new(site, site.source, File.join('schedule'), {:name => 'session.html', :liquid_tag => 'attendease_test_session'})
           end
 
         end
@@ -189,3 +231,7 @@ Liquid::Template.register_tag('attendease_content', Jekyll::Attendease::Attendea
 Liquid::Template.register_tag('attendease_test_register_choose_pass', Jekyll::Attendease::AttendeaseTest)
 Liquid::Template.register_tag('attendease_test_register_checkout', Jekyll::Attendease::AttendeaseTest)
 Liquid::Template.register_tag('attendease_test_register_dashboard', Jekyll::Attendease::AttendeaseTest)
+Liquid::Template.register_tag('attendease_test_schedule', Jekyll::Attendease::AttendeaseTest)
+Liquid::Template.register_tag('attendease_test_session', Jekyll::Attendease::AttendeaseTest)
+Liquid::Template.register_tag('attendease_test_presenters', Jekyll::Attendease::AttendeaseTest)
+Liquid::Template.register_tag('attendease_test_presenter', Jekyll::Attendease::AttendeaseTest)
