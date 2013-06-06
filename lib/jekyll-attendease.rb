@@ -219,6 +219,54 @@ layout: layout
       end
     end
 
+    class AttendeaseAuthTag < Liquid::Tag
+      def render(context)
+        content = <<-eos
+<script type="text/javascript">
+function handleAuthState()
+{
+  var xmlhttp;
+  if (window.XMLHttpRequest)
+  {
+    xmlhttp=new XMLHttpRequest();
+    xmlhttp.onreadystatechange=function()
+    {
+      if (xmlhttp.readyState==4 && xmlhttp.status==200)
+      {
+        logout = '<a class="attendease-auth-logout" href="/attendease/logout">Logout</a>';
+        document.getElementById("attendease-auth-action").innerHTML = logout;
+
+        account = JSON.parse(xmlhttp.responseText);
+        account = '<a class="attendease-auth-account" href="/attendease/account">' + account.name + '</a>';
+        document.getElementById("attendease-auth-account").innerHTML = account;
+      }
+      else
+      {
+        login = '<a class="attendease-auth-logout" href="/attendease/login">Login</a>';
+        document.getElementById("attendease-auth-action").innerHTML = login;
+      }
+    }
+    xmlhttp.open("GET","/attendease/verify_credentials.json",true);
+    xmlhttp.send();
+  }
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  handleAuthState();
+});
+
+</script>
+
+<div class="attendease-auth-status">
+  <span id="attendease-auth-account"></span>
+
+  <span id="attendease-auth-action"></span>
+</div>
+        eos
+
+        content
+      end
+    end
 
     class AttendeaseContent < Liquid::Tag
       def render(context)
@@ -230,6 +278,7 @@ layout: layout
 end
 
 Liquid::Template.register_tag('attendease_content', Jekyll::Attendease::AttendeaseContent)
+Liquid::Template.register_tag('attendease_auth_status', Jekyll::Attendease::AttendeaseAuthTag)
 Liquid::Template.register_tag('attendease_test_register_choose_pass', Jekyll::Attendease::AttendeaseTest)
 Liquid::Template.register_tag('attendease_test_register_checkout', Jekyll::Attendease::AttendeaseTest)
 Liquid::Template.register_tag('attendease_test_register_dashboard', Jekyll::Attendease::AttendeaseTest)

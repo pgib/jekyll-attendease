@@ -56,6 +56,13 @@ We can also use logical expressions like so:
 {% endif %}
 ```
 
+## Magic Auth Tag
+
+Simply add the auth tag and our system will know if you logged in or out and will be able to link to your account.
+
+`{% attendease_auth_status %}`
+
+
 ## Contributing
 
 1. Fork it
