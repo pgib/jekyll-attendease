@@ -7,89 +7,65 @@ module Jekyll
     class EventData < Generator
       safe true
 
-      def generate(site)
-        if attendease_config = site.config['attendease']
+      include HTTParty
 
-          if attendease_config['api_host'] && !attendease_config['api_host'].match(/^http(.*).attendease.com/)
+      def get(url, options = {})
+        begin
+          self.class.get(url, options)
+        rescue => e
+          puts "Could not connect to #{url}."
+          puts e.inspect
+        end
+      end
+
+      def generate(site)
+        if @attendease_config = site.config['attendease']
+
+          if @attendease_config['api_host'] && !@attendease_config['api_host'].match(/^http(.*).attendease.com/)
             raise "Is your Attendease api_host site properly in _config.yml? Needs to be something like https://myevent.attendease.com/"
           else
             # add a trailing slash if we are missing one.
-            if attendease_config['api_host'][-1, 1] != '/'
-              attendease_config['api_host'] += '/'
+            if @attendease_config['api_host'][-1, 1] != '/'
+              @attendease_config['api_host'] += '/'
             end
 
-            attendease_data_path = "#{site.config['source']}/_attendease_data"
+            @attendease_data_path = "#{site.config['source']}/_attendease_data"
 
-            FileUtils.mkdir_p(attendease_data_path)
+            FileUtils.mkdir_p(@attendease_data_path)
 
             update_data = true
 
-            if File.exists?("#{attendease_data_path}/site.json")
-              if (Time.now.to_i - File.mtime("#{attendease_data_path}/site.json").to_i) <= 30 # file is less than 30 seconds old
+            if File.exists?("#{@attendease_data_path}/site.json")
+              if (Time.now.to_i - File.mtime("#{@attendease_data_path}/site.json").to_i) <= 30 # file is less than 30 seconds old
                 update_data = false
 
-                site_json = File.read("#{attendease_data_path}/site.json")
+                site_json = File.read("#{@attendease_data_path}/site.json")
 
                 event_data = JSON.parse(site_json)
               end
             end
 
             if update_data
-              event_data = HTTParty.get("#{attendease_config['api_host']}api/site.json")
+              event_data = get("#{@attendease_config['api_host']}api/site.json")
 
               if !event_data['error']
-                puts "                    [Attendease] Saving event data..."
+                puts "[Attendease] Saving event data..."
 
-                File.open("#{attendease_data_path}/site.json", 'w+') { |file| file.write(event_data.parsed_response.to_json) }
+                File.open("#{@attendease_data_path}/site.json", 'w+') { |file| file.write(event_data.parsed_response.to_json) }
               else
                 raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
               end
 
+              #pages_to_fetch = ['choose_pass', 'checkout', 'dashboard']
 
               # Registration test pages, so we can style the forms!
-              pages_to_fetch = ['choose_pass', 'checkout', 'dashboard']
-
-              pages_to_fetch.each do |page|
-                page_data = HTTParty.get("#{attendease_config['api_host']}attendease/preview/#{page}.html")
-
-                if page_data.response.code.to_i == 200
-                  puts "                    [Attendease] Saving test data for register page (#{page})..."
-
-                  File.open("#{attendease_data_path}/attendease_test_register_#{page}.html", 'w+') { |file| file.write(page_data.parsed_response) }
-                else
-                  raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
-                end
-              end
+              fetch_pages ['choose_pass', 'checkout', 'dashboard'], 'register'
 
               # Schedule test pages, so we can style the forms!
-              pages_to_fetch = ['schedule', 'session']
-
-              pages_to_fetch.each do |page|
-                page_data = HTTParty.get("#{attendease_config['api_host']}attendease/preview/#{page}.html")
-
-                if page_data.response.code.to_i == 200
-                  puts "                    [Attendease] Saving test data for schedule page (#{page})..."
-
-                  File.open("#{attendease_data_path}/attendease_test_#{page}.html", 'w+') { |file| file.write(page_data.parsed_response) }
-                else
-                  raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
-                end
-              end
+              fetch_pages ['schedule', 'session', 'session_instance']
 
               # Presenter test pages, so we can style the forms!
-              pages_to_fetch = ['presenters', 'presenter']
-
-              pages_to_fetch.each do |page|
-                page_data = HTTParty.get("#{attendease_config['api_host']}attendease/preview/#{page}.html")
-
-                if page_data.response.code.to_i == 200
-                  puts "                    [Attendease] Saving test data for presenter page (#{page})..."
-
-                  File.open("#{attendease_data_path}/attendease_test_#{page}.html", 'w+') { |file| file.write(page_data.parsed_response) }
-                else
-                  raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
-                end
-              end
+              fetch_pages ['presenters', 'presenter']
             end
 
             # Adding to site config so we can access these variables globally wihtout using a Liquid Tag so we can use if/else
@@ -103,6 +79,29 @@ module Jekyll
         else
           raise "Please set the Attendease event data in your _config.yml"
         end
+      end
+
+      private
+
+      def fetch_pages(pages_to_fetch, prefix = nil)
+
+        pages_to_fetch.each do |page|
+          url = "#{@attendease_config['api_host']}attendease/preview/#{page}.html"
+          page_data = get(url)
+
+          if page_data.response.code.to_i == 200
+            puts "                    [Attendease] Saving test data for #{page} page..."
+
+            filename = []
+            filename << prefix unless prefix.nil?
+            filename << page
+
+            File.open("#{@attendease_data_path}/attendease_test_#{filename.join('_')}.html", 'w') { |file| file.write(page_data.parsed_response) }
+          else
+            raise "Could not retrieve #{url}. Is your Attendease api_host site properly in _config.yml?"
+          end
+        end
+
       end
     end
 
@@ -149,9 +148,9 @@ layout: layout
       safe true
 
       def generate(site)
-        if attendease_config = site.config['attendease']
+        if @attendease_config = site.config['attendease']
 
-          if attendease_config['test_mode']
+          if @attendease_config['test_mode']
             puts "                    [Attendease] Generating pages to test the layouts..."
 
             puts "                    [Attendease] Generating /register/index.html"
@@ -174,6 +173,9 @@ layout: layout
 
             puts "                    [Attendease] Generating /schedule/session.html"
             site.pages << RegisterTestPage.new(site, site.source, File.join('schedule'), {:name => 'session.html', :liquid_tag => 'attendease_test_session'})
+
+            puts "                    [Attendease] Generating /schedule/session_instance.html"
+            site.pages << RegisterTestPage.new(site, site.source, File.join('schedule'), {:name => 'session_instance.html', :liquid_tag => 'attendease_test_session_instance'})
           end
 
         end
@@ -207,12 +209,12 @@ layout: layout
       end
 
       def render(context)
-        attendease_data_path = "#{context['site']['source']}/_attendease_data"
+        @attendease_data_path = "#{context['site']['source']}/_attendease_data"
 
-        if File.exists?("#{attendease_data_path}/#{@tag_name}.html")
-          File.read("#{attendease_data_path}/#{@tag_name}.html")
+        if File.exists?("#{@attendease_data_path}/#{@tag_name}.html")
+          File.read("#{@attendease_data_path}/#{@tag_name}.html")
         else
-          raise "Please set the Attendease event data in your _config.yml or read documentation about how to use this tag."
+          raise "#{@attendease_data_path}/#{@tag_name}.html not found."
         end
       end
     end
@@ -233,5 +235,6 @@ Liquid::Template.register_tag('attendease_test_register_checkout', Jekyll::Atten
 Liquid::Template.register_tag('attendease_test_register_dashboard', Jekyll::Attendease::AttendeaseTest)
 Liquid::Template.register_tag('attendease_test_schedule', Jekyll::Attendease::AttendeaseTest)
 Liquid::Template.register_tag('attendease_test_session', Jekyll::Attendease::AttendeaseTest)
+Liquid::Template.register_tag('attendease_test_session_instance', Jekyll::Attendease::AttendeaseTest)
 Liquid::Template.register_tag('attendease_test_presenters', Jekyll::Attendease::AttendeaseTest)
 Liquid::Template.register_tag('attendease_test_presenter', Jekyll::Attendease::AttendeaseTest)
