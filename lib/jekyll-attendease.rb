@@ -219,7 +219,7 @@ layout: layout
       end
     end
 
-    class AttendeaseAuthTag < Liquid::Tag
+    class AttendeaseAuthScriptTag < Liquid::Tag
       def render(context)
         content = <<-eos
 <script type="text/javascript">
@@ -256,15 +256,21 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 </script>
-
-<div class="attendease-auth-status">
-  <span id="attendease-auth-account"></span>
-
-  <span id="attendease-auth-action"></span>
-</div>
         eos
 
         content
+      end
+    end
+
+    class AttendeaseAuthAccountTag < Liquid::Tag
+      def render(context)
+        '<div id="attendease-auth-account"></div>'
+      end
+    end
+
+    class AttendeaseAuthActionTag < Liquid::Tag
+      def render(context)
+        '<div id="attendease-auth-action"></div>'
       end
     end
 
@@ -278,7 +284,9 @@ document.addEventListener('DOMContentLoaded',function(){
 end
 
 Liquid::Template.register_tag('attendease_content', Jekyll::Attendease::AttendeaseContent)
-Liquid::Template.register_tag('attendease_auth_status', Jekyll::Attendease::AttendeaseAuthTag)
+Liquid::Template.register_tag('attendease_auth_script', Jekyll::Attendease::AttendeaseAuthScriptTag)
+Liquid::Template.register_tag('attendease_auth_account', Jekyll::Attendease::AttendeaseAuthAccountTag)
+Liquid::Template.register_tag('attendease_auth_action', Jekyll::Attendease::AttendeaseAuthActionTag)
 Liquid::Template.register_tag('attendease_test_register_choose_pass', Jekyll::Attendease::AttendeaseTest)
 Liquid::Template.register_tag('attendease_test_register_checkout', Jekyll::Attendease::AttendeaseTest)
 Liquid::Template.register_tag('attendease_test_register_dashboard', Jekyll::Attendease::AttendeaseTest)
