@@ -21,42 +21,42 @@ module Jekyll
       def generate(site)
         if @attendease_config = site.config['attendease']
 
-          if @attendease_config['test_mode']
+          if @attendease_config['api_host'] && !@attendease_config['api_host'].match(/^http(.*).attendease.com/)
+            raise "Is your Attendease api_host site properly in _config.yml? Needs to be something like https://myevent.attendease.com/"
+          else
+            # add a trailing slash if we are missing one.
+            if @attendease_config['api_host'][-1, 1] != '/'
+              @attendease_config['api_host'] += '/'
+            end
 
-            if @attendease_config['api_host'] && !@attendease_config['api_host'].match(/^http(.*).attendease.com/)
-              raise "Is your Attendease api_host site properly in _config.yml? Needs to be something like https://myevent.attendease.com/"
-            else
-              # add a trailing slash if we are missing one.
-              if @attendease_config['api_host'][-1, 1] != '/'
-                @attendease_config['api_host'] += '/'
+            @attendease_data_path = "#{site.config['source']}/_attendease_data"
+
+            FileUtils.mkdir_p(@attendease_data_path)
+
+            update_data = true
+
+            if File.exists?("#{@attendease_data_path}/site.json")
+              if (Time.now.to_i - File.mtime("#{@attendease_data_path}/site.json").to_i) <= (@attendease_config['cache_expiry'].nil? ? 30 : @attendease_config['cache_expiry'])  # file is less than 30 seconds old
+                update_data = false
+
+                site_json = File.read("#{@attendease_data_path}/site.json")
+
+                event_data = JSON.parse(site_json)
+              end
+            end
+
+            if update_data
+              event_data = get("#{@attendease_config['api_host']}api/site.json")
+
+              if !event_data['error']
+                puts "[Attendease] Saving event data..."
+
+                File.open("#{@attendease_data_path}/site.json", 'w+') { |file| file.write(event_data.parsed_response.to_json) }
+              else
+                raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
               end
 
-              @attendease_data_path = "#{site.config['source']}/_attendease_data"
-
-              FileUtils.mkdir_p(@attendease_data_path)
-
-              update_data = true
-
-              if File.exists?("#{@attendease_data_path}/site.json")
-                if (Time.now.to_i - File.mtime("#{@attendease_data_path}/site.json").to_i) <= (@attendease_config['cache_expiry'].nil? ? 30 : @attendease_config['cache_expiry'])  # file is less than 30 seconds old
-                  update_data = false
-
-                  site_json = File.read("#{@attendease_data_path}/site.json")
-
-                  event_data = JSON.parse(site_json)
-                end
-              end
-
-              if update_data
-                event_data = get("#{@attendease_config['api_host']}api/site.json")
-
-                if !event_data['error']
-                  puts "[Attendease] Saving event data..."
-
-                  File.open("#{@attendease_data_path}/site.json", 'w+') { |file| file.write(event_data.parsed_response.to_json) }
-                else
-                  raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
-                end
+              if @attendease_config['test_mode']
 
                 #pages_to_fetch = ['choose_pass', 'checkout', 'dashboard']
 
@@ -69,16 +69,14 @@ module Jekyll
                 # Presenter test pages, so we can style the forms!
                 fetch_pages ['presenters', 'presenter']
               end
-
-              # Adding to site config so we can access these variables globally wihtout using a Liquid Tag so we can use if/else
-              site.config['attendease']['data'] = {}
-
-              event_data.keys.each do |tag|
-                site.config['attendease']['data'][tag] = event_data[tag]
-              end
             end
-          else
-            puts "[Attendease] Test mode disabled..."
+
+            # Adding to site config so we can access these variables globally wihtout using a Liquid Tag so we can use if/else
+            site.config['attendease']['data'] = {}
+
+            event_data.keys.each do |tag|
+              site.config['attendease']['data'][tag] = event_data[tag]
+            end
           end
 
         else
