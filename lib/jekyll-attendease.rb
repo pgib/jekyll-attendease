@@ -231,6 +231,7 @@ layout: layout
 function handleAuthState()
 {
   var xmlhttp;
+  var attendease_logged_in = false;
   if (window.XMLHttpRequest)
   {
     xmlhttp=new XMLHttpRequest();
@@ -244,6 +245,8 @@ function handleAuthState()
         account = JSON.parse(xmlhttp.responseText);
         account = '<a class="attendease-auth-account" href="/attendease/account">' + account.name + '</a>';
         document.getElementById("attendease-auth-account").innerHTML = account;
+
+        attendease_logged_in = true;
       }
       else
       {
