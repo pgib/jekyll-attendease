@@ -228,10 +228,11 @@ layout: layout
 
         content = <<-eos
 <script type="text/javascript">
+var attendease_logged_in = false;
+
 function handleAuthState()
 {
   var xmlhttp;
-  var attendease_logged_in = false;
   if (window.XMLHttpRequest)
   {
     xmlhttp=new XMLHttpRequest();
