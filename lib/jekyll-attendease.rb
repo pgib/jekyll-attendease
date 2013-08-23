@@ -228,13 +228,12 @@ layout: layout
 
         content = <<-eos
 <script type="text/javascript">
+var attendease_logged_in = false;
 
 var JekyllAttendease = {
 
-  attendease_logged_in : false,
-
   isLoggedIn: function() {
-    return this.attendease_logged_in;
+    return attendease_logged_in;
   },
 
   handleAuthState: function() {
@@ -246,6 +245,7 @@ var JekyllAttendease = {
       {
         if (xmlhttp.readyState==4 && xmlhttp.status==200)
         {
+          console.log('Logged In!');
           logout = '<a class="attendease-auth-logout" href="/attendease/logout">Logout</a>';
           document.getElementById("attendease-auth-action").innerHTML = logout;
 
@@ -253,7 +253,7 @@ var JekyllAttendease = {
           account = '<a class="attendease-auth-account" href="/attendease/account">' + account.name + '</a>';
           document.getElementById("attendease-auth-account").innerHTML = account;
 
-          this.attendease_logged_in = true;
+          attendease_logged_in = true;
         }
         else
         {
