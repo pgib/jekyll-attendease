@@ -232,6 +232,26 @@ var JekyllAttendease = {
 
   attendease_logged_in: false,
 
+  addEvent: function(obj, eventType, targetFunction, useCapture)
+  {
+    if (obj.addEventListener)
+    {
+      obj.addEventListener(eventType, targetFunction, false);
+    }
+    else if (obj.attachEvent)
+    {
+      obj.attachEvent('on' + eventType, targetFunction);
+    }
+    else
+    {
+      obj['on' + eventType] = targetFunction;
+    }
+  },
+
+  onLoginCheck: function(callback) {
+    this.addEvent(document, "attendease.loggedin", callback);
+  },
+
   isLoggedIn: function() {
     return this.attendease_logged_in;
   },
@@ -243,41 +263,49 @@ var JekyllAttendease = {
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange=function()
       {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+        if (xmlhttp.readyState==4)
         {
-          logout = '<a class="attendease-auth-logout" href="/attendease/logout">Logout</a>';
-          document.getElementById("attendease-auth-action").innerHTML = logout;
+          var accountObject = false;
 
-          account = JSON.parse(xmlhttp.responseText);
-          account = '<a class="attendease-auth-account" href="/attendease/account">' + account.name + '</a>';
-          document.getElementById("attendease-auth-account").innerHTML = account;
+          if (xmlhttp.status==200)
+          {
+            authActionElement = document.getElementById("attendease-auth-action");
+            if (authActionElement)
+            {
+              authActionElement.innerHTML = '<a class="attendease-auth-logout" href="/attendease/logout">Logout</a>';
+            }
 
-          this.attendease_logged_in = true;
-        }
-        else
-        {
-          login = '<a class="attendease-auth-logout" href="/attendease/login">Login</a>';
-          document.getElementById("attendease-auth-action").innerHTML = login;
-        }
+            accountObject = JSON.parse(xmlhttp.responseText);
 
-        if (document.createEvent)
-        {
-          event = initCustomEvent("attendease.loggedin", true, true, {loggedin: this.attendease_logged_in});
-        }
-        else
-        {
-          event = document.createEventObject();
-          event.eventType = "attendease.loggedin";
-          event.memo = {loggedin: this.attendease_logged_in}
-        }
+            authAccountElement = document.getElementById("attendease-auth-account");
+            if (authAccountElement)
+            {
+              authAccountElement.innerHTML = '<a class="attendease-auth-account" href="/attendease/account">' + accountObject.name + '</a>';
+            }
 
-        if (document.createEvent)
-        {
-          document.dispatchEvent(event);
-        }
-        else
-        {
-          document.fireEvent("on" + event.eventType, event);
+            this.attendease_logged_in = true;
+          }
+          else
+          {
+            document.getElementById("attendease-auth-action").innerHTML = '<a class="attendease-auth-logout" href="/attendease/login">Login</a>';
+          }
+
+          data = { loggedin: this.attendease_logged_in, account: accountObject, loginURL: "/attendease/login", logoutURL: "/attendease/logout", accountURL: "/attendease/account" };
+
+          if (document.createEvent)
+          {
+            event = document.createEvent("HTMLEvents");
+            event.initEvent("attendease.loggedin", true, true);
+            event.data = data;
+            document.dispatchEvent(event);
+          }
+          else
+          {
+            event = document.createEventObject();
+            event.eventType = "attendease.loggedin";
+            event.memo = data;
+            document.fireEvent("on" + event.eventType, event);
+          }
         }
       }
       xmlhttp.open("GET","/attendease/verify_credentials.json",true);
