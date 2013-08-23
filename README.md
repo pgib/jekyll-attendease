@@ -75,20 +75,22 @@ This is simple a div with the id `attendease-auth-action`, maybe more in the fut
 
 In your site's Javascript, do something like this:
 
-    JekyllAttendease.onLoggedIn(function(e)
-    {
-      if (e.data.loggedin)
-      {
-        // do some cool stuff!
-        var account = e.data.account;
-        // console.log(account);
-      }
+``` javascript
+JekyllAttendease.onLoggedIn(function(e)
+{
+  if (e.data.loggedin)
+  {
+    // do some cool stuff!
+    var account = e.data.account;
+    // console.log(account);
+  }
 
-      // And we have some URLs for you!
-      // e.data.loginURL
-      // e.data.logoutURL
-      // e.data.accountURL
-    });
+  // And we have some URLs for you!
+  // e.data.loginURL
+  // e.data.logoutURL
+  // e.data.accountURL
+});
+```
 
 ## Contributing
 
