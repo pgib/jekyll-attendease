@@ -228,12 +228,12 @@ layout: layout
 
         content = <<-eos
 <script type="text/javascript">
-var attendease_logged_in = false;
-
 var JekyllAttendease = {
 
+  attendease_logged_in: false,
+
   isLoggedIn: function() {
-    return attendease_logged_in;
+    return this.attendease_logged_in;
   },
 
   handleAuthState: function() {
@@ -245,7 +245,6 @@ var JekyllAttendease = {
       {
         if (xmlhttp.readyState==4 && xmlhttp.status==200)
         {
-          console.log('Logged In!');
           logout = '<a class="attendease-auth-logout" href="/attendease/logout">Logout</a>';
           document.getElementById("attendease-auth-action").innerHTML = logout;
 
@@ -253,12 +252,32 @@ var JekyllAttendease = {
           account = '<a class="attendease-auth-account" href="/attendease/account">' + account.name + '</a>';
           document.getElementById("attendease-auth-account").innerHTML = account;
 
-          attendease_logged_in = true;
+          this.attendease_logged_in = true;
         }
         else
         {
           login = '<a class="attendease-auth-logout" href="/attendease/login">Login</a>';
           document.getElementById("attendease-auth-action").innerHTML = login;
+        }
+
+        if (document.createEvent)
+        {
+          event = initCustomEvent("attendease.loggedin", true, true, {loggedin: this.attendease_logged_in});
+        }
+        else
+        {
+          event = document.createEventObject();
+          event.eventType = "attendease.loggedin";
+          event.memo = {loggedin: this.attendease_logged_in}
+        }
+
+        if (document.createEvent)
+        {
+          document.dispatchEvent(event);
+        }
+        else
+        {
+          document.fireEvent("on" + event.eventType, event);
         }
       }
       xmlhttp.open("GET","/attendease/verify_credentials.json",true);
