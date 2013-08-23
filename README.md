@@ -76,7 +76,7 @@ This is simple a div with the id `attendease-auth-action`, maybe more in the fut
 In your site's Javascript, do something like this:
 
 ``` javascript
-JekyllAttendease.onLoggedIn(function(e)
+JekyllAttendease.onLoginCheck(function(e)
 {
   if (e.data.loggedin)
   {
