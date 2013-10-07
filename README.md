@@ -32,15 +32,17 @@ You will need to configure by editing your `_config.yml`:
 # Plugin: jekyll-attendease
 #
 attendease:
+  # Required
   api_host: https://your-event-subdomain.attendease.com/
-  test_mode: true # this generates pages for /regsister, /schedule, and /presenters for local development and styling.
+
+  # Optional
+  access_token: secret_access_token_for_access_to_private_events # Delete this if you don't have one or need one.
+  cache_expiry: 3600 # The number of seconds until we regerenate the data from the api. Otherwise data will be cached for speed.
+  generate_schedule_pages: false # Set to true if you want to generate static schedule pages.
+  schedule_path_name: 'schedule' # Set to the path your want your schedule pages to live at.
 ```
 
 Remember to replace `https://your-event-subdomain.attendease.com/` with your actual event url, or crazy things will happen!
-
-Setting `test_mode` will create pages for /register, /schedule and
-/presenters. You may style these pages, but they are non-functional.
-When the site is deployed to Attendease these will function.
 
 ## Usage
 
@@ -91,6 +93,20 @@ JekyllAttendease.onLoginCheck(function(e)
   // e.data.accountURL
 });
 ```
+
+
+## Static Schedule Pages
+
+In your `_config.yml` if you add the `generate_schedule_pages` set to `true` under `attendease` it will generate static schedule pages from the Attendease public API.
+
+You can customize the look/structure of each page as well as widgets within the pages. These pages will be automatically generated for you when you build your site.
+
+For Session Day pages:
+
+- `_layouts/attendease_schedule_day_sessions.html` - The layout for the generate session day page. It will list all instances on that day
+- `_includes/attendease/session_instance_item.html` - The instance item on the page
+- `_includes/attendease/filter.html` - A filter and its items in the instance
+- `_includes/attendease/presenter_item.html` - A presenter item in the instance
 
 ## Contributing
 

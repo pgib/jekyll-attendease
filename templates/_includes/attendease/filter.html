@@ -1,0 +1,12 @@
+<div class="filter">
+  <div class="name">
+    {{ filter.name }}
+  </div>
+  <div class="items">
+    {% for item in filter.items %}
+      <div class="item">
+        {{ item.name }}
+      </div>
+    {% endfor %}
+  </div>
+</div>

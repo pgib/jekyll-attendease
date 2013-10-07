@@ -7,6 +7,8 @@ module Jekyll
     class EventData < Generator
       safe true
 
+      priority :highest
+
       include HTTParty
 
       def get(url, options = {})
@@ -29,53 +31,49 @@ module Jekyll
               @attendease_config['api_host'] += '/'
             end
 
-            @attendease_data_path = "#{site.config['source']}/_attendease_data"
+            @attendease_data_path = "#{site.source}/_attendease_data"
 
             FileUtils.mkdir_p(@attendease_data_path)
 
-            update_data = true
+            data_files = ['site.json', 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json']
 
-            if File.exists?("#{@attendease_data_path}/site.json")
-              if (Time.now.to_i - File.mtime("#{@attendease_data_path}/site.json").to_i) <= (@attendease_config['cache_expiry'].nil? ? 30 : @attendease_config['cache_expiry'])  # file is less than 30 seconds old
-                update_data = false
+            data_files.each do |file_name|
+              update_data = true
 
-                site_json = File.read("#{@attendease_data_path}/site.json")
+              if File.exists?("#{@attendease_data_path}/#{file_name}")
+                if (Time.now.to_i - File.mtime("#{@attendease_data_path}/#{file_name}").to_i) <= (@attendease_config['cache_expiry'].nil? ? 30 : @attendease_config['cache_expiry'])  # file is less than 30 seconds old
+                  update_data = false
 
-                event_data = JSON.parse(site_json)
-              end
-            end
+                  site_json = File.read("#{@attendease_data_path}/#{file_name}")
 
-            if update_data
-              event_data = get("#{@attendease_config['api_host']}api/site.json")
-
-              if !event_data['error']
-                puts "[Attendease] Saving event data..."
-
-                File.open("#{@attendease_data_path}/site.json", 'w+') { |file| file.write(event_data.parsed_response.to_json) }
-              else
-                raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
+                  data = JSON.parse(site_json)
+                end
               end
 
-              if @attendease_config['test_mode']
+              if update_data
+                options = {}
+                options.merge!(:headers => {'X-Event-Token' => @attendease_config['access_token']}) if @attendease_config['access_token']
 
-                #pages_to_fetch = ['choose_pass', 'checkout', 'dashboard']
+                data = get("#{@attendease_config['api_host']}api/#{file_name}", options)
 
-                # Registration test pages, so we can style the forms!
-                fetch_pages ['choose_pass', 'checkout', 'dashboard'], 'register'
+                if (data.is_a?(Hash) && !data['error']) || data.is_a?(Array)
+                  puts "" if file_name == 'site.json' # leading space, that's all.
+                  puts "                    [Attendease] Saving #{file_name} data..."
 
-                # Schedule test pages, so we can style the forms!
-                fetch_pages ['schedule', 'session', 'session_instance']
-
-                # Presenter test pages, so we can style the forms!
-                fetch_pages ['presenters', 'presenter']
+                  File.open("#{@attendease_data_path}/#{file_name}", 'w+') { |file| file.write(data.parsed_response.to_json) }
+                else
+                  raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
+                end
               end
-            end
 
-            # Adding to site config so we can access these variables globally wihtout using a Liquid Tag so we can use if/else
-            site.config['attendease']['data'] = {}
+              if file_name == 'site.json'
+                # Adding to site config so we can access these variables globally wihtout using a Liquid Tag so we can use if/else
+                site.config['attendease']['data'] = {}
 
-            event_data.keys.each do |tag|
-              site.config['attendease']['data'][tag] = event_data[tag]
+                data.keys.each do |tag|
+                  site.config['attendease']['data'][tag] = data[tag]
+                end
+              end
             end
           end
 
@@ -83,39 +81,17 @@ module Jekyll
           raise "Please set the Attendease event data in your _config.yml"
         end
       end
-
-      private
-
-      def fetch_pages(pages_to_fetch, prefix = nil)
-
-        pages_to_fetch.each do |page|
-          url = "#{@attendease_config['api_host']}attendease/preview/#{page}.html"
-          page_data = get(url)
-
-          if page_data.response.code.to_i == 200
-            puts "                    [Attendease] Saving test data for #{page} page..."
-
-            filename = []
-            filename << prefix unless prefix.nil?
-            filename << page
-
-            File.open("#{@attendease_data_path}/attendease_test_#{filename.join('_')}.html", 'w') { |file| file.write(page_data.parsed_response) }
-          else
-            raise "Could not retrieve #{url}. Is your Attendease api_host site properly in _config.yml?"
-          end
-        end
-
-      end
     end
-
 
     class EventThemes < Generator
       safe true
 
+      priority :high
+
       def generate(site)
         puts "                    [Attendease] Generating theme layouts..."
 
-        attendease_precompiled_theme_layouts_path = "#{site.config['source']}/attendease_layouts"
+        attendease_precompiled_theme_layouts_path = "#{site.source}/_attendease_layouts"
 
         FileUtils.mkdir_p(attendease_precompiled_theme_layouts_path)
 
@@ -123,110 +99,39 @@ module Jekyll
 
         # Precompiled layout for website sections.
         layouts_to_precompile.each do |layout|
-          if File.exists?("#{site.config['source']}/_layouts/layout.html")
+          if File.exists?("#{site.source}/_layouts/layout.html")
 
             # create a layout file if is already doesn't exist.
             # the layout file will be used by attendease to wrap /register, /schedule, /presnters in the
             # look the compiled file defines.
             # ensure {{ content }} is in the file so we can render content in there!
-            if !File.exists?("#{site.config['source']}/attendease_layouts/#{layout}.html")
-              theme_layout_content = <<-eos
----
-layout: layout
----
+            if !File.exists?("#{site.source}/_attendease_layouts/#{layout}.html")
+              theme_layout_content = File.read(File.dirname(__FILE__) + "/../templates/layout.html")
 
-{% attendease_content %}
-              eos
-
-              File.open("#{site.config['source']}/attendease_layouts/#{layout}.html", 'w+') { |file| file.write(theme_layout_content) }
-
+              File.open("#{site.source}/_attendease_layouts/#{layout}.html", 'w+') { |file| file.write(theme_layout_content) }
             end
           end
+
+          site.pages << AttendeaseLayoutPage.new(site, site.source, 'attendease_layouts', "#{layout}.html")
         end
       end
     end
 
-
-    class TestPages < Generator
-      safe true
-
-      def generate(site)
-        if @attendease_config = site.config['attendease']
-
-          if @attendease_config['test_mode']
-            puts "                    [Attendease] Generating pages to test the layouts..."
-
-            puts "                    [Attendease] Generating /register/index.html"
-            site.pages << RegisterTestPage.new(site, site.source, File.join('register'), {:name => 'index.html', :liquid_tag => 'attendease_test_register_choose_pass'})
-
-            puts "                    [Attendease] Generating /register/checkout.html"
-            site.pages << RegisterTestPage.new(site, site.source, File.join('register'), {:name => 'checkout.html', :liquid_tag => 'attendease_test_register_checkout'})
-
-            puts "                    [Attendease] Generating /register/dashboard.html"
-            site.pages << RegisterTestPage.new(site, site.source, File.join('register'), {:name => 'dashboard.html', :liquid_tag => 'attendease_test_register_dashboard'})
-
-            puts "                    [Attendease] Generating /presenters/index.html"
-            site.pages << RegisterTestPage.new(site, site.source, File.join('presenters'), {:name => 'index.html', :liquid_tag => 'attendease_test_presenters'})
-
-            puts "                    [Attendease] Generating /presenters/presenter.html"
-            site.pages << RegisterTestPage.new(site, site.source, File.join('presenters'), {:name => 'presenter.html', :liquid_tag => 'attendease_test_presenter'})
-
-            puts "                    [Attendease] Generating /schedule/index.html"
-            site.pages << RegisterTestPage.new(site, site.source, File.join('schedule'), {:name => 'index.html', :liquid_tag => 'attendease_test_schedule'})
-
-            puts "                    [Attendease] Generating /schedule/session.html"
-            site.pages << RegisterTestPage.new(site, site.source, File.join('schedule'), {:name => 'session.html', :liquid_tag => 'attendease_test_session'})
-
-            puts "                    [Attendease] Generating /schedule/session_instance.html"
-            site.pages << RegisterTestPage.new(site, site.source, File.join('schedule'), {:name => 'session_instance.html', :liquid_tag => 'attendease_test_session_instance'})
-          end
-
-        end
-      end
-    end
-
-    class RegisterTestPage < Page
-      def initialize(site, base, dir, page_data)
+    class AttendeaseLayoutPage < Page
+      def initialize(site, base, dir, name)
         @site = site
         @base = base
         @dir = dir
-        @name = page_data[:name]
+        @name = name
 
-        self.process(@name)
-
-        if File.exists?(File.join(base, 'attendease_layouts', 'register.html'))
-          self.read_yaml(File.join(base, 'attendease_layouts'), 'register.html')
-        else
-          self.read_yaml(File.join(base, 'attendease_layouts'), 'layout.html')
-        end
-
-        self.content.gsub! /\{\% attendease_content \%\}/, "{% #{page_data[:liquid_tag]} %}"
-      end
-    end
-
-
-    class AttendeaseTest < Liquid::Tag
-      def initialize(tag_name, text, tokens)
-        super
-        @tag_name = tag_name
-      end
-
-      def render(context)
-        @attendease_data_path = "#{context['site']['source']}/_attendease_data"
-
-        if File.exists?("#{@attendease_data_path}/#{@tag_name}.html")
-          File.read("#{@attendease_data_path}/#{@tag_name}.html")
-        else
-          raise "#{@attendease_data_path}/#{@tag_name}.html not found."
-        end
+        self.process(name)
+        self.read_yaml(File.join(base, '_attendease_layouts'), name)
       end
     end
 
     class AttendeaseAuthScriptTag < Liquid::Tag
       def render(context)
-        @attendease_data_path = "#{context['site']['source']}/_attendease_data"
-
-        "<script type=\"text/javascript\">#{File.open(File.expand_path(File.dirname(__FILE__) + "/../assets/auth_check.js")).read}</script>"
+        "<script type=\"text/javascript\">#{File.read(File.dirname(__FILE__) + "/../assets/auth_check.js")}</script>"
       end
     end
 
@@ -248,6 +153,149 @@ layout: layout
       end
     end
 
+
+    class SessionDayPage < Page
+      def initialize(site, base, dir, day, sessions, presenters, rooms, filters)
+        @site = site
+        @base = base
+        @dir = dir
+        @name = 'index.html'
+
+        self.process(@name)
+        self.read_yaml(File.join(base, '_layouts'), 'attendease_schedule_day_sessions.html')
+
+        session_day_title_prefix = site.config['session_day_title_prefix'] || 'Schedule: '
+        self.data['title'] = "#{session_day_title_prefix}#{day['date']}"
+
+        self.data['day'] = day
+
+        instances = []
+        sessions.each do |s|
+          s['instances'].each do |i|
+            if i['date'] == day['date']
+              instance = {
+                'session' => {
+                  'name' => s['name'],
+                  'description' => s['description'],
+                  'presenters' => s['presenters'],
+                  'filters' => s['filters']
+                },
+
+                'time' => i['time'],
+                'duration' => i['duration'],
+              }
+
+              room =  rooms.select{|room| room['id'] == i['room_id'] }.first
+
+              instance['room'] = {
+                'name' => room['name'],
+                'capacity' => room['capacity']
+              }
+
+              instances << instance
+            end
+          end
+        end
+
+        self.data['instances'] = instances
+      end
+    end
+
+    class AttendeaseScheduleGenerator < Generator
+      safe true
+
+      def generate(site)
+        if site.config['attendease'] && site.config['attendease']['api_host'] && site.config['attendease']['generate_schedule_pages']
+
+          # Fetch all the session data!
+          attendease_api_host = site.config['attendease']['api_host']
+          attendease_access_token = site.config['attendease']['access_token']
+
+          options = {}
+          options.merge!(:headers => {'X-Event-Token' => attendease_access_token}) if attendease_access_token
+
+          event = HTTParty.get("#{attendease_api_host}/api/event.json", options).parsed_response
+          sessions = HTTParty.get("#{attendease_api_host}/api/sessions.json", options).parsed_response
+          presenters = HTTParty.get("#{attendease_api_host}/api/presenters.json", options).parsed_response
+          rooms = HTTParty.get("#{attendease_api_host}/api/rooms.json", options).parsed_response
+          filters = HTTParty.get("#{attendease_api_host}/api/filters.json", options).parsed_response
+
+          sessions = sessions_with_presenters_and_filters(sessions, presenters, filters)
+
+          if !site.layouts.key? 'attendease_schedule_day_sessions'
+            # Generate the schedule day page layout file if it doesn't exist.
+            layout_file = File.read(File.join(File.dirname(__FILE__), '..', '/templates/attendease_schedule_day_sessions.html'))
+            File.open(File.join(site.source, '_layouts/attendease_schedule_day_sessions.html'), 'w+') { |out_file| out_file.write(layout_file) }
+          end
+
+          # Generate the schedule day page include files if they don't yet exist.
+          files_to_create_if_they_dont_exist = [ 'filter.html', 'presenter_item.html', 'session_instance_item.html']
+          files_to_create_if_they_dont_exist.each do |file|
+            FileUtils.mkdir_p("#{site.source}/_includes/attendease")
+
+            if !File.exists?(File.join(site.source, '_includes/attendease/', file))
+              include_file = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', file))
+              File.open(File.join(site.source, '_includes/attendease/', file), 'w+') { |out_file| out_file.write(include_file) }
+            end
+          end
+
+          dir = (site.config['attendease'] && site.config['attendease']['schedule_path_name']) ? site.config['attendease']['schedule_path_name'] : 'schedule'
+
+          event['dates'].each do |day|
+            # get all the sessions for that day!
+            site.pages << SessionDayPage.new(site, site.source, File.join(dir, day['date']), day, sessions, presenters, rooms, filters)
+          end
+
+        end
+      end
+
+      def sessions_with_presenters_and_filters(sessions, presenters, filters)
+        sessions_parsed = []
+
+        sessions.each do |session|
+          presenters_for_session = presenters.select{|presenter| session['speaker_ids'].include?(presenter['id']) }
+
+          session['presenters'] = presenters_for_session.map do |presenter|
+            {
+              'first_name' => presenter['first_name'],
+              'last_name' => presenter['last_name'],
+              'company' => presenter['company'],
+              'title' => presenter['title'],
+              'profile_url' => presenter['profile_url'],
+              'bio' => presenter['bio']
+            }
+          end
+
+          filters_for_session_hash = {}
+
+          filters.each do |filter|
+            filter['filter_items'].each do |filter_item|
+              if session['filters'].include?(filter_item['id'])
+                filters_for_session_hash[filter['name']] = [] unless filters_for_session_hash[filter['name']]
+                filters_for_session_hash[filter['name']] << {
+                  'name' => filter_item['name']
+                }
+              end
+            end
+          end
+
+          filters_for_session = filters_for_session_hash.map do |key, value|
+            {
+              'name' => key,
+              'items' => value
+            }
+          end
+
+          session['filters'] = filters_for_session
+
+          sessions_parsed << session
+        end
+
+        sessions_parsed
+      end
+    end
+
+
   end
 end
 
@@ -255,11 +303,3 @@ Liquid::Template.register_tag('attendease_content', Jekyll::Attendease::Attendea
 Liquid::Template.register_tag('attendease_auth_script', Jekyll::Attendease::AttendeaseAuthScriptTag)
 Liquid::Template.register_tag('attendease_auth_account', Jekyll::Attendease::AttendeaseAuthAccountTag)
 Liquid::Template.register_tag('attendease_auth_action', Jekyll::Attendease::AttendeaseAuthActionTag)
-Liquid::Template.register_tag('attendease_test_register_choose_pass', Jekyll::Attendease::AttendeaseTest)
-Liquid::Template.register_tag('attendease_test_register_checkout', Jekyll::Attendease::AttendeaseTest)
-Liquid::Template.register_tag('attendease_test_register_dashboard', Jekyll::Attendease::AttendeaseTest)
-Liquid::Template.register_tag('attendease_test_schedule', Jekyll::Attendease::AttendeaseTest)
-Liquid::Template.register_tag('attendease_test_session', Jekyll::Attendease::AttendeaseTest)
-Liquid::Template.register_tag('attendease_test_session_instance', Jekyll::Attendease::AttendeaseTest)
-Liquid::Template.register_tag('attendease_test_presenters', Jekyll::Attendease::AttendeaseTest)
-Liquid::Template.register_tag('attendease_test_presenter', Jekyll::Attendease::AttendeaseTest)
