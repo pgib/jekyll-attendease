@@ -72,11 +72,8 @@ module Jekyll
             end
 
             # Adding to site config so we can access these variables globally wihtout using a Liquid Tag so we can use if/else
-            site.config['attendease']['data'] = {}
-
-            event_data.keys.each do |tag|
-              site.config['attendease']['data'][tag] = event_data[tag]
-            end
+            site.config['attendease']['data'] = {} if site.config['attendease']['data'].nil?
+            site.config['attendease']['data'].merge!(event_data)
           end
 
         else
