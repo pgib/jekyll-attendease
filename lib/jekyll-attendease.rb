@@ -51,7 +51,7 @@ module Jekyll
               if !event_data['error']
                 puts "[Attendease] Saving event data..."
 
-                File.open("#{@attendease_data_path}/site.json", 'w+') { |file| file.write(event_data.parsed_response.to_json) }
+                File.open("#{@attendease_data_path}/site.json", 'w+') { |file| file.write(JSON.pretty_generate(event_data.parsed_response)) }
               else
                 raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
               end
