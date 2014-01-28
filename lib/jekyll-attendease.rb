@@ -95,11 +95,13 @@ module Jekyll
 
         FileUtils.mkdir_p(attendease_precompiled_theme_layouts_path)
 
+        base_layout = (site.config['attendease'] && site.config['attendease']['base_layout']) ? site.config['attendease']['base_layout'] : 'layout'
+
         layouts_to_precompile = ['layout', 'register', 'schedule', 'presenters']
 
         # Precompiled layout for website sections.
         layouts_to_precompile.each do |layout|
-          if File.exists?("#{site.source}/_layouts/layout.html")
+          if File.exists?("#{site.source}/_layouts/#{base_layout}.html")
 
             # create a layout file if is already doesn't exist.
             # the layout file will be used by attendease to wrap /register, /schedule, /presnters in the
@@ -110,15 +112,15 @@ module Jekyll
 
               File.open("#{site.source}/_attendease_layouts/#{layout}.html", 'w+') { |file| file.write(theme_layout_content) }
             end
-          end
 
-          site.pages << AttendeaseLayoutPage.new(site, site.source, 'attendease_layouts', "#{layout}.html")
+            site.pages << AttendeaseLayoutPage.new(site, site.source, 'attendease_layouts', "#{layout}.html", base_layout)
+          end
         end
       end
     end
 
     class AttendeaseLayoutPage < Page
-      def initialize(site, base, dir, name)
+      def initialize(site, base, dir, name, base_layout)
         @site = site
         @base = base
         @dir = dir
@@ -126,6 +128,8 @@ module Jekyll
 
         self.process(name)
         self.read_yaml(File.join(base, '_attendease_layouts'), name)
+
+        self.data['layout'] = base_layout
       end
     end
 
