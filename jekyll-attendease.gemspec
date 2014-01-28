@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'jekyll-attendease'
-  s.version     = '0.4.0'
-  s.date        = '2013-10-07'
+  s.version     = '0.4.2'
+  s.date        = '2014-01-28'
   s.summary     = "Attendease event helper for Jekyll"
   s.description = "Bring your event data into Jekyll for amazing event websites."
   s.authors     = ["Michael Wood", "Patrick Gibson", "Jamie Lubiner"]
