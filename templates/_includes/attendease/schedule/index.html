@@ -1,0 +1,22 @@
+<div class="attendease-schedule">
+  <div class="attendease-header">
+    <h1>Schedule</h1>
+  </div>
+
+  {% for day in page.dates %}
+  <div class="day">
+    <div class="date">
+      <h4><a href="/schedule/{{ day.date }}">{{ day.date }}</a></h4>
+    </div>
+
+    <div class="times">
+      {{ day.start_time }} to {{ day.end_time }}
+    </div>
+  </div>
+  {% endfor %}
+
+  <div class="all-sessions">
+    <h4><a href="/schedule/sessions">List all sessions.</a></h4>
+  </div>
+
+</div>

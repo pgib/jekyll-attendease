@@ -1,0 +1,70 @@
+<div class="attendease-presenter-profile">
+  <div class="attendease-presenter" data-presenter-id="{{ page.presenter.id }}">
+    <div class="attendease-presenter-profile-image">
+      <img height="100" src="{{ page.presenter.profile_url }}">
+    </div>
+
+    <div class="attendease-presenter-name">
+      <h1>{{ page.presenter.first_name }} {{ page.presenter.last_name }}</h1>
+    </div>
+
+    <div class="attendease-presenter-title">
+      {{ page.presenter.title }}
+    </div>
+
+    <div class="attendease-presenter-company">
+      {{ page.presenter.company }}
+    </div>
+
+    <div class="attendease-presenter-bio">
+      {{ page.presenter.bio | markdownify }}
+    </div>
+
+  </div>
+
+  <div class="attendease-sessions">
+    <h2>Sessions</h2>
+
+    {% for session in page.presenter.sessions %}
+      <div class="attendease-session-and-instances" data-session-id="{{ session.id }}">
+        <div class="attendease-session-name">
+          <h3><a href="/schedule/{{ session.code }}">{{ session.name }}</a></h3>
+        </div>
+
+
+        {% for instance in session.instances %}
+          <div class="attendease-instance" data-instance-id="{{ instance.id }}">
+            <h3 class="attendease-date" data-date="{{ instance.date }}">
+              {{ instance.date }}
+            </h3>
+
+            <div class="attendease-instance-details">
+              <div class="attendease-instance-detail attendease-time-range" data-duration="{{ instance.duration }}" data-start-time="{{ instance.time }}">
+                {{ instance.time }}
+
+                <div class="attendease-duration" data-duration="{{ instance.duration }}">
+                  {{ instance.duration }} minutes
+                </div>
+              </div>
+
+              <div class="attendease-instance-divider"></div>
+
+              <div class="attendease-instance-detail attendease-instance-location">
+                <div class="attendease-instance-location-venue"><a href="/venues/{{ instance.room.venue_id }}">{{ instance.room.venue_name }}</a></div>
+                <div class="attendease-instance-location-room">{{ instance.room.name }}</div>
+              </div>
+
+              <div class="attendease-instance-divider"></div>
+
+              <div class="attendease-instance-detail attendease-schedule-status">
+                <a class="attendease-button" href="/attendease/login">-- Make this dynamic --</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+      </div>
+    {% endfor %}
+
+  </div>
+</div>

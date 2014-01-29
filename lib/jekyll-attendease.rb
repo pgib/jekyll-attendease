@@ -35,7 +35,7 @@ module Jekyll
 
             FileUtils.mkdir_p(@attendease_data_path)
 
-            data_files = ['site.json', 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json']
+            data_files = ['site.json']#, 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json']
 
             data_files.each do |file_name|
               update_data = true
@@ -91,7 +91,7 @@ module Jekyll
       def generate(site)
         puts "                    [Attendease] Generating theme layouts..."
 
-        attendease_precompiled_theme_layouts_path = "#{site.source}/_attendease_layouts"
+        attendease_precompiled_theme_layouts_path = "#{site.source}/attendease_layouts"
 
         FileUtils.mkdir_p(attendease_precompiled_theme_layouts_path)
 
@@ -103,17 +103,13 @@ module Jekyll
         layouts_to_precompile.each do |layout|
           if File.exists?("#{site.source}/_layouts/#{base_layout}.html")
 
-            # create a layout file if is already doesn't exist.
+            # create a layout file if it already doesn't exist.
             # the layout file will be used by attendease to wrap /register, /schedule, /presnters in the
             # look the compiled file defines.
             # ensure {{ content }} is in the file so we can render content in there!
-            if !File.exists?("#{site.source}/_attendease_layouts/#{layout}.html")
-              theme_layout_content = File.read(File.dirname(__FILE__) + "/../templates/layout.html")
-
-              File.open("#{site.source}/_attendease_layouts/#{layout}.html", 'w+') { |file| file.write(theme_layout_content) }
+            if !File.exists?("#{attendease_precompiled_theme_layouts_path}/#{layout}.html")
+              site.pages << AttendeaseLayoutPage.new(site, site.source, 'attendease_layouts', "#{layout}.html", base_layout)
             end
-
-            site.pages << AttendeaseLayoutPage.new(site, site.source, 'attendease_layouts', "#{layout}.html", base_layout)
           end
         end
       end
@@ -127,7 +123,8 @@ module Jekyll
         @name = name
 
         self.process(name)
-        self.read_yaml(File.join(base, '_attendease_layouts'), name)
+
+        self.read_yaml(File.dirname(__FILE__) + "/../templates", 'layout') # a template for the layout.
 
         self.data['layout'] = base_layout
       end
@@ -158,43 +155,51 @@ module Jekyll
     end
 
 
-    class SessionDayPage < Page
-      def initialize(site, base, dir, day, sessions, presenters, rooms, filters)
+    class ScheduleIndexPage < Page
+      def initialize(site, base, dir, dates)
         @site = site
         @base = base
         @dir = dir
         @name = 'index.html'
 
         self.process(@name)
-        self.read_yaml(File.join(base, '_layouts'), 'attendease_schedule_day_sessions.html')
 
-        session_day_title_prefix = site.config['session_day_title_prefix'] || 'Schedule: '
+        self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
+
+        self.data['title'] = site.config['schedule_index_title_prefix'] || 'Schedule'
+
+        self.data['dates'] = dates
+
+        if File.exists?(File.join(base, '_includes', 'attendease', 'schedule', 'index.html'))
+          self.content = File.read(File.join(base, '_includes', 'attendease', 'schedule', 'index.html')) # Use theme specific layout
+        else
+          self.content = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', 'schedule/index.html')) # Use template
+        end
+      end
+    end
+
+    class ScheduleDayPage < Page
+      def initialize(site, base, dir, day, sessions)
+        @site = site
+        @base = base
+        @dir = dir
+        @name = 'index.html'
+
+        self.process(@name)
+
+        self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
+
+        session_day_title_prefix = site.config['schedule_day_title_prefix'] || 'Schedule: '
         self.data['title'] = "#{session_day_title_prefix}#{day['date']}"
 
         self.data['day'] = day
 
         instances = []
+
         sessions.each do |s|
-          s['instances'].each do |i|
-            if i['date'] == day['date']
-              instance = {
-                'session' => {
-                  'name' => s['name'],
-                  'description' => s['description'],
-                  'presenters' => s['presenters'],
-                  'filters' => s['filters']
-                },
-
-                'time' => i['time'],
-                'duration' => i['duration'],
-              }
-
-              room =  rooms.select{|room| room['id'] == i['room_id'] }.first
-
-              instance['room'] = {
-                'name' => room['name'],
-                'capacity' => room['capacity']
-              }
+          s['instances'].each do |instance|
+            if instance['date'] == day['date']
+              instance['session'] = s
 
               instances << instance
             end
@@ -202,6 +207,162 @@ module Jekyll
         end
 
         self.data['instances'] = instances
+
+        if File.exists?(File.join(base, '_includes', 'attendease', 'schedule', 'day.html'))
+          self.content = File.read(File.join(base, '_includes', 'attendease', 'schedule', 'day.html')) # Use theme specific layout
+        else
+          self.content = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', 'schedule/day.html')) # Use template
+        end
+      end
+    end
+
+    class ScheduleSessionsPage < Page
+      def initialize(site, base, dir, sessions)
+        @site = site
+        @base = base
+        @dir = dir
+        @name = 'index.html'
+
+        self.process(@name)
+
+        self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
+
+        self.data['title'] = site.config['schedule_sessions_title_prefix'] || 'Schedule: Sessions'
+
+        sessionsData = []
+
+        self.data['sessions'] = sessions
+
+        if File.exists?(File.join(base, '_includes', 'attendease', 'schedule', 'sessions.html'))
+          self.content = File.read(File.join(base, '_includes', 'attendease', 'schedule', 'sessions.html')) # Use theme specific layout
+        else
+          self.content = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', 'schedule/sessions.html')) # Use template
+        end
+      end
+    end
+
+    class ScheduleSessionPage < Page
+      def initialize(site, base, dir, session)
+        @site = site
+        @base = base
+        @dir = dir
+        @name = 'index.html'
+
+        self.process(@name)
+
+        self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
+
+        schedule_session_title_prefix = site.config['schedule_session_title_prefix'] || 'Schedule: '
+        self.data['title'] = "#{schedule_session_title_prefix}#{session['name']}"
+
+        self.data['session'] = session
+
+        if File.exists?(File.join(base, '_includes', 'attendease', 'schedule', 'session.html'))
+          self.content = File.read(File.join(base, '_includes', 'attendease', 'schedule', 'session.html')) # Use theme specific layout
+        else
+          self.content = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', 'schedule/session.html')) # Use template
+        end
+      end
+    end
+
+    class PresentersIndexPage < Page
+      def initialize(site, base, dir, presenters)
+        @site = site
+        @base = base
+        @dir = dir
+        @name = 'index.html'
+
+        self.process(@name)
+
+        self.read_yaml(File.join(base, 'attendease_layouts'), 'presenters.html')
+
+        self.data['title'] = site.config['presenters_index_title_prefix'] || 'Presenters'
+
+        self.data['presenters'] = presenters
+
+        if File.exists?(File.join(base, '_includes', 'attendease', 'presenters', 'index.html'))
+          self.content = File.read(File.join(base, '_includes', 'attendease', 'presenters', 'index.html')) # Use theme specific layout
+        else
+          self.content = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', 'presenters/index.html')) # Use template
+        end
+      end
+    end
+
+    class PresenterPage < Page
+      def initialize(site, base, dir, presenter, sessions)
+        @site = site
+        @base = base
+        @dir = dir
+        @name = 'index.html'
+
+        self.process(@name)
+
+        self.read_yaml(File.join(base, 'attendease_layouts'), 'presenters.html')
+
+        self.data['title'] = site.config['presenter_title_prefix'] || 'Presenter'
+
+        presenter['sessions'] = []
+
+        sessions.each do |session|
+          if session['speaker_ids'].include?(presenter['id'])
+            presenter['sessions'] << session
+          end
+        end
+
+        self.data['presenter'] = presenter
+
+        if File.exists?(File.join(base, '_includes', 'attendease', 'presenters', 'presenter.html'))
+          self.content = File.read(File.join(base, '_includes', 'attendease', 'presenters', 'presenter.html')) # Use theme specific layout
+        else
+          self.content = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', 'presenters/presenter.html')) # Use template
+        end
+      end
+    end
+
+
+    class VenuesIndexPage < Page
+      def initialize(site, base, dir, venues)
+        @site = site
+        @base = base
+        @dir = dir
+        @name = 'index.html'
+
+        self.process(@name)
+
+        self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
+
+        self.data['title'] = site.config['venues_index_title_prefix'] || 'Venues'
+
+        self.data['venues'] = venues
+
+        if File.exists?(File.join(base, '_includes', 'attendease', 'venues', 'index.html'))
+          self.content = File.read(File.join(base, '_includes', 'attendease', 'venues', 'index.html')) # Use theme specific layout
+        else
+          self.content = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', 'venues/index.html')) # Use template
+        end
+      end
+    end
+
+    class VenuePage < Page
+      def initialize(site, base, dir, venue)
+        @site = site
+        @base = base
+        @dir = dir
+        @name = 'index.html'
+
+        self.process(@name)
+
+        self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
+
+        self.data['title'] = site.config['venue_title_prefix'] || 'Venue'
+
+        self.data['venue'] = venue
+
+        if File.exists?(File.join(base, '_includes', 'attendease', 'venues', 'venue.html'))
+          self.content = File.read(File.join(base, '_includes', 'attendease', 'venues', 'venue.html')) # Use theme specific layout
+        else
+          self.content = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', 'venues/venue.html')) # Use template
+        end
       end
     end
 
@@ -223,19 +384,19 @@ module Jekyll
           presenters = HTTParty.get("#{attendease_api_host}/api/presenters.json", options).parsed_response
           rooms = HTTParty.get("#{attendease_api_host}/api/rooms.json", options).parsed_response
           filters = HTTParty.get("#{attendease_api_host}/api/filters.json", options).parsed_response
+          venues = HTTParty.get("#{attendease_api_host}/api/venues.json", options).parsed_response
 
-          sessions = sessions_with_presenters_and_filters(sessions, presenters, filters)
+          # Generate the template files if they don't yet exist.
+          files_to_create_if_they_dont_exist = [
+            'schedule/index.html', 'schedule/day.html', 'schedule/sessions.html', 'schedule/session.html',
+            'presenters/index.html', 'presenters/presenter.html',
+            'venues/index.html', 'venues/venue.html',
+          ]
 
-          if !site.layouts.key? 'attendease_schedule_day_sessions'
-            # Generate the schedule day page layout file if it doesn't exist.
-            layout_file = File.read(File.join(File.dirname(__FILE__), '..', '/templates/attendease_schedule_day_sessions.html'))
-            File.open(File.join(site.source, '_layouts/attendease_schedule_day_sessions.html'), 'w+') { |out_file| out_file.write(layout_file) }
-          end
-
-          # Generate the schedule day page include files if they don't yet exist.
-          files_to_create_if_they_dont_exist = [ 'filter.html', 'presenter_item.html', 'session_instance_item.html']
           files_to_create_if_they_dont_exist.each do |file|
-            FileUtils.mkdir_p("#{site.source}/_includes/attendease")
+            FileUtils.mkdir_p("#{site.source}/_includes/attendease/schedule")
+            FileUtils.mkdir_p("#{site.source}/_includes/attendease/presenters")
+            FileUtils.mkdir_p("#{site.source}/_includes/attendease/venues")
 
             if !File.exists?(File.join(site.source, '_includes/attendease/', file))
               include_file = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', file))
@@ -243,62 +404,122 @@ module Jekyll
             end
           end
 
+          sessions = Jekyll::Attendease::sessions_with_all_data(sessions, presenters, rooms, venues, filters)
+
+          # /schedule pages.
           dir = (site.config['attendease'] && site.config['attendease']['schedule_path_name']) ? site.config['attendease']['schedule_path_name'] : 'schedule'
 
+          site.pages << ScheduleIndexPage.new(site, site.source, File.join(dir), event['dates'])
+          site.pages << ScheduleSessionsPage.new(site, site.source, File.join(dir, 'sessions'), sessions)
+
           event['dates'].each do |day|
-            # get all the sessions for that day!
-            site.pages << SessionDayPage.new(site, site.source, File.join(dir, day['date']), day, sessions, presenters, rooms, filters)
+            site.pages << ScheduleDayPage.new(site, site.source, File.join(dir, day['date']), day, sessions)
           end
 
+          sessions.each do |session|
+            site.pages << ScheduleSessionPage.new(site, site.source, File.join(dir, session['code']), session)
+          end
+
+          # /presenters pages.
+          dir = (site.config['attendease'] && site.config['attendease']['presenters_path_name']) ? site.config['attendease']['presenters_path_name'] : 'presenters'
+
+          site.pages << PresentersIndexPage.new(site, site.source, File.join(dir), presenters)
+
+          presenters.each do |presenter|
+            site.pages << PresenterPage.new(site, site.source, File.join(dir, presenter['id']), presenter, sessions)
+          end
+
+          # /venue pages.
+          dir = (site.config['attendease'] && site.config['attendease']['venues_path_name']) ? site.config['attendease']['venues_path_name'] : 'venues'
+
+          site.pages << VenuesIndexPage.new(site, site.source, File.join(dir), venues)
+
+          venues.each do |venue|
+            site.pages << VenuePage.new(site, site.source, File.join(dir, venue['id']), venue)
+          end
         end
       end
 
-      def sessions_with_presenters_and_filters(sessions, presenters, filters)
-        sessions_parsed = []
-
-        sessions.each do |session|
-          presenters_for_session = presenters.select{|presenter| session['speaker_ids'].include?(presenter['id']) }
-
-          session['presenters'] = presenters_for_session.map do |presenter|
-            {
-              'first_name' => presenter['first_name'],
-              'last_name' => presenter['last_name'],
-              'company' => presenter['company'],
-              'title' => presenter['title'],
-              'profile_url' => presenter['profile_url'],
-              'bio' => presenter['bio']
-            }
-          end
-
-          filters_for_session_hash = {}
-
-          filters.each do |filter|
-            filter['filter_items'].each do |filter_item|
-              if session['filters'].include?(filter_item['id'])
-                filters_for_session_hash[filter['name']] = [] unless filters_for_session_hash[filter['name']]
-                filters_for_session_hash[filter['name']] << {
-                  'name' => filter_item['name']
-                }
-              end
-            end
-          end
-
-          filters_for_session = filters_for_session_hash.map do |key, value|
-            {
-              'name' => key,
-              'items' => value
-            }
-          end
-
-          session['filters'] = filters_for_session
-
-          sessions_parsed << session
-        end
-
-        sessions_parsed
-      end
     end
 
+    def self.sessions_with_all_data(sessions, presenters, rooms, venues, filters)
+      sessionsData = []
+
+      sessions.each do |s|
+        session = {
+          'id' => s['id'],
+          'name' => s['name'],
+          'description' => s['description'],
+          'code' => s['code'],
+          'speaker_ids' => s['speaker_ids']
+        }
+
+        session['presenters'] = []
+        presenters.select{|presenter| s['speaker_ids'].include?(presenter['id'])}.each do |presenter|
+          session['presenters'] << {
+            'id' => presenter['id'],
+            'first_name' => presenter['first_name'],
+            'last_name' => presenter['last_name'],
+            'company' => presenter['company'],
+            'title' => presenter['title'],
+            'profile_url' => presenter['profile_url'],
+          }
+        end
+
+        filters_for_session_hash = {}
+        filters.each do |filter|
+          filter['filter_items'].each do |filter_item|
+            if s['filters'].include?(filter_item['id'])
+              filters_for_session_hash[filter['name']] = [] unless filters_for_session_hash[filter['name']]
+              filters_for_session_hash[filter['name']] << {
+                'name' => filter_item['name']
+              }
+            end
+          end
+        end
+
+        filters_for_session = filters_for_session_hash.map do |key, value|
+          {
+            'name' => key,
+            'items' => value
+          }
+        end
+
+        session['filters'] = filters_for_session
+
+        if s['instances']
+          instances = []
+          s['instances'].each do |i|
+            instance = {
+              'id' => i['id'],
+              'time' => i['time'],
+              'date' => i['date'],
+              'duration' => i['duration'],
+              'room_id' => i['room_id'],
+            }
+
+            room = rooms.select{|room| room['id'] == i['room_id'] }.first
+            venue = venues.select{|venue| venue['id'] == room['venue_id'] }.first
+
+            instance['room'] = {
+              'name' => room['name'],
+              'venue_id' => room['venue_id'],
+              'venue_name' => venue['name'],
+              'capacity' => room['capacity']
+            }
+
+            instances << instance
+          end
+          session['instances'] = instances
+        else
+          session['instances'] = []
+        end
+
+        sessionsData << session
+      end
+
+      sessionsData
+    end
 
   end
 end

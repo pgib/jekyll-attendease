@@ -1,0 +1,25 @@
+<div class="attendease-presenters">
+  <div class="attendease-header">
+    <h1>Presenters</h1>
+  </div>
+
+  {% for presenter in page.presenters %}
+    <div class="attendease-presenter" data-presenter-id="{{ presenter.id }}">
+      <div class="attendease-presenter-profile-image">
+        <img height="100" src="{{ presenter.profile_url }}">
+      </div>
+
+      <div class="attendease-presenter-name">
+        <a href="/presenters/{{ presenter.id }}">{{ presenter.first_name }} {{ presenter.last_name }}</a>
+      </div>
+
+      <div class="attendease-presenter-title">
+        {{ presenter.title }}
+      </div>
+
+      <div class="attendease-presenter-company">
+        {{ presenter.company }}
+      </div>
+    </div>
+  {% endfor %}
+</div>
