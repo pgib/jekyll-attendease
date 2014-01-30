@@ -144,6 +144,12 @@ module Jekyll
       end
     end
 
+    class AttendeaseLocalesScriptTag < Liquid::Tag
+      def render(context)
+        '<script type="text/javascript">String.toLocaleString("/api/lingo.json");</script>'
+      end
+    end
+
     class AttendeaseAuthAccountTag < Liquid::Tag
       def render(context)
         '<div id="attendease-auth-account"></div>'
@@ -307,7 +313,7 @@ module Jekyll
 
         self.read_yaml(File.join(base, 'attendease_layouts'), 'presenters.html')
 
-        self.data['title'] = site.config['presenter_title_prefix'] || 'Presenter'
+        self.data['title'] = site.config['presenter_title_prefix'] || presenter['first_name'] + ' ' + presenter['last_name']
 
         presenter['sessions'] = []
 
@@ -534,5 +540,6 @@ end
 Liquid::Template.register_tag('attendease_content', Jekyll::Attendease::AttendeaseContent)
 Liquid::Template.register_tag('attendease_auth_script', Jekyll::Attendease::AttendeaseAuthScriptTag)
 Liquid::Template.register_tag('attendease_scheduler_script', Jekyll::Attendease::AttendeaseSchedulerScriptTag)
+Liquid::Template.register_tag('attendease_locales_script', Jekyll::Attendease::AttendeaseLocalesScriptTag)
 Liquid::Template.register_tag('attendease_auth_account', Jekyll::Attendease::AttendeaseAuthAccountTag)
 Liquid::Template.register_tag('attendease_auth_action', Jekyll::Attendease::AttendeaseAuthActionTag)
