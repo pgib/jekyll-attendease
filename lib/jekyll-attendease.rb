@@ -132,13 +132,15 @@ module Jekyll
 
     class AttendeaseAuthScriptTag < Liquid::Tag
       def render(context)
-        "<script type=\"text/javascript\">#{File.read(File.dirname(__FILE__) + "/../assets/auth_check.js")}</script>"
+        api_host = context.registers[:site].config['attendease']['api_host']
+        '<script type="text/javascript" src="' + api_host + '/assets/attendease_event/auth.js"></script>'
       end
     end
 
     class AttendeaseSchedulerScriptTag < Liquid::Tag
       def render(context)
-        "<script type=\"text/javascript\">#{File.read(File.dirname(__FILE__) + "/../assets/scheduler.js")}</script>"
+        api_host = context.registers[:site].config['attendease']['api_host']
+        '<script type="text/javascript" src="' + api_host + '/assets/attendease_event/schedule.js"></script>'
       end
     end
 
