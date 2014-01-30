@@ -35,7 +35,7 @@ module Jekyll
 
             FileUtils.mkdir_p(@attendease_data_path)
 
-            data_files = ['site.json']#, 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json']
+            data_files = ['site.json', 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json', 'venues.json']
 
             data_files.each do |file_name|
               update_data = true
@@ -44,9 +44,9 @@ module Jekyll
                 if (Time.now.to_i - File.mtime("#{@attendease_data_path}/#{file_name}").to_i) <= (@attendease_config['cache_expiry'].nil? ? 30 : @attendease_config['cache_expiry'])  # file is less than 30 seconds old
                   update_data = false
 
-                  site_json = File.read("#{@attendease_data_path}/#{file_name}")
+                  json = File.read("#{@attendease_data_path}/#{file_name}")
 
-                  data = JSON.parse(site_json)
+                  data = JSON.parse(json)
                 end
               end
 
@@ -384,15 +384,14 @@ module Jekyll
           attendease_api_host = site.config['attendease']['api_host']
           attendease_access_token = site.config['attendease']['access_token']
 
-          options = {}
-          options.merge!(:headers => {'X-Event-Token' => attendease_access_token}) if attendease_access_token
+          attendease_data_path = "#{site.source}/_attendease_data"
 
-          event = HTTParty.get("#{attendease_api_host}/api/event.json", options).parsed_response
-          sessions = HTTParty.get("#{attendease_api_host}/api/sessions.json", options).parsed_response
-          presenters = HTTParty.get("#{attendease_api_host}/api/presenters.json", options).parsed_response
-          rooms = HTTParty.get("#{attendease_api_host}/api/rooms.json", options).parsed_response
-          filters = HTTParty.get("#{attendease_api_host}/api/filters.json", options).parsed_response
-          venues = HTTParty.get("#{attendease_api_host}/api/venues.json", options).parsed_response
+          event = JSON.parse(File.read("#{attendease_data_path}/event.json"))
+          sessions = JSON.parse(File.read("#{attendease_data_path}/sessions.json"))
+          presenters = JSON.parse(File.read("#{attendease_data_path}/presenters.json"))
+          rooms = JSON.parse(File.read("#{attendease_data_path}/rooms.json"))
+          filters = JSON.parse(File.read("#{attendease_data_path}/filters.json"))
+          venues = JSON.parse(File.read("#{attendease_data_path}/venues.json"))
 
           # Generate the template files if they don't yet exist.
           files_to_create_if_they_dont_exist = [
