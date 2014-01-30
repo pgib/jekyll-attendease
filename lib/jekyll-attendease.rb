@@ -136,6 +136,12 @@ module Jekyll
       end
     end
 
+    class AttendeaseSchedulerScriptTag < Liquid::Tag
+      def render(context)
+        "<script type=\"text/javascript\">#{File.read(File.dirname(__FILE__) + "/../assets/scheduler.js")}</script>"
+      end
+    end
+
     class AttendeaseAuthAccountTag < Liquid::Tag
       def render(context)
         '<div id="attendease-auth-account"></div>'
@@ -526,5 +532,6 @@ end
 
 Liquid::Template.register_tag('attendease_content', Jekyll::Attendease::AttendeaseContent)
 Liquid::Template.register_tag('attendease_auth_script', Jekyll::Attendease::AttendeaseAuthScriptTag)
+Liquid::Template.register_tag('attendease_scheduler_script', Jekyll::Attendease::AttendeaseSchedulerScriptTag)
 Liquid::Template.register_tag('attendease_auth_account', Jekyll::Attendease::AttendeaseAuthAccountTag)
 Liquid::Template.register_tag('attendease_auth_action', Jekyll::Attendease::AttendeaseAuthActionTag)

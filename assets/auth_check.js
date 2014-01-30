@@ -1,5 +1,4 @@
-var JekyllAttendease = {
-
+var AttendeaseAuthHelper = {
   attendease_logged_in: false,
 
   microsoft: false,
@@ -77,7 +76,7 @@ var JekyllAttendease = {
             authActionElement = document.getElementById("attendease-auth-action");
             if (authActionElement)
             {
-              authActionElement.innerHTML = '<a class="attendease-auth-logout" href="/attendease/logout">Logout</a>';
+              authActionElement.innerHTML = '<a href="/attendease/logout">Sign out</a>';
             }
 
             accountObject = JSON.parse(xmlhttp.responseText);
@@ -85,7 +84,7 @@ var JekyllAttendease = {
             authAccountElement = document.getElementById("attendease-auth-account");
             if (authAccountElement)
             {
-              authAccountElement.innerHTML = '<a class="attendease-auth-account" href="/attendease/account">' + accountObject.name + '</a>';
+              authAccountElement.innerHTML = '<a href="/attendease/account">' + accountObject.name + '</a>';
             }
 
             this.attendease_logged_in = true;
@@ -95,7 +94,13 @@ var JekyllAttendease = {
             authActionElement = document.getElementById("attendease-auth-action");
             if (authActionElement)
             {
-              authActionElement.innerHTML = '<a class="attendease-auth-logout" href="/attendease/login">Login</a>';
+              authActionElement.innerHTML = '<a href="/attendease/login">Sign in</a>';
+            }
+
+            authAccountElement = document.getElementById("attendease-auth-account");
+            if (authAccountElement)
+            {
+              authAccountElement.innerHTML = '';
             }
           }
 
@@ -125,9 +130,9 @@ var JekyllAttendease = {
 
 if (window.ActiveXObject)
 {
-  JekyllAttendease.addEvent(window, 'load', JekyllAttendease.handleAuthState);
+  AttendeaseAuthHelper.addEvent(window, 'load', AttendeaseAuthHelper.handleAuthState);
 }
 else
 {
-  JekyllAttendease.addEvent(document, 'DOMContentLoaded', JekyllAttendease.handleAuthState);
+  AttendeaseAuthHelper.addEvent(document, 'DOMContentLoaded', AttendeaseAuthHelper.handleAuthState);
 }

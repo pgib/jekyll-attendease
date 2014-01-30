@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
     "README.md",
     "lib/jekyll-attendease.rb",
     "assets/auth_check.js",
+    "assets/scheduler.js",
     "templates/layout.html",
 
     "templates/_includes/attendease/schedule/index.html",
