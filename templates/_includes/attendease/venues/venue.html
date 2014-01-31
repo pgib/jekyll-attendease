@@ -1,6 +1,45 @@
 <div class="attendease-venue-profile">
   <div class="attendease-venue" data-venue-id="{{ page.venue.id }}">
+
+    {% if page.venue.address.latitude && page.venue.address.longitude %}
+      <div class="attendease-venue-map">
+        <div class="attendease-venue-map-image">
+          <img src="http://maps.google.com/maps/api/staticmap?center={{ page.venue.address.latitude }},{{ page.venue.address.longitude }}&zoom=13&size=200x200&sensor=true" width="200" height="200" /">
+        </div>
+
+        <div class="attendease-venue-map-link">
+          <a href="https://maps.google.com/maps?ll={{ page.venue.address.latitude }},{{ page.venue.address.longitude }}">Open Google Map</a>
+        </div>
+      </div>
+    {% endif %}
+
     <div class="attendease-venue-name">
       <h1>{{ page.venue.name }}</h1>
     </div>
+
+    {% if page.venue.address.address1 && page.venue.address.city %}
+      <div class="attendease-venue-address">
+        <div class="attendease-venue-address-address1">
+          {{ page.venue.address.address1 }}
+        </div>
+
+        {% if page.venue.address.address2 %}
+          <div class="attendease-venue-address-address2">
+            {{ page.venue.address.address2 }}
+          </div>
+        {% endif %}
+
+        <div class="attendease-venue-address-location">
+          {{ page.venue.address.city }}{% if page.venue.address.state %}, {{ page.venue.address.state }}{% endif %}{% if page.venue.address.country %}, {{ page.venue.address.country }}{% endif %}
+        </div>
+
+        {% if page.venue.address.zip %}
+          <div class="attendease-venue-address-zip">
+            {{ page.venue.address.zip }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  </div>
 </div>
