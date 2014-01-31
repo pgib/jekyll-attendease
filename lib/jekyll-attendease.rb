@@ -146,7 +146,7 @@ module Jekyll
 
     class AttendeaseLocalesScriptTag < Liquid::Tag
       def render(context)
-        '<script type="text/javascript">String.toLocaleString("/api/lingo.json");</script>'
+        '<script type="text/javascript">String.locale="en";String.toLocaleString("/api/lingo.json");</script>'
       end
     end
 
