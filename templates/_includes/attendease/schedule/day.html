@@ -1,0 +1,52 @@
+<div class="attendease-schedule" data-date="{{ page.day.date }}">
+  <div class="attendease-header">
+    <h1>Sessions for {{ page.day.date_formatted }}</h1>
+  </div>
+
+  {% for instance in page.instances %}
+    <div class="attendease-session-and-instance" data-instance-id="{{ instance.id }}" data-session-id="{{ instance.session.id }}">
+      <div class="attendease-name">
+        <h2><a href="/schedule/{{ instance.session.code }}">{{ instance.session.name }}</a></h2>
+      </div>
+
+      <div class="attendease-presenters">
+        {% for presenter in instance.session.presenters %}
+          <div class="attendease-presenter-mini" data-presenter-id="{{ presenter.id }}">
+            <div class="attendease-presenter-name">
+              <a href="/presenters/{{ presenter.id }}">{{ presenter.first_name }} {{ presenter.last_name }}</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="attendease-description">
+        {{ instance.session.description | markdownify }}
+      </div>
+
+      <div class="attendease-instance-details">
+        <div class="attendease-instance-detail attendease-time-range" data-duration="{{ instance.duration }}" data-start-time="{{ instance.time }}">
+          {{ instance.time_formatted }}
+
+          <div class="attendease-duration" data-duration="{{ instance.duration }}">
+            {{ instance.duration }} minutes
+          </div>
+        </div>
+
+        <div class="attendease-instance-divider"></div>
+
+        <div class="attendease-instance-detail attendease-instance-location">
+          <div class="attendease-instance-location-venue"><a href="/venues/{{ instance.room.venue_id }}">{{ instance.room.venue_name }}</a></div>
+          <div class="attendease-instance-location-room">{{ instance.room.name }}</div>
+        </div>
+
+        <div class="attendease-instance-divider"></div>
+
+        <div class="attendease-instance-detail">
+          <div class="attendease-schedule-status"></div>
+          <div class="attendease-schedule-action"></div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
