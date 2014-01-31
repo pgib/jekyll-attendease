@@ -220,7 +220,7 @@ module Jekyll
           end
         end
 
-        self.data['instances'] = instances
+        self.data['instances'] = instances.sort{|x,y| x['time'] <=> y['time'] }
 
         if File.exists?(File.join(base, '_includes', 'attendease', 'schedule', 'day.html'))
           self.content = File.read(File.join(base, '_includes', 'attendease', 'schedule', 'day.html')) # Use theme specific layout
