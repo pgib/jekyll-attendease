@@ -193,7 +193,7 @@ module Jekyll
     end
 
     class ScheduleDayPage < Page
-      def initialize(site, base, dir, day, sessions)
+      def initialize(site, base, dir, day, sessions, dates)
         @site = site
         @base = base
         @dir = dir
@@ -207,6 +207,7 @@ module Jekyll
         self.data['title'] = "#{session_day_title_prefix}#{day['date_formatted']}"
 
         self.data['day'] = day
+        self.data['dates'] = dates
 
         instances = []
 
@@ -422,11 +423,16 @@ module Jekyll
           # /schedule pages.
           dir = (site.config['attendease'] && site.config['attendease']['schedule_path_name']) ? site.config['attendease']['schedule_path_name'] : 'schedule'
 
-          site.pages << ScheduleIndexPage.new(site, site.source, File.join(dir), event['dates'])
+          if (site.config['attendease'] && site.config['attendease']['show_day_index'])
+            site.pages << ScheduleIndexPage.new(site, site.source, File.join(dir), event['dates'])
+          else
+            site.pages << ScheduleDayPage.new(site, site.source, File.join(dir), event['dates'].first, sessions, event['dates'])
+          end
+
           site.pages << ScheduleSessionsPage.new(site, site.source, File.join(dir, 'sessions'), sessions)
 
           event['dates'].each do |day|
-            site.pages << ScheduleDayPage.new(site, site.source, File.join(dir, day['date']), day, sessions)
+            site.pages << ScheduleDayPage.new(site, site.source, File.join(dir, day['date']), day, sessions, event['dates'])
           end
 
           sessions.each do |session|
