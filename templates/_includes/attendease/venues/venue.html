@@ -1,14 +1,20 @@
 <div class="attendease-venue-profile">
   <div class="attendease-venue" data-venue-id="{{ page.venue.id }}">
-
     {% if page.venue.address.latitude && page.venue.address.longitude %}
+
+      {% if page.venue.primary %}
+        {% assign marker_colour = 'blue' %}
+      {% else %}
+        {% assign marker_colour = 'red' %}
+      {% endif %}
+
       <div class="attendease-venue-map">
         <div class="attendease-venue-map-image">
-          <img src="https://maps.google.com/maps/api/staticmap?center={{ page.venue.address.latitude }},{{ page.venue.address.longitude }}&zoom=13&size=200x200&sensor=false" width="200" height="200" /">
+          <img src="https://maps.google.com/maps/api/staticmap?center={{ page.venue.address.latitude }},{{ page.venue.address.longitude }}&zoom=13&size=200x200&sensor=false&markers=color:{{ marker_colour }}%7C{{ page.venue.address.latitude }},{{ page.venue.address.longitude }}" width="200" height="200" /">
         </div>
 
         <div class="attendease-venue-map-link">
-          <a href="https://maps.google.com/maps?ll={{ page.venue.address.latitude }},{{ page.venue.address.longitude }}">Open in Google Maps</a>
+          <a href="https://maps.google.com/maps?q=@{{ page.venue.address.latitude }},{{ page.venue.address.longitude }}">Open in Google Maps</a>
         </div>
       </div>
     {% endif %}
