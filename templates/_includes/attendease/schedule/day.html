@@ -1,6 +1,6 @@
-<div class="attendease-schedule">
+<div class="attendease-schedule" data-date="{{ page.day.date }}">
   <div class="attendease-header">
-    <h1>Sessions for {{ page.day.date }}</h1>
+    <h1>Sessions for {{ page.day.date_formatted }}</h1>
   </div>
 
   {% for instance in page.instances %}
@@ -25,7 +25,7 @@
 
       <div class="attendease-instance-details">
         <div class="attendease-instance-detail attendease-time-range" data-duration="{{ instance.duration }}" data-start-time="{{ instance.time }}">
-          {{ instance.time }}
+          {{ instance.time_formatted }}
 
           <div class="attendease-duration" data-duration="{{ instance.duration }}">
             {{ instance.duration }} minutes

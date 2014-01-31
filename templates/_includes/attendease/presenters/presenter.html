@@ -35,12 +35,12 @@
         {% for instance in session.instances %}
           <div class="attendease-instance" data-instance-id="{{ instance.id }}">
             <h3 class="attendease-date" data-date="{{ instance.date }}">
-              {{ instance.date }}
+              {{ instance.date_formatted }}
             </h3>
 
             <div class="attendease-instance-details">
               <div class="attendease-instance-detail attendease-time-range" data-duration="{{ instance.duration }}" data-start-time="{{ instance.time }}">
-                {{ instance.time }}
+                {{ instance.time_formatted }}
 
                 <div class="attendease-duration" data-duration="{{ instance.duration }}">
                   {{ instance.duration }} minutes

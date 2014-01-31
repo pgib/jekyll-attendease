@@ -204,7 +204,7 @@ module Jekyll
         self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
 
         session_day_title_prefix = site.config['schedule_day_title_prefix'] || 'Schedule: '
-        self.data['title'] = "#{session_day_title_prefix}#{day['date']}"
+        self.data['title'] = "#{session_day_title_prefix}#{day['date_formatted']}"
 
         self.data['day'] = day
 
@@ -507,6 +507,8 @@ module Jekyll
               'id' => i['id'],
               'time' => i['time'],
               'date' => i['date'],
+              'time_formatted' => i['time_formatted'],
+              'date_formatted' => i['date_formatted'],
               'duration' => i['duration'],
               'room_id' => i['room_id'],
             }
