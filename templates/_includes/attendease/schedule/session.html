@@ -4,12 +4,17 @@
       <h1>{{ page.session.name }}</h1>
     </div>
 
+    {% if site.attendease.data.event_session_description_first == true %}
     <div class="attendease-description">
       {{ page.session.description | markdownify }}
     </div>
+    {% endif %}
 
     <div class="attendease-instances attendease-meta-item">
-      <h2>Times</h2>
+      {% if site.attendease.data.event_session_times_heading == true %}
+      {% assign t_size = page.session.instances.size %}
+      <h2 class="attendease-times-heading">{% t event.lingo.times %}</h2>
+      {% endif %}
 
       {% for instance in page.session.instances %}
         <div class="attendease-instance" data-instance-id="{{ instance.id }}">
@@ -43,11 +48,21 @@
       {% endfor %}
 
     </div>
+
+    {% if site.attendease.data.event_session_description_first != true %}
+    <div class="attendease-description">
+      {{ page.session.description | markdownify }}
+    </div>
+    {% endif %}
+
   </div>
 
   <div class="attendease-session-meta">
     <div class="attendease-presenters attendease-meta-item">
-      <h2>Presenters</h2>
+      {% if site.attendease.data.event_session_presenters_heading == true %}
+      {% assign t_size = page.session.presenters.size %}
+      <h2 class="attendease-presenter-heading">{% t event.lingo.presenters %}</h2>
+      {% endif %}
 
       {% for presenter in page.session.presenters %}
         <div class="attendease-presenter" data-presenter-id="{{ presenter.id }}">
@@ -72,7 +87,10 @@
     </div>
 
     <div class="attendease-filters attendease-meta-item">
-      <h2>Tags</h2>
+      {% if site.attendease.data.event_session_filters_heading == true %}
+      {% assign t_size = page.session.filters.size %}
+      <h2 class="attendease-filter-heading">{% t event.lingo.filters %}</h2>
+      {% endif %}
 
       {% for filter in page.session.filters %}
         <div class="attendease-filter">
