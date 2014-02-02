@@ -1,5 +1,6 @@
 require 'httparty'
 require 'json'
+require 'i18n'
 
 module Jekyll
   module Attendease
@@ -35,7 +36,7 @@ module Jekyll
 
             FileUtils.mkdir_p(@attendease_data_path)
 
-            data_files = ['site.json', 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json', 'venues.json']
+            data_files = ['site.json', 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json', 'venues.json', 'lingo.json', 'lingo.yml']
 
             data_files.each do |file_name|
               update_data = true
@@ -44,9 +45,13 @@ module Jekyll
                 if (Time.now.to_i - File.mtime("#{@attendease_data_path}/#{file_name}").to_i) <= (@attendease_config['cache_expiry'].nil? ? 30 : @attendease_config['cache_expiry'])  # file is less than 30 seconds old
                   update_data = false
 
-                  json = File.read("#{@attendease_data_path}/#{file_name}")
+                  if file_name.match(/json$/)
+                    json = File.read("#{@attendease_data_path}/#{file_name}")
 
-                  data = JSON.parse(json)
+                    data = JSON.parse(json)
+                  else
+                    data = File.read("#{@attendease_data_path}/#{file_name}")
+                  end
                 end
               end
 
@@ -54,15 +59,22 @@ module Jekyll
                 options = {}
                 options.merge!(:headers => {'X-Event-Token' => @attendease_config['access_token']}) if @attendease_config['access_token']
 
-                data = get("#{@attendease_config['api_host']}api/#{file_name}", options)
+                request_filename = file_name.gsub(/yml$/, 'yaml')
+                data = get("#{@attendease_config['api_host']}api/#{request_filename}", options)
 
-                if (data.is_a?(Hash) && !data['error']) || data.is_a?(Array)
+                #if (file_name.match(/yaml$/) || data.is_a?(Hash) && !data['error']) || data.is_a?(Array)
+                if (data.response.is_a?(Net::HTTPOK))
                   puts "" if file_name == 'site.json' # leading space, that's all.
                   puts "                    [Attendease] Saving #{file_name} data..."
 
-                  File.open("#{@attendease_data_path}/#{file_name}", 'w+') { |file| file.write(data.parsed_response.to_json) }
+
+                  if file_name.match(/json$/)
+                    File.open("#{@attendease_data_path}/#{file_name}", 'w+') { |file| file.write(data.parsed_response.to_json) }
+                  else
+                    File.open("#{@attendease_data_path}/#{file_name}", 'w+') { |file| file.write(data.body) }
+                  end
                 else
-                  raise "Event data not found, is your Attendease api_host site properly in _config.yml?"
+                  raise "Request failed for #{@attendease_config['api_host']}api/#{request_filename}. Is your Attendease api_host site properly in _config.yml?"
                 end
               end
 
@@ -147,6 +159,26 @@ module Jekyll
     class AttendeaseLocalesScriptTag < Liquid::Tag
       def render(context)
         '<script type="text/javascript">String.locale="en";String.toLocaleString("/api/lingo.json");</script>'
+      end
+    end
+
+    class AttendeaseTranslateTag < Liquid::Tag
+      def initialize(tag_name, params, tokens)
+        super
+        @args = split_params(params)
+      end
+
+      def split_params(params)
+        params.split(",").map(&:strip)
+      end
+
+      def render(context)
+        I18n::Backend::Simple.include(I18n::Backend::Pluralization)
+        I18n.enforce_available_locales = false
+        i18n_path = File.join(context.registers[:site].config['source'], '_attendease_data', 'lingo.yml')
+        I18n.load_path << i18n_path unless I18n.load_path.include?(i18n_path)
+        I18n.locale = context.registers[:page]['lang'] || context.registers[:site].config['attendease']['lang'] || :en
+        I18n.t(@args[0], :count => context['t_size'].nil? ? 0 : context['t_size'].to_i)
       end
     end
 
@@ -551,3 +583,4 @@ Liquid::Template.register_tag('attendease_scheduler_script', Jekyll::Attendease:
 Liquid::Template.register_tag('attendease_locales_script', Jekyll::Attendease::AttendeaseLocalesScriptTag)
 Liquid::Template.register_tag('attendease_auth_account', Jekyll::Attendease::AttendeaseAuthAccountTag)
 Liquid::Template.register_tag('attendease_auth_action', Jekyll::Attendease::AttendeaseAuthActionTag)
+Liquid::Template.register_tag('t', Jekyll::Attendease::AttendeaseTranslateTag)

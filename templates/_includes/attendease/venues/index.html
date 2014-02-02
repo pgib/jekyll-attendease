@@ -1,6 +1,7 @@
 <div class="attendease-venues">
   <div class="attendease-header">
-    <h1>Venues</h1>
+    {% assign t_size = page.venues.size %}
+    <h1>{% t event.lingo.venues %}</h2>
   </div>
 
   {% for venue in page.venues %}
