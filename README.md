@@ -116,6 +116,11 @@ For Session Day pages:
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
+## Updating the gem on beta and production
+
+1. log into the jail as root
+2. gem install jekyll-attendease -v x.x.x
+
 ## Testing
 
 During development, you can create and install local builds:
