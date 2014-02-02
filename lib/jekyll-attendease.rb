@@ -36,7 +36,7 @@ module Jekyll
 
             FileUtils.mkdir_p(@attendease_data_path)
 
-            data_files = ['site.json', 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json', 'venues.json', 'lingo.json', 'lingo.yml']
+            data_files = ['site.json', 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json', 'venues.json', 'lingo.yml']
 
             data_files.each do |file_name|
               update_data = true
