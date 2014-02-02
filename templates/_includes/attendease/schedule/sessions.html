@@ -1,3 +1,16 @@
+<div class="attendease-navigation">
+  <ul class="attendease-dates">
+    {% for day in page.dates %}
+    <li data-date="{{ day.date }}">
+      <a href="/schedule/{{ day.date }}">{{ day.date_formatted }}</a>
+    </li>
+    {% endfor %}
+    <li class="active">
+      <a href="/schedule/sessions">List all</a>
+    </li>
+  </ul>
+</div>
+
 <div class="attendease-schedule">
   <div class="attendease-header">
     <h1>Sessions</h1>
