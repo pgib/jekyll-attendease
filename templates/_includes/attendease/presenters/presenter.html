@@ -23,7 +23,10 @@
   </div>
 
   <div class="attendease-sessions">
-    <h2>Sessions</h2>
+    {% if site.attendease.data.event_session_times_heading == true %}
+    {% assign t_size = page.presenter.sessions.size %}
+    <h2 class="attendease-sessions-heading">{% t event.lingo.sessions %}</h2>
+    {% endif %}
 
     {% for session in page.presenter.sessions %}
       <div class="attendease-session-and-instances" data-session-id="{{ session.id }}">
