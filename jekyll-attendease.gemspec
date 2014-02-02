@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'jekyll-attendease'
-  s.version     = '0.4.3'
-  s.date        = '2014-01-29'
+  s.version     = '0.4.4'
+  s.date        = '2014-02-02'
   s.summary     = "Attendease event helper for Jekyll"
   s.description = "Bring your event data into Jekyll for amazing event websites."
   s.authors     = ["Michael Wood", "Patrick Gibson", "Jamie Lubiner"]
@@ -25,7 +25,9 @@ Gem::Specification.new do |s|
   ]
 
   s.homepage    = 'https://attendease.com/'
+  s.licenses    = [ 'BSD-2-Clause' ]
 
   s.add_dependency 'httparty'
   s.add_dependency 'json'
+  s.add_dependency 'i18n'
 end
