@@ -221,7 +221,7 @@ module Jekyll
           end
         end
 
-        self.data['instances'] = instances.sort{|x,y| x['time'] <=> y['time'] }
+        self.data['instances'] = instances.sort{|x,y| [x['time'], x['session']['name']] <=> [y['time'], y['session']['name']]}
 
         if File.exists?(File.join(base, '_includes', 'attendease', 'schedule', 'day.html'))
           self.content = File.read(File.join(base, '_includes', 'attendease', 'schedule', 'day.html')) # Use theme specific layout
@@ -232,7 +232,7 @@ module Jekyll
     end
 
     class ScheduleSessionsPage < Page
-      def initialize(site, base, dir, sessions)
+      def initialize(site, base, dir, sessions, dates)
         @site = site
         @base = base
         @dir = dir
@@ -247,6 +247,7 @@ module Jekyll
         sessionsData = []
 
         self.data['sessions'] = sessions
+        self.data['dates'] = dates
 
         if File.exists?(File.join(base, '_includes', 'attendease', 'schedule', 'sessions.html'))
           self.content = File.read(File.join(base, '_includes', 'attendease', 'schedule', 'sessions.html')) # Use theme specific layout
@@ -394,11 +395,11 @@ module Jekyll
           attendease_data_path = "#{site.source}/_attendease_data"
 
           event = JSON.parse(File.read("#{attendease_data_path}/event.json"))
-          sessions = JSON.parse(File.read("#{attendease_data_path}/sessions.json"))
-          presenters = JSON.parse(File.read("#{attendease_data_path}/presenters.json"))
-          rooms = JSON.parse(File.read("#{attendease_data_path}/rooms.json"))
-          filters = JSON.parse(File.read("#{attendease_data_path}/filters.json"))
-          venues = JSON.parse(File.read("#{attendease_data_path}/venues.json"))
+          sessions = JSON.parse(File.read("#{attendease_data_path}/sessions.json")).sort{|s1, s2| s1['name'] <=> s2['name']}
+          presenters = JSON.parse(File.read("#{attendease_data_path}/presenters.json")).sort{|p1, p2| p1['last_name'] <=> p2['last_name']}
+          rooms = JSON.parse(File.read("#{attendease_data_path}/rooms.json")).sort{|r1, r2| r1['name'] <=> r2['name']}
+          filters = JSON.parse(File.read("#{attendease_data_path}/filters.json")).sort{|f1, f2| f1['name'] <=> f2['name']}
+          venues = JSON.parse(File.read("#{attendease_data_path}/venues.json")).sort{|v1, v2| v1['name'] <=> v2['name']}
 
           # Generate the template files if they don't yet exist.
           files_to_create_if_they_dont_exist = [
@@ -429,7 +430,7 @@ module Jekyll
             site.pages << ScheduleDayPage.new(site, site.source, File.join(dir), event['dates'].first, sessions, event['dates'])
           end
 
-          site.pages << ScheduleSessionsPage.new(site, site.source, File.join(dir, 'sessions'), sessions)
+          site.pages << ScheduleSessionsPage.new(site, site.source, File.join(dir, 'sessions'), sessions, event['dates'])
 
           event['dates'].each do |day|
             site.pages << ScheduleDayPage.new(site, site.source, File.join(dir, day['date']), day, sessions, event['dates'])
