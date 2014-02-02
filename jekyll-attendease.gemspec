@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   ]
 
   s.homepage    = 'https://attendease.com/'
-  s.licenses    = [ 'BSD-2-Clause' ]
+  s.licenses    = [ 'MIT' ]
 
   s.add_dependency 'httparty'
   s.add_dependency 'json'
