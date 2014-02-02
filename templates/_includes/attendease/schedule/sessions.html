@@ -1,6 +1,7 @@
 <div class="attendease-schedule">
   <div class="attendease-header">
-    <h1>Sessions</h1>
+    {% assign t_size = page.session.size %}
+    <h1>{% t event.lingo.sessions %}</h2>
   </div>
 
   {% for session in page.sessions %}
