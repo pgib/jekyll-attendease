@@ -58,7 +58,7 @@ We can also use logical expressions like so:
 {% endif %}
 ```
 
-## Magic Auth Tag
+## Magic Attendease Tags
 
 Simply add the auth script tag and the auth action and account tags and our system will know if you logged in or out and will be able to link to your account!
 
@@ -72,6 +72,18 @@ This is simple a div with the id `attendease-auth-account`, maybe more in the fu
 This is simple a div with the id `attendease-auth-action`, maybe more in the future. When used with the `attendease_auth_script` tag it will populate with a `login` or `logout` action.
 
 `{% attendease_auth_action %}`
+
+This script tag sets up ajax actions for scheduling sessions.
+
+`{% attendease_scheduler_script %}`
+
+This script tag sets up lingo so your event can sound like you want it to sound like.
+
+`{% attendease_locales_script %}`
+
+A quick way to use our lingo stuff in our jekyll templates.
+
+`{% t %}`
 
 ## Listening for the auth callback
 
