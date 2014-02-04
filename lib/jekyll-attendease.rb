@@ -451,7 +451,7 @@ module Jekyll
             end
           end
 
-          sessions = Jekyll::Attendease::sessions_with_all_data(sessions, presenters, rooms, venues, filters)
+          sessions = Jekyll::Attendease::sessions_with_all_data(event, sessions, presenters, rooms, venues, filters)
 
           # /schedule pages.
           dir = (site.config['attendease'] && site.config['attendease']['schedule_path_name']) ? site.config['attendease']['schedule_path_name'] : 'schedule'
@@ -494,7 +494,7 @@ module Jekyll
 
     end
 
-    def self.sessions_with_all_data(sessions, presenters, rooms, venues, filters)
+    def self.sessions_with_all_data(event, sessions, presenters, rooms, venues, filters)
       sessionsData = []
 
       sessions.each do |s|
@@ -526,6 +526,10 @@ module Jekyll
               filters_for_session_hash[filter['name']] << {
                 'name' => filter_item['name']
               }
+              if event['primary_filter_id'] && event['primary_filter_id'] == filter['id']
+                session['primary_filter_name'] = filter['name']
+                session['primary_filter'] = filter_item['name']
+              end
             end
           end
         end
