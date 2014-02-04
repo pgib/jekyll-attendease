@@ -24,7 +24,7 @@ module Jekyll
       def generate(site)
         if @attendease_config = site.config['attendease']
 
-          if @attendease_config['api_host'] && !@attendease_config['api_host'].match(/^http(.*).attendease.com/)
+          if @attendease_config['api_host'] && !@attendease_config['api_host'].match(/^http/)
             raise "Is your Attendease api_host site properly in _config.yml? Needs to be something like https://myevent.attendease.com/"
           else
             # add a trailing slash if we are missing one.
@@ -36,7 +36,7 @@ module Jekyll
 
             FileUtils.mkdir_p(@attendease_data_path)
 
-            data_files = ['site.json', 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json', 'venues.json', 'lingo.json', 'lingo.yml']
+            data_files = ['site.json', 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json', 'venues.json', 'lingo.yml']
 
             data_files.each do |file_name|
               update_data = true
