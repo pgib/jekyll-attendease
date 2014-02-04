@@ -22,7 +22,7 @@
 
   </div>
 
-  <div class="attendease-sessions">
+  <div class="attendease-sessions attendease-schedule">
     {% if site.attendease.data.event_session_times_heading == true %}
     {% assign t_size = page.presenter.sessions.size %}
     <h2 class="attendease-sessions-heading">{% t event.lingo.sessions %}</h2>
@@ -33,7 +33,6 @@
         <div class="attendease-session-name">
           <h3><a href="/schedule/{{ session.code }}">{{ session.name }}</a></h3>
         </div>
-
 
         {% for instance in session.instances %}
           <div class="attendease-instance" data-instance-id="{{ instance.id }}">
@@ -56,6 +55,15 @@
                 <div class="attendease-instance-location-venue"><a href="/venues/{{ instance.room.venue_id }}">{{ instance.room.venue_name }}</a></div>
                 <div class="attendease-instance-location-room">{{ instance.room.name }}</div>
               </div>
+
+              {% if instance.session.primary_filter %}
+              <div class="attendease-instance-divider"></div>
+
+              <div class="attendease-instance-detail">
+                <div class="attendease-primary-filter-name">{{ instance.session.primary_filter_name }}</div>
+                <div class="attendease-primary-filter">{{ instance.session.primary_filter }}</div>
+              </div>
+              {% endif %}
 
               <div class="attendease-instance-divider"></div>
 
