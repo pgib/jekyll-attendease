@@ -141,7 +141,7 @@ During development, you can create and install local builds:
 
 And then install it:
 
-`gem install jekyll-attendease-``cat jekyll-attendease.gemspec|grep s.version|awk '{print $3}'|sed s/\'//g```
+    gem install jekyll-attendease-`cat jekyll-attendease.gemspec|grep s.version|awk '{print $3}'|sed s/\'//g`.gem
 
 (where `x.x.x` is the version you've defined in the gemspec)
 
