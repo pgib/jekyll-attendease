@@ -143,8 +143,6 @@ And then install it:
 
     gem install jekyll-attendease-`cat jekyll-attendease.gemspec|grep s.version|awk '{print $3}'|sed s/\'//g`.gem
 
-(where `x.x.x` is the version you've defined in the gemspec)
-
 ## License
 
 Copyright (C) 2013 Attendease (https://attendease.com/)
