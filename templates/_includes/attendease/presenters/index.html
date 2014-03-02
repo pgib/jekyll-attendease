@@ -6,7 +6,9 @@
   {% for presenter in page.presenters %}
     <div class="attendease-presenter" data-presenter-id="{{ presenter.id }}">
       <div class="attendease-presenter-profile-image">
-        <img height="100" src="{{ presenter.profile_url }}">
+        <a href="/presenters/{{ presenter.id }}">
+          <img height="100" src="{{ presenter.profile_url }}">
+        </a>
       </div>
 
       <div class="attendease-presenter-name">
