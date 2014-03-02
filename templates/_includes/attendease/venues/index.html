@@ -17,7 +17,7 @@
 
         <div class="attendease-venue-map">
           <div class="attendease-venue-map-image">
-            <img src="https://maps.google.com/maps/api/staticmap?center={{ venue.address.latitude }},{{ venue.address.longitude }}&zoom=13&size=100x100&sensor=false&markers=color:{{ marker_colour }}%7C{{ venue.address.latitude }},{{ venue.address.longitude }}" width="100" height="100" /">
+            <a href="/venues/{{ venue.id }}"><img src="https://maps.google.com/maps/api/staticmap?center={{ venue.address.latitude }},{{ venue.address.longitude }}&zoom=13&size=100x100&sensor=false&markers=color:{{ marker_colour }}%7C{{ venue.address.latitude }},{{ venue.address.longitude }}" width="100" height="100" /"></a>
           </div>
         </div>
       {% endif %}
