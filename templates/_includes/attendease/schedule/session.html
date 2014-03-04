@@ -25,9 +25,9 @@
 
             <div class="attendease-instance-details">
               <div class="attendease-instance-detail attendease-time-range" data-duration="{{ instance.duration }}" data-start-time="{{ instance.time }}">
-                {{ instance.time_formatted }}
+                {{ instance.time_formatted }} - {{ instance.end_time_formatted}}
                 <div class="attendease-duration" data-duration="{{ instance.duration }}">
-                  {{ instance.duration }} minutes
+                  {{ instance.duration_formatted }}
                 </div>
               </div>
 
