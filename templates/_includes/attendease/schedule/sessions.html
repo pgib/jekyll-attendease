@@ -18,7 +18,7 @@
   </div>
 
   {% for session in page.sessions %}
-    <div class="attendease-session-and-instance {{ page.session.filter_tags }}" data-session-id="{{ session.id }}">
+    <div class="attendease-session-and-instance {{ session.filter_tags }}" data-session-id="{{ session.id }}">
       <div class="attendease-name">
         <h2><a href="/schedule/{{ session.code }}">{{ session.name }}</a></h2>
       </div>
