@@ -17,7 +17,7 @@
   </div>
 
   {% for instance in page.instances %}
-    <div class="attendease-session-and-instance" data-instance-id="{{ instance.id }}" data-session-id="{{ instance.session.id }}">
+    <div class="attendease-session-and-instance {{ page.session.filter_tags }}" data-instance-id="{{ instance.id }}" data-session-id="{{ instance.session.id }}">
       <div class="attendease-name">
         <h2><a href="/schedule/{{ instance.session.code }}">{{ instance.session.name }}</a></h2>
       </div>
