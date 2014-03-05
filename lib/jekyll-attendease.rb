@@ -573,11 +573,14 @@ module Jekyll
           s['instances'].each do |i|
             instance = {
               'id' => i['id'],
-              'time' => i['time'],
               'date' => i['date'],
-              'time_formatted' => i['time_formatted'],
-              'date_formatted' => i['date_formatted'],
+              'time' => i['time'],
+              'end_time' => i['end_time'],
               'duration' => i['duration'],
+              'date_formatted' => i['date_formatted'],
+              'time_formatted' => i['time_formatted'],
+              'end_time_formatted' => i['end_time_formatted'],
+              'duration_formatted' => i['duration_formatted'],
               'room_id' => i['room_id'],
             }
 
