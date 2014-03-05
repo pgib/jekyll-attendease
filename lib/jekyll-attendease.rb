@@ -21,6 +21,20 @@ module Jekyll
         end
       end
 
+      def self.parameterize(string, sep = '-')
+        string.downcase!
+        # Turn unwanted chars into the separator
+        string.gsub!(/[^a-z0-9\-_]+/, sep)
+        unless sep.nil? || sep.empty?
+          re_sep = Regexp.escape(sep)
+          # No more than one of the separator in a row.
+          string.gsub!(/#{re_sep}{2,}/, sep)
+          # Remove leading/trailing separator.
+          string.gsub!(/^#{re_sep}|#{re_sep}$/, '')
+        end
+        string
+      end
+
       def generate(site)
         if @attendease_config = site.config['attendease']
 
@@ -542,6 +556,17 @@ module Jekyll
         end
 
         session['filters'] = filters_for_session
+
+        filter_tags = []
+        filters_for_session.each do |filter|
+          item_names = []
+          if !filter['items'].nil?
+            filter['items'].each do |item|
+              filter_tags << EventData.parameterize('attendease-filter-' + filter['name'] + "-" + item['name'])
+            end
+          end
+        end
+        session['filter_tags'] = filter_tags.join(" ")
 
         if s['instances']
           instances = []

@@ -29,7 +29,7 @@
     {% endif %}
 
     {% for session in page.presenter.sessions %}
-      <div class="attendease-session-and-instances" data-session-id="{{ session.id }}">
+      <div class="attendease-session-and-instances {{ session.filter_tags }}" data-session-id="{{ session.id }}">
         <div class="attendease-session-name">
           <h3><a href="/schedule/{{ session.code }}">{{ session.name }}</a></h3>
         </div>
