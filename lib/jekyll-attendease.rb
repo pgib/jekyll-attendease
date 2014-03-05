@@ -562,10 +562,9 @@ module Jekyll
           item_names = []
           if !filter['items'].nil?
             filter['items'].each do |item|
-              item_names << item['name']
+              filter_tags << EventData.parameterize('attendease-filter-' + filter['name'] + "-" + item['name'])
             end
           end
-          filter_tags << EventData.parameterize(filter['name'] + "-" + item_names.join("-"))
         end
         session['filter_tags'] = filter_tags.join(" ")
 
