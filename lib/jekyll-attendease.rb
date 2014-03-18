@@ -99,6 +99,12 @@ module Jekyll
                 data.keys.each do |tag|
                   site.config['attendease']['data'][tag] = data[tag]
                 end
+              elsif file_name == 'event.json'
+                site.config['attendease']['event'] = {}
+
+                data.keys.each do |tag|
+                  site.config['attendease']['event'][tag] = data[tag]
+                end
               end
             end
           end
