@@ -11,7 +11,7 @@
     {% endif %}
 
     <div class="attendease-schedule">
-      <div class="attendease-instances attendease-meta-item">
+      <div class="attendease-instances">
         {% if site.attendease.data.event_session_times_heading == true %}
         {% assign t_size = page.session.instances.size %}
         <h2 class="attendease-times-heading">{% t event.lingo.times %}</h2>
@@ -38,12 +38,14 @@
                 <div class="attendease-instance-location-room">{{ instance.room.name }}</div>
               </div>
 
-              <div class="attendease-instance-divider"></div>
+              {% if site.attendease.data.attendease_event_scheduling_available %}
+                <div class="attendease-instance-divider"></div>
 
-              <div class="attendease-instance-detail">
-                <div class="attendease-schedule-status"></div>
-                <div class="attendease-schedule-action"></div>
-              </div>
+                <div class="attendease-instance-detail attendease-scheduling-widget">
+                  <div class="attendease-schedule-status"></div>
+                  <div class="attendease-schedule-action"></div>
+                </div>
+              {% endif %}
             </div>
           </div>
         {% endfor %}
@@ -90,7 +92,9 @@
     <div class="attendease-filters attendease-meta-item">
       {% if site.attendease.data.event_session_filters_heading == true %}
       {% assign t_size = page.session.filters.size %}
-      <h2 class="attendease-filter-heading">{% t event.lingo.filters %}</h2>
+        {% if t_size > 0 %}
+          <h2 class="attendease-filter-heading">{% t event.lingo.filters %}</h2>
+        {% endif %}
       {% endif %}
 
       {% for filter in page.session.filters %}
