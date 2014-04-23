@@ -59,18 +59,21 @@
               {% if instance.session.primary_filter %}
               <div class="attendease-instance-divider"></div>
 
-              <div class="attendease-instance-detail">
+              <div class="attendease-instance-detail ">
                 <div class="attendease-primary-filter-name">{{ instance.session.primary_filter_name }}</div>
                 <div class="attendease-primary-filter">{{ instance.session.primary_filter }}</div>
               </div>
               {% endif %}
 
-              <div class="attendease-instance-divider"></div>
+              {% if site.attendease.data.attendease_event_scheduling_available %}
+                <div class="attendease-instance-divider"></div>
 
-              <div class="attendease-instance-detail">
-                <div class="attendease-schedule-status"></div>
-                <div class="attendease-schedule-action"></div>
-              </div>
+                <div class="attendease-instance-detail attendease-scheduling-widget">
+                  <div class="attendease-schedule-status"></div>
+                  <div class="attendease-schedule-action"></div>
+                </div>
+              {% endif %}
+
             </div>
           </div>
         {% endfor %}

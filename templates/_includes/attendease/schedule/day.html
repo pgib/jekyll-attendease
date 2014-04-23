@@ -61,10 +61,14 @@
         </div>
         {% endif %}
 
-        <div class="attendease-instance-detail">
-          <div class="attendease-schedule-status"></div>
-          <div class="attendease-schedule-action"></div>
-        </div>
+        {% if site.attendease.data.attendease_event_scheduling_available %}
+          <div class="attendease-instance-divider"></div>
+
+          <div class="attendease-instance-detail attendease-scheduling-widget">
+            <div class="attendease-schedule-status"></div>
+            <div class="attendease-schedule-action"></div>
+          </div>
+        {% endif %}
       </div>
     </div>
   {% endfor %}
