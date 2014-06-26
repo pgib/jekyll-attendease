@@ -107,6 +107,14 @@ module Jekyll
 
                 data.keys.each do |tag|
                   site.config['attendease']['data'][tag] = data[tag]
+                  # memorandum from the department of redundancy department:
+                  # --------------------------------------------------------
+                  # support accessing the attendease_* variables without the
+                  # attendease_ prefix because they're already namespaced in
+                  # site.attendease.data
+                  if tag.match(/^attendease_/)
+                    site.config['attendease']['data'][tag.gsub(/^attendease_/, '')] = data[tag]
+                  end
                 end
               elsif file_name == 'event.json'
                 site.config['attendease']['event'] = {}
