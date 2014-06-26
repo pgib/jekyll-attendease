@@ -40,6 +40,19 @@ attendease:
   cache_expiry: 3600 # The number of seconds until we regerenate the data from the api. Otherwise data will be cached for speed.
   generate_schedule_pages: false # Set to true if you want to generate static schedule pages.
   schedule_path_name: 'schedule' # Set to the path your want your schedule pages to live at.
+  show_day_index: false # Set to true if you want an index of days
+  presenters_path_name: 'presenters' # folder off of the root to put the presenters page
+  venues_path_name: 'venues' # folder off of the root to put the venues page
+  sponsors_path_name: 'sponsors' # folder off of the root to put the sponsors page
+
+  schedule_sessions_title: 'Schedule: Sessions' # Override to set the page.title of the sessions listing page
+  schedule_session_page_title: 'Schedule: %s' # %s will be substituted with the session's name
+
+  presenters_index_title: 'Presenters' # Override to set the page.title of the presenters listing page
+  presenter_page_title: 'Presenter: %s' # %s will be substituted with the session's name
+
+  venues_index_title: 'Venues' # Override to set the page.title property of the Venues index page
+  venue_page_title: 'Venue: %s' # %s will be substituted with venue's name. Override to set the page.title property of the individual Venue page
 ```
 
 Remember to replace `https://your-event-subdomain.attendease.com/` with your actual event url, or crazy things will happen!
@@ -62,7 +75,7 @@ We can also use logical expressions like so:
 
 Simply add the auth script tag and the auth action and account tags and our system will know if you logged in or out and will be able to link to your account!
 
-The script tag sets up an ajax callback to the server to determine if we are online or offline.
+The script tag sets up an AJAX callback to the server to determine if we are online or offline.
 `{% attendease_auth_script %}`
 
 This is simple a div with the id `attendease-auth-account`, maybe more in the future. When used with the `attendease_auth_script` tag it will populate with the link to the account of the attendee.
@@ -73,7 +86,7 @@ This is simple a div with the id `attendease-auth-action`, maybe more in the fut
 
 `{% attendease_auth_action %}`
 
-This script tag sets up ajax actions for scheduling sessions.
+This script tag sets up AJAX actions for scheduling sessions.
 
 `{% attendease_scheduler_script %}`
 
