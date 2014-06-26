@@ -21,8 +21,9 @@ module Jekyll
         end
       end
 
-      def self.parameterize(string, sep = '-')
-        string.downcase!
+      def self.parameterize(source, sep = '-')
+        return '' if source.nil?
+        string = source.downcase
         # Turn unwanted chars into the separator
         string.gsub!(/[^a-z0-9\-_]+/, sep)
         unless sep.nil? || sep.empty?
