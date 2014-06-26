@@ -70,6 +70,14 @@ module Jekyll
                 end
               end
 
+              key = "has_#{file_name.split('.')[0]}"
+
+              # don't bother making a request for resources that don't exist in the event
+              if !@attendease_config[key].nil? && !@attendease_config[key]
+                update_data = false
+                data = []
+              end
+
               if update_data
                 options = {}
                 options.merge!(:headers => {'X-Event-Token' => @attendease_config['access_token']}) if @attendease_config['access_token']
