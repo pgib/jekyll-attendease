@@ -50,7 +50,7 @@ module Jekyll
 
             FileUtils.mkdir_p(@attendease_data_path)
 
-            data_files = ['site.json', 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json', 'venues.json', 'lingo.yml']
+            data_files = ['site.json', 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json', 'venues.json', 'sponsors.json', 'lingo.yml']
 
             data_files.each do |file_name|
               update_data = true
@@ -434,6 +434,29 @@ module Jekyll
       end
     end
 
+    class SponsorsIndexPage < Page
+      def initialize(site, base, dir, sponsor_levels)
+        @site = site
+        @base = base
+        @dir = dir
+        @name = 'index.html'
+
+        self.process(@name)
+
+        self.read_yaml(File.join(base, 'attendease_layouts'), 'sponsors.html')
+
+        self.data['title'] = site.config['sponsors_index_title'] || 'Sponsors'
+
+        self.data['sponsor_levels'] = sponsor_levels
+
+        if File.exists?(File.join(base, '_includes', 'attendease', 'sponsors', 'index.html'))
+          self.content = File.read(File.join(base, '_includes', 'attendease', 'sponsors', 'index.html')) # Use theme specific layout
+        else
+          self.content = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', 'sponsors/index.html')) # Use template
+        end
+      end
+    end
+
     class AttendeaseScheduleGenerator < Generator
       safe true
 
@@ -452,18 +475,20 @@ module Jekyll
           rooms = JSON.parse(File.read("#{attendease_data_path}/rooms.json")).sort{|r1, r2| r1['name'] <=> r2['name']}
           filters = JSON.parse(File.read("#{attendease_data_path}/filters.json")).sort{|f1, f2| f1['name'] <=> f2['name']}
           venues = JSON.parse(File.read("#{attendease_data_path}/venues.json")).sort{|v1, v2| v1['name'] <=> v2['name']}
+          sponsors = JSON.parse(File.read("#{attendease_data_path}/sponsors.json"))
 
           # Generate the template files if they don't yet exist.
           files_to_create_if_they_dont_exist = [
             'schedule/index.html', 'schedule/day.html', 'schedule/sessions.html', 'schedule/session.html',
             'presenters/index.html', 'presenters/presenter.html',
-            'venues/index.html', 'venues/venue.html',
+            'venues/index.html', 'venues/venue.html', 'sponsors/index.html'
           ]
 
           files_to_create_if_they_dont_exist.each do |file|
             FileUtils.mkdir_p("#{site.source}/_includes/attendease/schedule")
             FileUtils.mkdir_p("#{site.source}/_includes/attendease/presenters")
             FileUtils.mkdir_p("#{site.source}/_includes/attendease/venues")
+            FileUtils.mkdir_p("#{site.source}/_includes/attendease/sponsors")
 
             if !File.exists?(File.join(site.source, '_includes/attendease/', file))
               include_file = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', file))
@@ -504,11 +529,31 @@ module Jekyll
           # /venue pages.
           dir = (site.config['attendease'] && site.config['attendease']['venues_path_name']) ? site.config['attendease']['venues_path_name'] : 'venues'
 
+          venues.each do |venue|
+            venue['slug'] = EventData.parameterize(venue['name'], '_') + '.html'
+            site.pages << VenuePage.new(site, site.source, File.join(dir, venue['slug']), venue)
+          end
+
           site.pages << VenuesIndexPage.new(site, site.source, File.join(dir), venues)
 
-          venues.each do |venue|
-            site.pages << VenuePage.new(site, site.source, File.join(dir, venue['id']), venue)
+          # /sponsors pages.
+          dir = site.config['attendease']['sponsors_path_name']
+
+          sponsor_levels = event['sponsor_levels']
+          sponsor_levels.each do |level|
+            level['sponsors'] = []
           end
+
+          sponsors.each do |sponsor|
+            level = sponsor_levels.select { |m| m['_id'] == sponsor['level_id'] }.first
+            level['sponsors'] << sponsor
+          end
+
+          site.pages << SponsorsIndexPage.new(site, site.source, File.join(dir), sponsor_levels)
+
+          #sponsors.each do |sponsor|
+          #  site.pages << SponsorPage.new(site, site.source, File.join(dir, EventData.parameterize(sponsor['name']) + '.html', '_'), sponsor)
+          #end
         end
       end
 
@@ -623,3 +668,4 @@ Liquid::Template.register_tag('attendease_locales_script', Jekyll::Attendease::A
 Liquid::Template.register_tag('attendease_auth_account', Jekyll::Attendease::AttendeaseAuthAccountTag)
 Liquid::Template.register_tag('attendease_auth_action', Jekyll::Attendease::AttendeaseAuthActionTag)
 Liquid::Template.register_tag('t', Jekyll::Attendease::AttendeaseTranslateTag)
+Liquid::Template.register_filters(Jekyll::Attendease::Filters)
