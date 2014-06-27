@@ -88,7 +88,7 @@ module Jekyll
                 #if (file_name.match(/yaml$/) || data.is_a?(Hash) && !data['error']) || data.is_a?(Array)
                 if (data.response.is_a?(Net::HTTPOK))
                   puts "" if file_name == 'site.json' # leading space, that's all.
-                  puts "                    [Attendease] Saving #{file_name} data..."
+                  puts "[Attendease] Saving #{file_name} data..."
 
 
                   if file_name.match(/json$/)
@@ -138,7 +138,7 @@ module Jekyll
       priority :high
 
       def generate(site)
-        puts "                    [Attendease] Generating theme layouts..."
+        puts "[Attendease] Generating theme layouts..."
 
         attendease_precompiled_theme_layouts_path = "#{site.source}/attendease_layouts"
 
