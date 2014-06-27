@@ -311,7 +311,7 @@ module Jekyll
 
         self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
 
-        self.data['title'] = site.config['schedule_sessions_title_prefix'] || 'Schedule: Sessions'
+        self.data['title'] = site.config['schedule_sessions_title'] || 'Schedule: Sessions'
 
         sessionsData = []
 
@@ -337,8 +337,8 @@ module Jekyll
 
         self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
 
-        schedule_session_title_prefix = site.config['schedule_session_title_prefix'] || 'Schedule: '
-        self.data['title'] = "#{schedule_session_title_prefix}#{session['name']}"
+        schedule_session_page_title = site.config['schedule_session_page_title'] || 'Schedule: %s'
+        self.data['title'] = sprintf(schedule_session_page_title, session['name'])
 
         self.data['session'] = session
 
@@ -361,7 +361,7 @@ module Jekyll
 
         self.read_yaml(File.join(base, 'attendease_layouts'), 'presenters.html')
 
-        self.data['title'] = site.config['presenters_index_title_prefix'] || 'Presenters'
+        self.data['title'] = site.config['presenters_index_title'] || 'Presenters'
 
         self.data['presenters'] = presenters
 
@@ -384,7 +384,8 @@ module Jekyll
 
         self.read_yaml(File.join(base, 'attendease_layouts'), 'presenters.html')
 
-        self.data['title'] = site.config['presenter_title_prefix'] || presenter['first_name'] + ' ' + presenter['last_name']
+        presenter_page_title = site.config['presenter_page_title'] ? site.config['presenter_page_title'] : 'Presenter: %s'
+        self.data['title'] = sprintf(presenter_page_title, presenter['first_name'] + ' ' + presenter['last_name'])
 
         presenter['sessions'] = []
 
@@ -416,7 +417,7 @@ module Jekyll
 
         self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
 
-        self.data['title'] = site.config['venues_index_title_prefix'] || 'Venues'
+        self.data['title'] = site.config['venues_index_title'] || 'Venues'
 
         self.data['venues'] = venues
 
@@ -439,7 +440,8 @@ module Jekyll
 
         self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
 
-        self.data['title'] = site.config['venue_title_prefix'] || 'Venue'
+        venue_page_title = site.config['venue_page_title'] ? site.config['venue_page_title'] : 'Venue: %s'
+        self.data['title'] = sprintf(venue_page_title, venue['name'])
 
         self.data['venue'] = venue
 
