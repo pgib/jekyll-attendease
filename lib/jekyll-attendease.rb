@@ -239,6 +239,11 @@ module Jekyll
       end
     end
 
+    module Filters
+      def slugify(string)
+        EventData.parameterize(string, '_')
+      end
+    end
 
     class ScheduleIndexPage < Page
       def initialize(site, base, dir, dates)
@@ -406,7 +411,6 @@ module Jekyll
         end
       end
     end
-
 
     class VenuesIndexPage < Page
       def initialize(site, base, dir, venues)
@@ -690,4 +694,4 @@ Liquid::Template.register_tag('attendease_locales_script', Jekyll::Attendease::A
 Liquid::Template.register_tag('attendease_auth_account', Jekyll::Attendease::AttendeaseAuthAccountTag)
 Liquid::Template.register_tag('attendease_auth_action', Jekyll::Attendease::AttendeaseAuthActionTag)
 Liquid::Template.register_tag('t', Jekyll::Attendease::AttendeaseTranslateTag)
-Liquid::Template.register_filters(Jekyll::Attendease::Filters)
+Liquid::Template.register_filter(Jekyll::Attendease::Filters)
