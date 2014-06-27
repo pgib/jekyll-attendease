@@ -216,7 +216,7 @@ module Jekyll
         I18n.enforce_available_locales = false
         i18n_path = File.join(context.registers[:site].config['source'], '_attendease_data', 'lingo.yml')
         I18n.load_path << i18n_path unless I18n.load_path.include?(i18n_path)
-        I18n.locale = context.registers[:page]['lang'] || context.registers[:site].config['attendease']['lang'] || :en
+        I18n.locale = context.registers[:page]['lang'] || context.registers[:site].config['attendease']['locale'] || context.registers[:site].config['attendease']['lang'] || :en
         I18n.t(@args[0], :count => context['t_size'].nil? ? 0 : context['t_size'].to_i)
       end
     end
