@@ -520,7 +520,7 @@ module Jekyll
           sessions = Jekyll::Attendease::sessions_with_all_data(event, sessions, presenters, rooms, venues, filters)
 
           # /schedule pages.
-          dir = (site.config['attendease'] && site.config['attendease']['schedule_path_name']) ? site.config['attendease']['schedule_path_name'] : 'schedule'
+          dir = site.config['attendease']['schedule_path_name']
 
           if (site.config['attendease'] && site.config['attendease']['show_day_index'])
             site.pages << ScheduleIndexPage.new(site, site.source, File.join(dir), event['dates'])
@@ -539,9 +539,7 @@ module Jekyll
           end
 
           # /presenters pages.
-          dir = (site.config['attendease'] && site.config['attendease']['presenters_path_name']) ? site.config['attendease']['presenters_path_name'] : 'presenters'
-
-          site.pages << PresentersIndexPage.new(site, site.source, File.join(dir), presenters)
+          dir = site.config['attendease']['presenters_path_name']
 
           presenters.each do |presenter|
             presenter['slug'] = EventData.parameterize("#{presenter['first_name']} #{presenter['last_name']}", '_') + '.html'
