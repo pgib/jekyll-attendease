@@ -146,7 +146,7 @@ module Jekyll
 
         base_layout = (site.config['attendease'] && site.config['attendease']['base_layout']) ? site.config['attendease']['base_layout'] : 'layout'
 
-        layouts_to_precompile = ['layout', 'register', 'schedule', 'presenters']
+        layouts_to_precompile = ['layout', 'register', 'schedule', 'presenters', 'venues', 'sponsors']
 
         # Precompiled layout for website sections.
         layouts_to_precompile.each do |layout|
@@ -157,6 +157,8 @@ module Jekyll
             # look the compiled file defines.
             # ensure {{ content }} is in the file so we can render content in there!
             if !File.exists?("#{attendease_precompiled_theme_layouts_path}/#{layout}.html")
+              theme_layout_content = File.read("#{site.source}/_layouts/#{base_layout}.html")
+              File.open("#{site.source}/attendease_layouts/#{layout}.html", 'w+') { |file| file.write(theme_layout_content) }
               site.pages << AttendeaseLayoutPage.new(site, site.source, 'attendease_layouts', "#{layout}.html", base_layout)
             end
           end
@@ -173,7 +175,7 @@ module Jekyll
 
         self.process(name)
 
-        self.read_yaml(File.dirname(__FILE__) + "/../templates", 'layout') # a template for the layout.
+        self.read_yaml(File.expand_path(File.dirname(__FILE__) + "/../templates"), 'layout') # a template for the layout.
 
         self.data['layout'] = base_layout
       end
@@ -415,7 +417,7 @@ module Jekyll
 
         self.process(@name)
 
-        self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
+        self.read_yaml(File.join(base, 'attendease_layouts'), 'venues.html')
 
         self.data['title'] = site.config['venues_index_title'] || 'Venues'
 
@@ -438,7 +440,7 @@ module Jekyll
 
         self.process(@name)
 
-        self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
+        self.read_yaml(File.join(base, 'attendease_layouts'), 'venues.html')
 
         venue_page_title = site.config['venue_page_title'] ? site.config['venue_page_title'] : 'Venue: %s'
         self.data['title'] = sprintf(venue_page_title, venue['name'])
