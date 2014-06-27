@@ -1,0 +1,31 @@
+<div class="attendease-sponsors">
+  <div class="attendease-header">
+    <h1>{% t event.lingo.sponsors %}</h1>
+  </div>
+
+  {% for level in page.sponsor_levels %}
+    {% unless level.sponsors.empty? %}
+      <div class="attendease-sponsor-level">
+        {{ level.name }}
+      </div>
+
+      {% for sponsor in level.sponsors %}
+        <div class="attendease-sponsor" data-sponsor-id="{{ sponsor.id }}">
+          <div class="attendease-sponsor-image">
+            <a href="{{ sponsor.url }}" target="_blank">
+              <img class="attendease-sponsor-logo" height="100" src="{{ sponsor.logo_url }}" />
+            </a>
+          </div>
+
+          <div class="attendease-sponsor-name">
+            <a href="{{ sponsor.url }}" target="_blank">{{ sponsor.name }}</a>
+          </div>
+
+          <div class="attendease-sponsor-description">
+            {{ sponsor.description | markdownify }}
+          </div>
+        </div>
+      {% endfor %}
+    {% endunless %}
+  {% endfor %}
+</div>

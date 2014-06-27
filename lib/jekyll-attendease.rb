@@ -21,8 +21,9 @@ module Jekyll
         end
       end
 
-      def self.parameterize(string, sep = '-')
-        string.downcase!
+      def self.parameterize(source, sep = '-')
+        return '' if source.nil?
+        string = source.downcase
         # Turn unwanted chars into the separator
         string.gsub!(/[^a-z0-9\-_]+/, sep)
         unless sep.nil? || sep.empty?
@@ -50,7 +51,7 @@ module Jekyll
 
             FileUtils.mkdir_p(@attendease_data_path)
 
-            data_files = ['site.json', 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json', 'venues.json', 'lingo.yml']
+            data_files = ['site.json', 'event.json', 'sessions.json', 'presenters.json', 'rooms.json', 'filters.json', 'venues.json', 'sponsors.json', 'lingo.yml']
 
             data_files.each do |file_name|
               update_data = true
@@ -69,6 +70,14 @@ module Jekyll
                 end
               end
 
+              key = "has_#{file_name.split('.')[0]}"
+
+              # don't bother making a request for resources that don't exist in the event
+              if !@attendease_config[key].nil? && !@attendease_config[key]
+                update_data = false
+                data = []
+              end
+
               if update_data
                 options = {}
                 options.merge!(:headers => {'X-Event-Token' => @attendease_config['access_token']}) if @attendease_config['access_token']
@@ -79,7 +88,7 @@ module Jekyll
                 #if (file_name.match(/yaml$/) || data.is_a?(Hash) && !data['error']) || data.is_a?(Array)
                 if (data.response.is_a?(Net::HTTPOK))
                   puts "" if file_name == 'site.json' # leading space, that's all.
-                  puts "                    [Attendease] Saving #{file_name} data..."
+                  puts "[Attendease] Saving #{file_name} data..."
 
 
                   if file_name.match(/json$/)
@@ -98,6 +107,14 @@ module Jekyll
 
                 data.keys.each do |tag|
                   site.config['attendease']['data'][tag] = data[tag]
+                  # memorandum from the department of redundancy department:
+                  # --------------------------------------------------------
+                  # support accessing the attendease_* variables without the
+                  # attendease_ prefix because they're already namespaced in
+                  # site.attendease.data
+                  if tag.match(/^attendease_/)
+                    site.config['attendease']['data'][tag.gsub(/^attendease_/, '')] = data[tag]
+                  end
                 end
               elsif file_name == 'event.json'
                 site.config['attendease']['event'] = {}
@@ -121,7 +138,7 @@ module Jekyll
       priority :high
 
       def generate(site)
-        puts "                    [Attendease] Generating theme layouts..."
+        puts "[Attendease] Generating theme layouts..."
 
         attendease_precompiled_theme_layouts_path = "#{site.source}/attendease_layouts"
 
@@ -129,7 +146,7 @@ module Jekyll
 
         base_layout = (site.config['attendease'] && site.config['attendease']['base_layout']) ? site.config['attendease']['base_layout'] : 'layout'
 
-        layouts_to_precompile = ['layout', 'register', 'schedule', 'presenters']
+        layouts_to_precompile = ['layout', 'register', 'schedule', 'presenters', 'venues', 'sponsors']
 
         # Precompiled layout for website sections.
         layouts_to_precompile.each do |layout|
@@ -140,6 +157,8 @@ module Jekyll
             # look the compiled file defines.
             # ensure {{ content }} is in the file so we can render content in there!
             if !File.exists?("#{attendease_precompiled_theme_layouts_path}/#{layout}.html")
+              theme_layout_content = File.read("#{site.source}/_layouts/#{base_layout}.html")
+              File.open("#{site.source}/attendease_layouts/#{layout}.html", 'w+') { |file| file.write(theme_layout_content) }
               site.pages << AttendeaseLayoutPage.new(site, site.source, 'attendease_layouts', "#{layout}.html", base_layout)
             end
           end
@@ -156,7 +175,7 @@ module Jekyll
 
         self.process(name)
 
-        self.read_yaml(File.dirname(__FILE__) + "/../templates", 'layout') # a template for the layout.
+        self.read_yaml(File.expand_path(File.dirname(__FILE__) + "/../templates"), 'layout') # a template for the layout.
 
         self.data['layout'] = base_layout
       end
@@ -197,7 +216,7 @@ module Jekyll
         I18n.enforce_available_locales = false
         i18n_path = File.join(context.registers[:site].config['source'], '_attendease_data', 'lingo.yml')
         I18n.load_path << i18n_path unless I18n.load_path.include?(i18n_path)
-        I18n.locale = context.registers[:page]['lang'] || context.registers[:site].config['attendease']['lang'] || :en
+        I18n.locale = context.registers[:page]['lang'] || context.registers[:site].config['attendease']['locale'] || context.registers[:site].config['attendease']['lang'] || :en
         I18n.t(@args[0], :count => context['t_size'].nil? ? 0 : context['t_size'].to_i)
       end
     end
@@ -220,6 +239,11 @@ module Jekyll
       end
     end
 
+    module Filters
+      def slugify(string)
+        EventData.parameterize(string, '_')
+      end
+    end
 
     class ScheduleIndexPage < Page
       def initialize(site, base, dir, dates)
@@ -294,7 +318,7 @@ module Jekyll
 
         self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
 
-        self.data['title'] = site.config['schedule_sessions_title_prefix'] || 'Schedule: Sessions'
+        self.data['title'] = site.config['schedule_sessions_title'] || 'Schedule: Sessions'
 
         sessionsData = []
 
@@ -320,8 +344,8 @@ module Jekyll
 
         self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
 
-        schedule_session_title_prefix = site.config['schedule_session_title_prefix'] || 'Schedule: '
-        self.data['title'] = "#{schedule_session_title_prefix}#{session['name']}"
+        schedule_session_page_title = site.config['schedule_session_page_title'] || 'Schedule: %s'
+        self.data['title'] = sprintf(schedule_session_page_title, session['name'])
 
         self.data['session'] = session
 
@@ -344,7 +368,7 @@ module Jekyll
 
         self.read_yaml(File.join(base, 'attendease_layouts'), 'presenters.html')
 
-        self.data['title'] = site.config['presenters_index_title_prefix'] || 'Presenters'
+        self.data['title'] = site.config['presenters_index_title'] || 'Presenters'
 
         self.data['presenters'] = presenters
 
@@ -367,7 +391,8 @@ module Jekyll
 
         self.read_yaml(File.join(base, 'attendease_layouts'), 'presenters.html')
 
-        self.data['title'] = site.config['presenter_title_prefix'] || presenter['first_name'] + ' ' + presenter['last_name']
+        presenter_page_title = site.config['presenter_page_title'] ? site.config['presenter_page_title'] : 'Presenter: %s'
+        self.data['title'] = sprintf(presenter_page_title, presenter['first_name'] + ' ' + presenter['last_name'])
 
         presenter['sessions'] = []
 
@@ -387,7 +412,6 @@ module Jekyll
       end
     end
 
-
     class VenuesIndexPage < Page
       def initialize(site, base, dir, venues)
         @site = site
@@ -397,9 +421,9 @@ module Jekyll
 
         self.process(@name)
 
-        self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
+        self.read_yaml(File.join(base, 'attendease_layouts'), 'venues.html')
 
-        self.data['title'] = site.config['venues_index_title_prefix'] || 'Venues'
+        self.data['title'] = site.config['venues_index_title'] || 'Venues'
 
         self.data['venues'] = venues
 
@@ -420,9 +444,10 @@ module Jekyll
 
         self.process(@name)
 
-        self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
+        self.read_yaml(File.join(base, 'attendease_layouts'), 'venues.html')
 
-        self.data['title'] = site.config['venue_title_prefix'] || 'Venue'
+        venue_page_title = site.config['venue_page_title'] ? site.config['venue_page_title'] : 'Venue: %s'
+        self.data['title'] = sprintf(venue_page_title, venue['name'])
 
         self.data['venue'] = venue
 
@@ -430,6 +455,29 @@ module Jekyll
           self.content = File.read(File.join(base, '_includes', 'attendease', 'venues', 'venue.html')) # Use theme specific layout
         else
           self.content = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', 'venues/venue.html')) # Use template
+        end
+      end
+    end
+
+    class SponsorsIndexPage < Page
+      def initialize(site, base, dir, sponsor_levels)
+        @site = site
+        @base = base
+        @dir = dir
+        @name = 'index.html'
+
+        self.process(@name)
+
+        self.read_yaml(File.join(base, 'attendease_layouts'), 'sponsors.html')
+
+        self.data['title'] = site.config['sponsors_index_title'] || 'Sponsors'
+
+        self.data['sponsor_levels'] = sponsor_levels
+
+        if File.exists?(File.join(base, '_includes', 'attendease', 'sponsors', 'index.html'))
+          self.content = File.read(File.join(base, '_includes', 'attendease', 'sponsors', 'index.html')) # Use theme specific layout
+        else
+          self.content = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', 'sponsors/index.html')) # Use template
         end
       end
     end
@@ -452,18 +500,20 @@ module Jekyll
           rooms = JSON.parse(File.read("#{attendease_data_path}/rooms.json")).sort{|r1, r2| r1['name'] <=> r2['name']}
           filters = JSON.parse(File.read("#{attendease_data_path}/filters.json")).sort{|f1, f2| f1['name'] <=> f2['name']}
           venues = JSON.parse(File.read("#{attendease_data_path}/venues.json")).sort{|v1, v2| v1['name'] <=> v2['name']}
+          sponsors = JSON.parse(File.read("#{attendease_data_path}/sponsors.json"))
 
           # Generate the template files if they don't yet exist.
           files_to_create_if_they_dont_exist = [
             'schedule/index.html', 'schedule/day.html', 'schedule/sessions.html', 'schedule/session.html',
             'presenters/index.html', 'presenters/presenter.html',
-            'venues/index.html', 'venues/venue.html',
+            'venues/index.html', 'venues/venue.html', 'sponsors/index.html'
           ]
 
           files_to_create_if_they_dont_exist.each do |file|
             FileUtils.mkdir_p("#{site.source}/_includes/attendease/schedule")
             FileUtils.mkdir_p("#{site.source}/_includes/attendease/presenters")
             FileUtils.mkdir_p("#{site.source}/_includes/attendease/venues")
+            FileUtils.mkdir_p("#{site.source}/_includes/attendease/sponsors")
 
             if !File.exists?(File.join(site.source, '_includes/attendease/', file))
               include_file = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', file))
@@ -474,7 +524,7 @@ module Jekyll
           sessions = Jekyll::Attendease::sessions_with_all_data(event, sessions, presenters, rooms, venues, filters)
 
           # /schedule pages.
-          dir = (site.config['attendease'] && site.config['attendease']['schedule_path_name']) ? site.config['attendease']['schedule_path_name'] : 'schedule'
+          dir = site.config['attendease']['schedule_path_name']
 
           if (site.config['attendease'] && site.config['attendease']['show_day_index'])
             site.pages << ScheduleIndexPage.new(site, site.source, File.join(dir), event['dates'])
@@ -493,22 +543,43 @@ module Jekyll
           end
 
           # /presenters pages.
-          dir = (site.config['attendease'] && site.config['attendease']['presenters_path_name']) ? site.config['attendease']['presenters_path_name'] : 'presenters'
-
-          site.pages << PresentersIndexPage.new(site, site.source, File.join(dir), presenters)
+          dir = site.config['attendease']['presenters_path_name']
 
           presenters.each do |presenter|
-            site.pages << PresenterPage.new(site, site.source, File.join(dir, presenter['id']), presenter, sessions)
+            presenter['slug'] = EventData.parameterize("#{presenter['first_name']} #{presenter['last_name']}", '_') + '.html'
+            site.pages << PresenterPage.new(site, site.source, File.join(dir, presenter['slug']), presenter, sessions)
           end
+
+          site.pages << PresentersIndexPage.new(site, site.source, File.join(dir), presenters)
 
           # /venue pages.
           dir = (site.config['attendease'] && site.config['attendease']['venues_path_name']) ? site.config['attendease']['venues_path_name'] : 'venues'
 
+          venues.each do |venue|
+            venue['slug'] = EventData.parameterize(venue['name'], '_') + '.html'
+            site.pages << VenuePage.new(site, site.source, File.join(dir, venue['slug']), venue)
+          end
+
           site.pages << VenuesIndexPage.new(site, site.source, File.join(dir), venues)
 
-          venues.each do |venue|
-            site.pages << VenuePage.new(site, site.source, File.join(dir, venue['id']), venue)
+          # /sponsors pages.
+          dir = site.config['attendease']['sponsors_path_name']
+
+          sponsor_levels = event['sponsor_levels']
+          sponsor_levels.each do |level|
+            level['sponsors'] = []
           end
+
+          sponsors.each do |sponsor|
+            level = sponsor_levels.select { |m| m['_id'] == sponsor['level_id'] }.first
+            level['sponsors'] << sponsor
+          end
+
+          site.pages << SponsorsIndexPage.new(site, site.source, File.join(dir), sponsor_levels)
+
+          #sponsors.each do |sponsor|
+          #  site.pages << SponsorPage.new(site, site.source, File.join(dir, EventData.parameterize(sponsor['name']) + '.html', '_'), sponsor)
+          #end
         end
       end
 
@@ -623,3 +694,4 @@ Liquid::Template.register_tag('attendease_locales_script', Jekyll::Attendease::A
 Liquid::Template.register_tag('attendease_auth_account', Jekyll::Attendease::AttendeaseAuthAccountTag)
 Liquid::Template.register_tag('attendease_auth_action', Jekyll::Attendease::AttendeaseAuthActionTag)
 Liquid::Template.register_tag('t', Jekyll::Attendease::AttendeaseTranslateTag)
+Liquid::Template.register_filter(Jekyll::Attendease::Filters)

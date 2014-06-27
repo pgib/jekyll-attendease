@@ -6,13 +6,13 @@
   {% for presenter in page.presenters %}
     <div class="attendease-presenter" data-presenter-id="{{ presenter.id }}">
       <div class="attendease-presenter-profile-image">
-        <a href="/presenters/{{ presenter.id }}">
+        <a href="/presenters/{{ presenter.slug }}">
           <img height="100" src="{{ presenter.profile_url }}">
         </a>
       </div>
 
       <div class="attendease-presenter-name">
-        <a href="/presenters/{{ presenter.id }}">{{ presenter.first_name }} {{ presenter.last_name }}</a>
+        <a href="/presenters/{{ presenter.slug }}.html">{{ presenter.first_name }} {{ presenter.last_name }}</a>
       </div>
 
       <div class="attendease-presenter-title">
