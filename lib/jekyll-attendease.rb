@@ -542,8 +542,11 @@ module Jekyll
           site.pages << PresentersIndexPage.new(site, site.source, File.join(dir), presenters)
 
           presenters.each do |presenter|
-            site.pages << PresenterPage.new(site, site.source, File.join(dir, presenter['id']), presenter, sessions)
+            presenter['slug'] = EventData.parameterize("#{presenter['first_name']} #{presenter['last_name']}", '_') + '.html'
+            site.pages << PresenterPage.new(site, site.source, File.join(dir, presenter['slug']), presenter, sessions)
           end
+
+          site.pages << PresentersIndexPage.new(site, site.source, File.join(dir), presenters)
 
           # /venue pages.
           dir = (site.config['attendease'] && site.config['attendease']['venues_path_name']) ? site.config['attendease']['venues_path_name'] : 'venues'
