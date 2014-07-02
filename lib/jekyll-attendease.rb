@@ -124,6 +124,25 @@ module Jekyll
                 end
               end
             end
+
+            event = JSON.parse(File.read("#{@attendease_data_path}/event.json"))
+            #sessions = JSON.parse(File.read("#{@attendease_data_path}/sessions.json")).sort{|s1, s2| s1['name'] <=> s2['name']}
+            #presenters = JSON.parse(File.read("#{@attendease_data_path}/presenters.json")).sort{|p1, p2| p1['last_name'] <=> p2['last_name']}
+            #rooms = JSON.parse(File.read("#{@attendease_data_path}/rooms.json")).sort{|r1, r2| r1['name'] <=> r2['name']}
+            #filters = JSON.parse(File.read("#{@attendease_data_path}/filters.json")).sort{|f1, f2| f1['name'] <=> f2['name']}
+            #venues = JSON.parse(File.read("#{@attendease_data_path}/venues.json")).sort{|v1, v2| v1['name'] <=> v2['name']}
+            sponsors = JSON.parse(File.read("#{@attendease_data_path}/sponsors.json"))
+
+            sponsor_levels = event['sponsor_levels']
+            sponsor_levels.each do |level|
+              level['sponsors'] = []
+            end
+
+            sponsors.each do |sponsor|
+              level = sponsor_levels.select { |m| m['_id'] == sponsor['level_id'] }.first
+              level['sponsors'] << sponsor
+            end
+            site.config['attendease']['sponsor_levels'] = sponsor_levels
           end
 
         else
@@ -500,7 +519,6 @@ module Jekyll
           rooms = JSON.parse(File.read("#{attendease_data_path}/rooms.json")).sort{|r1, r2| r1['name'] <=> r2['name']}
           filters = JSON.parse(File.read("#{attendease_data_path}/filters.json")).sort{|f1, f2| f1['name'] <=> f2['name']}
           venues = JSON.parse(File.read("#{attendease_data_path}/venues.json")).sort{|v1, v2| v1['name'] <=> v2['name']}
-          sponsors = JSON.parse(File.read("#{attendease_data_path}/sponsors.json"))
 
           # Generate the template files if they don't yet exist.
           files_to_create_if_they_dont_exist = [
@@ -565,21 +583,13 @@ module Jekyll
           # /sponsors pages.
           dir = site.config['attendease']['sponsors_path_name']
 
-          sponsor_levels = event['sponsor_levels']
-          sponsor_levels.each do |level|
-            level['sponsors'] = []
-          end
-
-          sponsors.each do |sponsor|
-            level = sponsor_levels.select { |m| m['_id'] == sponsor['level_id'] }.first
-            level['sponsors'] << sponsor
-          end
-
-          site.pages << SponsorsIndexPage.new(site, site.source, File.join(dir), sponsor_levels)
+          site.pages << SponsorsIndexPage.new(site, site.source, File.join(dir), site.config['attendease']['sponsor_levels'])
 
           #sponsors.each do |sponsor|
           #  site.pages << SponsorPage.new(site, site.source, File.join(dir, EventData.parameterize(sponsor['name']) + '.html', '_'), sponsor)
           #end
+
+
         end
       end
 
