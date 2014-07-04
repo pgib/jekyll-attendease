@@ -38,7 +38,6 @@ module Jekyll
 
       def generate(site)
         if @attendease_config = site.config['attendease']
-
           if @attendease_config['api_host'] && !@attendease_config['api_host'].match(/^http/)
             raise "Is your Attendease api_host site properly in _config.yml? Needs to be something like https://myevent.attendease.com/"
           else
@@ -126,23 +125,26 @@ module Jekyll
             end
 
             event = JSON.parse(File.read("#{@attendease_data_path}/event.json"))
+
             #sessions = JSON.parse(File.read("#{@attendease_data_path}/sessions.json")).sort{|s1, s2| s1['name'] <=> s2['name']}
             #presenters = JSON.parse(File.read("#{@attendease_data_path}/presenters.json")).sort{|p1, p2| p1['last_name'] <=> p2['last_name']}
             #rooms = JSON.parse(File.read("#{@attendease_data_path}/rooms.json")).sort{|r1, r2| r1['name'] <=> r2['name']}
             #filters = JSON.parse(File.read("#{@attendease_data_path}/filters.json")).sort{|f1, f2| f1['name'] <=> f2['name']}
             #venues = JSON.parse(File.read("#{@attendease_data_path}/venues.json")).sort{|v1, v2| v1['name'] <=> v2['name']}
-            sponsors = JSON.parse(File.read("#{@attendease_data_path}/sponsors.json"))
+            if @attendease_config['has_sponsors']
+              sponsors = JSON.parse(File.read("#{@attendease_data_path}/sponsors.json"))
 
-            sponsor_levels = event['sponsor_levels']
-            sponsor_levels.each do |level|
-              level['sponsors'] = []
-            end
+              sponsor_levels = event['sponsor_levels']
+              sponsor_levels.each do |level|
+                level['sponsors'] = []
+              end
 
-            sponsors.each do |sponsor|
-              level = sponsor_levels.select { |m| m['_id'] == sponsor['level_id'] }.first
-              level['sponsors'] << sponsor
+              sponsors.each do |sponsor|
+                level = sponsor_levels.select { |m| m['_id'] == sponsor['level_id'] }.first
+                level['sponsors'] << sponsor
+              end
+              site.config['attendease']['sponsor_levels'] = sponsor_levels
             end
-            site.config['attendease']['sponsor_levels'] = sponsor_levels
           end
 
         else
@@ -194,7 +196,7 @@ module Jekyll
 
         self.process(name)
 
-        self.read_yaml(File.expand_path(File.dirname(__FILE__) + "/../templates"), 'layout') # a template for the layout.
+        self.read_yaml(File.expand_path(File.dirname(__FILE__) + "/../templates"), 'layout.html') # a template for the layout.
 
         self.data['layout'] = base_layout
       end
@@ -583,7 +585,9 @@ module Jekyll
           # /sponsors pages.
           dir = site.config['attendease']['sponsors_path_name']
 
-          site.pages << SponsorsIndexPage.new(site, site.source, File.join(dir), site.config['attendease']['sponsor_levels'])
+          if site.config['attendease']['has_sponsors']
+            site.pages << SponsorsIndexPage.new(site, site.source, File.join(dir), site.config['attendease']['sponsor_levels'])
+          end
 
           #sponsors.each do |sponsor|
           #  site.pages << SponsorPage.new(site, site.source, File.join(dir, EventData.parameterize(sponsor['name']) + '.html', '_'), sponsor)
