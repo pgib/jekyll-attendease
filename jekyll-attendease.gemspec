@@ -1,36 +1,30 @@
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'jekyll/attendease_plugin/version'
+
 Gem::Specification.new do |s|
-  s.name        = 'jekyll-attendease'
-  s.version     = '0.5.5'
-  s.date        = '2014-07-03'
-  s.summary     = "Attendease event helper for Jekyll"
-  s.description = "Bring your event data into Jekyll for amazing event websites."
-  s.authors     = ["Michael Wood", "Patrick Gibson", "Jamie Lubiner"]
-  s.email       = 'support@attendease.com'
-  s.files       = [
-    "README.md",
-    "lib/jekyll-attendease.rb",
-
-    "templates/layout.html",
-
-    "templates/_includes/attendease/schedule/index.html",
-    "templates/_includes/attendease/schedule/day.html",
-    "templates/_includes/attendease/schedule/session.html",
-    "templates/_includes/attendease/schedule/sessions.html",
-
-    "templates/_includes/attendease/presenters/index.html",
-    "templates/_includes/attendease/presenters/presenter.html",
-
-    "templates/_includes/attendease/venues/index.html",
-    "templates/_includes/attendease/venues/venue.html",
-
-    "templates/_includes/attendease/sponsors/index.html",
-  ]
+  s.name          = 'jekyll-attendease'
+  s.version       = Jekyll::AttendeasePlugin::VERSION
+  s.date          = '2014-07-03'
+  s.summary       = 'Attendease event helper for Jekyll'
+  s.description   = 'Bring your event data into Jekyll for amazing event websites.'
+  s.authors       = [ 'Michael Wood', 'Patrick Gibson', 'Jamie Lubiner' ]
+  s.email         = 'support@attendease.com'
+  s.files         = (Dir.glob('lib/**/*.rb') + Dir.glob('templates/**/*.html'))
+  s.test_files    = Dir.glob('spec/**/*.rb').grep(/^(test|spec|features)\//)
+  s.require_paths = [ 'lib' ]
 
   s.homepage    = 'https://attendease.com/'
   s.licenses    = [ 'MIT' ]
 
-  s.add_dependency 'httparty'
-  s.add_dependency 'json'
-  s.add_dependency 'i18n'
-  s.add_dependency 'redcarpet'
+  s.add_dependency 'httparty',  '~> 0.13.1'
+  s.add_dependency 'json',      '~> 1.8.1'
+  s.add_dependency 'i18n',      '~> 0.6.9'
+  s.add_dependency 'redcarpet', '~> 3.1.2'
+
+  s.add_development_dependency "bundler", "~> 1.3"
+  s.add_development_dependency "rake"
+  s.add_development_dependency "rspec"
+  s.add_development_dependency "jekyll"
+
 end
