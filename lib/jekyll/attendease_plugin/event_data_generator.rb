@@ -45,7 +45,7 @@ module Jekyll
               @attendease_config['api_host'] += '/'
             end
 
-            @attendease_data_path = "#{site.source}/_attendease_data"
+            @attendease_data_path = File.join(site.source, '_attendease', 'data')
 
             FileUtils.mkdir_p(@attendease_data_path)
 
@@ -54,25 +54,19 @@ module Jekyll
             data_files.each do |file_name|
               update_data = true
 
-              file = "#{@attendease_data_path}/#{file_name}"
-              if File.exists? file
-                if use_cache? file
-                  update_data = false
+              file = File.join(@attendease_data_path, file_name)
+              if File.exists?(file) && use_cache?(file)
+                update_data = false
 
-                  if file_name.match(/json$/)
-                    begin
-                      data = JSON.parse(File.read(file))
-                    rescue => e
-                      raise "Error parsing #{file}: #{e.inspect}"
-                    end
-                  else
-                    data = File.read("#{@attendease_data_path}/#{file_name}")
+                if file_name.match(/json$/)
+                  begin
+                    data = JSON.parse(File.read(file))
+                  rescue => e
+                    raise "Error parsing #{file}: #{e.inspect}"
                   end
-                else 
-                  puts "Don't use cache."
+                else
+                  data = File.read(file)
                 end
-              else
-                puts "#{file} doesn't exist"
               end
 
               key = "has_#{file_name.split('.')[0]}"
@@ -94,11 +88,10 @@ module Jekyll
                 if (!data.nil? && data.response.is_a?(Net::HTTPOK))
                   Jekyll.logger.info "[Attendease] Saving #{file_name} data..."
 
-
                   if file_name.match(/json$/)
-                    File.open("#{@attendease_data_path}/#{file_name}", 'w+') { |file| file.write(data.parsed_response.to_json) }
+                    File.open(file, 'w+') { |f| f.write(data.parsed_response.to_json) }
                   else
-                    File.open("#{@attendease_data_path}/#{file_name}", 'w+') { |file| file.write(data.body) }
+                    File.open(file, 'w+') { |f| file.write(data.body) }
                   end
                 else
                   raise "Request failed for #{@attendease_config['api_host']}api/#{request_filename}. Is your Attendease api_host site properly in _config.yml?"
@@ -116,6 +109,9 @@ module Jekyll
                   # support accessing the attendease_* variables without the
                   # attendease_ prefix because they're already namespaced in
                   # site.attendease.data
+                  #
+                  # TODO: update all themes to not use attendease_ variables
+                  #       and then retire them from the ThemeManager.
                   if tag.match(/^attendease_/)
                     site.config['attendease']['data'][tag.gsub(/^attendease_/, '')] = data[tag]
                   end
@@ -131,7 +127,7 @@ module Jekyll
 
             # Generate the template files if they don't yet exist.
             %w{ schedule presenters venues sponsors}.each do |p|
-              path = "#{site.source}/_includes/attendease/#{p}"
+              path = File.join(site.source, '_attendease', 'templates', p)
               FileUtils.mkdir_p(path)
               raise "Could not create #{path}." unless File.exists?(path)
             end
@@ -140,7 +136,7 @@ module Jekyll
             files_to_create_if_they_dont_exist = Dir.chdir(template_path) { Dir.glob('*/**.html') }
 
             files_to_create_if_they_dont_exist.each do |file|
-              destination_file = File.join(site.source, '_includes', 'attendease', file)
+              destination_file = File.join(site.source, '_attendease', 'templates', file)
               FileUtils.cp(File.join(template_path, file), destination_file) unless File.exists?(destination_file)
             end
 

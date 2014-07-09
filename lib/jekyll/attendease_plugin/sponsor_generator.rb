@@ -4,7 +4,8 @@ module Jekyll
       safe true
 
       def generate(site)
-        if site.config['has_sponsors']
+        if site.config['attendease']['has_sponsors']
+          @attendease_data_path = File.join(site.source, '_attendease', 'data')
           sponsors = JSON.parse(File.read("#{@attendease_data_path}/sponsors.json"))
 
           sponsor_levels = site.config['attendease']['event']['sponsor_levels']

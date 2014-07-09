@@ -5,7 +5,6 @@ require 'i18n'
 
 require 'jekyll/attendease_plugin'
 
-Liquid::Template.register_tag('attendease_content', Jekyll::AttendeasePlugin::Content)
 Liquid::Template.register_tag('attendease_auth_script', Jekyll::AttendeasePlugin::AuthScriptTag)
 Liquid::Template.register_tag('attendease_scheduler_script', Jekyll::AttendeasePlugin::SchedulerScriptTag)
 Liquid::Template.register_tag('attendease_locales_script', Jekyll::AttendeasePlugin::LocalesScriptTag)

@@ -1,10 +1,10 @@
 require "jekyll/attendease_plugin/event_data_generator"
-require "jekyll/attendease_plugin/event_themes_generator"
+require "jekyll/attendease_plugin/event_layout_generator"
+require "jekyll/attendease_plugin/schedule_generator"
 require "jekyll/attendease_plugin/sponsor_generator"
 require "jekyll/attendease_plugin/tags"
 require "jekyll/attendease_plugin/filters"
 
-require "jekyll/attendease_plugin/layout_page"
 require "jekyll/attendease_plugin/presenters_index_page"
 require "jekyll/attendease_plugin/presenter_page"
 require "jekyll/attendease_plugin/schedule_day_page"

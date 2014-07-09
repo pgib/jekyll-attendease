@@ -23,7 +23,6 @@ module Jekyll
           s['instances'].each do |instance|
             if instance['date'] == day['date']
               instance['session'] = s
-
               instances << instance
             end
           end
@@ -31,11 +30,7 @@ module Jekyll
 
         self.data['instances'] = instances.sort{|x,y| [x['time'], x['session']['name']] <=> [y['time'], y['session']['name']]}
 
-        if File.exists?(File.join(base, '_includes', 'attendease', 'schedule', 'day.html'))
-          self.content = File.read(File.join(base, '_includes', 'attendease', 'schedule', 'day.html')) # Use theme specific layout
-        else
-          self.content = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', 'schedule/day.html')) # Use template
-        end
+        self.content = File.read(File.join(base, '_attendease', 'templates', 'schedule', 'day.html'))
       end
     end
   end

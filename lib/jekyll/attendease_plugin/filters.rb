@@ -2,7 +2,7 @@ module Jekyll
   module AttendeasePlugin
     module Filters
       def slugify(string)
-        EventData.parameterize(string, '_')
+        EventDataGenerator.parameterize(string, '_')
       end
     end
   end

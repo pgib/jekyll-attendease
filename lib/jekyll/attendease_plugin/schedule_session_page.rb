@@ -16,11 +16,7 @@ module Jekyll
 
         self.data['session'] = session
 
-        if File.exists?(File.join(base, '_includes', 'attendease', 'schedule', 'session.html'))
-          self.content = File.read(File.join(base, '_includes', 'attendease', 'schedule', 'session.html')) # Use theme specific layout
-        else
-          self.content = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', 'schedule/session.html')) # Use template
-        end
+        self.content = File.read(File.join(base, '_attendease', 'templates', 'schedule', 'session.html'))
       end
     end
   end

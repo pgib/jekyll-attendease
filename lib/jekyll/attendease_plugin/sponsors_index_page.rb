@@ -15,11 +15,7 @@ module Jekyll
 
         self.data['sponsor_levels'] = sponsor_levels
 
-        if File.exists?(File.join(base, '_includes', 'attendease', 'sponsors', 'index.html'))
-          self.content = File.read(File.join(base, '_includes', 'attendease', 'sponsors', 'index.html')) # Use theme specific layout
-        else
-          self.content = File.read(File.join(File.dirname(__FILE__), '..', '/templates/_includes/attendease/', 'sponsors/index.html')) # Use template
-        end
+        self.content = File.read(File.join(base, '_attendease', 'templates', 'sponsors', 'index.html'))
       end
     end
   end
