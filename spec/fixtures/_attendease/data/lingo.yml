@@ -1,0 +1,17 @@
+---
+en:
+  event:
+    lingo:
+      sessions:
+        one:   Session
+        other: Sessions
+      sponsors:
+        one:   Sponsor
+        other: Sponsors
+
+  i18n:
+    plural:
+      keys:
+      - :one
+      - :other
+      rule: !ruby/object:Proc {}

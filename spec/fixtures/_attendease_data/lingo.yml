@@ -1,9 +1,0 @@
----
-en:
-  event:
-  i18n:
-    plural:
-      keys:
-      - :one
-      - :other
-      rule: !ruby/object:Proc {}
