@@ -30,6 +30,18 @@ module Jekyll
             presenter['slug'] = EventDataGenerator.parameterize("#{presenter['first_name']} #{presenter['last_name']}", '_') + '.html'
           end
 
+          @venues.each do |venue|
+            venue['slug'] = EventDataGenerator.parameterize(venue['name'], '_') + '.html'
+          end
+
+          sessions.each do |session|
+            if site.config['attendease']['session_slug_uses_code']
+              session['slug'] = session['code'] + '.html'
+            else
+              session['slug'] = EventDataGenerator.parameterize(session['name'], '_') + '.html'
+            end
+          end
+
           @sessions = sessions_with_all_data(@event, sessions, @presenters, @rooms, @venues, @filters)
 
           #
@@ -50,7 +62,7 @@ module Jekyll
           end
 
           @sessions.each do |session|
-            site.pages << ScheduleSessionPage.new(site, site.source, File.join(dir, 'sessions', EventDataGenerator.parameterize(session['name'], '_')), session)
+            site.pages << ScheduleSessionPage.new(site, site.source, File.join(dir, 'sessions'), session)
           end
 
           # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -58,7 +70,7 @@ module Jekyll
           dir = site.config['attendease']['presenters_path_name']
 
           @presenters.each do |presenter|
-            site.pages << PresenterPage.new(site, site.source, File.join(dir, presenter['slug']), presenter, @sessions)
+            site.pages << PresenterPage.new(site, site.source, dir, presenter, @sessions)
           end
 
           site.pages << PresentersIndexPage.new(site, site.source, File.join(dir), @presenters)
@@ -68,8 +80,7 @@ module Jekyll
           dir = site.config['attendease']['venues_path_name']
 
           @venues.each do |venue|
-            venue['slug'] = EventDataGenerator.parameterize(venue['name'], '_') + '.html'
-            site.pages << VenuePage.new(site, site.source, File.join(dir, venue['slug']), venue)
+            site.pages << VenuePage.new(site, site.source, dir, venue)
           end
 
           site.pages << VenuesIndexPage.new(site, site.source, File.join(dir), @venues)
@@ -80,7 +91,7 @@ module Jekyll
         sessionsData = []
 
         sessions.each do |s|
-          session = s.select { |k, v| %w{ id name description code speaker_ids }.include?(k) }
+          session = s.select { |k, v| %w{ id name description code speaker_ids slug }.include?(k) }
           session['presenters'] = []
           presenters.select{|presenter| s['speaker_ids'].include?(presenter['id'])}.each do |presenter|
             session['presenters'] << presenter.select { |k, v| %w{ id first_name last_name company title profile_url slug }.include?(k) }
@@ -125,6 +136,7 @@ module Jekyll
               room  = rooms.select { |room| room['id'] == i['room_id'] }.first
               venue = venues.select { |venue| venue['id'] == room['venue_id'] }.first
               instance['room'] = room.merge({ 'venue_name' => venue['name'] })
+              instance['venue_slug'] = venue['slug']
 
               instances << instance
             end

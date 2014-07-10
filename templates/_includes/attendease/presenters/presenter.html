@@ -31,7 +31,7 @@
     {% for session in page.presenter.sessions %}
       <div class="attendease-session-and-instances {{ session.filter_tags }}" data-session-id="{{ session.id }}">
         <div class="attendease-session-name">
-          <h3><a href="/schedule/{{ session.code }}">{{ session.name }}</a></h3>
+          <h3><a href="/schedule/sessions/{{ session.slug }}">{{ session.name }}</a></h3>
         </div>
 
         {% for instance in session.instances %}
@@ -52,7 +52,7 @@
               <div class="attendease-instance-divider"></div>
 
               <div class="attendease-instance-detail attendease-instance-location">
-                <div class="attendease-instance-location-venue"><a href="/venues/{{ instance.room.venue_id }}">{{ instance.room.venue_name }}</a></div>
+                <div class="attendease-instance-location-venue"><a href="/venues/{{ instance.venue_slug }}">{{ instance.room.venue_name }}</a></div>
                 <div class="attendease-instance-location-room">{{ instance.room.name }}</div>
               </div>
 

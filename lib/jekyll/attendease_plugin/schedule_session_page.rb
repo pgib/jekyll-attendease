@@ -5,7 +5,7 @@ module Jekyll
         @site = site
         @base = base
         @dir = dir
-        @name = 'index.html'
+        @name = session['slug']
 
         self.process(@name)
 

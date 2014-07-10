@@ -2,7 +2,7 @@
   <ul class="attendease-dates">
     {% for day in page.dates %}
     <li class="{% if day.date == page.day.date %}active{% endif %}" data-date="{{ day.date }}">
-      <a href="/schedule/{{ day.date }}">{{ day.date_formatted }}</a>
+      <a href="/schedule/{{ day.date }}/">{{ day.date_formatted }}</a>
     </li>
     {% endfor %}
     <li>
@@ -19,14 +19,14 @@
   {% for instance in page.instances %}
     <div class="attendease-session-and-instance {{ instance.session.filter_tags }}" data-instance-id="{{ instance.id }}" data-session-id="{{ instance.session.id }}">
       <div class="attendease-name">
-        <h2><a href="/schedule/{{ instance.session.code }}">{{ instance.session.name }}</a></h2>
+        <h2><a href="/schedule/sessions/{{ instance.session.slug }}">{{ instance.session.name }}</a></h2>
       </div>
 
       <div class="attendease-presenters">
         {% for presenter in instance.session.presenters %}
           <div class="attendease-presenter-mini" data-presenter-id="{{ presenter.id }}">
             <div class="attendease-presenter-name">
-              <a href="/presenters/{{ presenter.id }}">{{ presenter.first_name }} {{ presenter.last_name }}</a>
+              <a href="/presenters/{{ presenter.slug }}">{{ presenter.first_name }} {{ presenter.last_name }}</a>
             </div>
           </div>
         {% endfor %}
@@ -48,7 +48,7 @@
         <div class="attendease-instance-divider"></div>
 
         <div class="attendease-instance-detail attendease-instance-location">
-          <div class="attendease-instance-location-venue"><a href="/venues/{{ instance.room.venue_id }}">{{ instance.room.venue_name }}</a></div>
+          <div class="attendease-instance-location-venue"><a href="/venues/{{ instance.venue_slug }}">{{ instance.room.venue_name }}</a></div>
           <div class="attendease-instance-location-room">{{ instance.room.name }}</div>
         </div>
 
