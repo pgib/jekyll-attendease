@@ -91,7 +91,7 @@ module Jekyll
                   if file_name.match(/json$/)
                     File.open(file, 'w+') { |f| f.write(data.parsed_response.to_json) }
                   else
-                    File.open(file, 'w+') { |f| file.write(data.body) }
+                    File.open(file, 'w+') { |f| f.write(data.body) }
                   end
                 else
                   raise "Request failed for #{@attendease_config['api_host']}api/#{request_filename}. Is your Attendease api_host site properly in _config.yml?"
