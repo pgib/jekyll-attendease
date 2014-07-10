@@ -12,13 +12,19 @@
       {% for sponsor in level.sponsors %}
         <div class="attendease-sponsor" data-sponsor-id="{{ sponsor.id }}">
           <div class="attendease-sponsor-image">
-            <a href="{{ sponsor.url }}" target="_blank">
-              <img class="attendease-sponsor-logo" src="{{ sponsor.logo_url }}" />
-            </a>
+            {% if sponsor.url %}
+            <a href="{{ sponsor.url }}" target="_blank"><img class="attendease-sponsor-logo" src="{{ sponsor.logo_url }}" /></a>
+            {% else %}
+            <img class="attendease-sponsor-logo" src="{{ sponsor.logo_url }}" />
+            {% endif %}
           </div>
 
           <div class="attendease-sponsor-name">
+            {% if sponsor.url %}
             <a href="{{ sponsor.url }}" target="_blank">{{ sponsor.name }}</a>
+            {% else %}
+            <span>{{ sponsor.name }}</span>
+            {% endif %}
           </div>
 
           <div class="attendease-sponsor-description">
