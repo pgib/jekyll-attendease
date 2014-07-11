@@ -133,7 +133,7 @@ module Jekyll
             end
 
             template_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '..', 'templates', '_includes', 'attendease'))
-            files_to_create_if_they_dont_exist = Dir.chdir(template_path) { Dir.glob('*/**.html') }
+            files_to_create_if_they_dont_exist = Dir.chdir(template_path) { Dir.glob('*/**.html') + Dir.glob('*.html') }
 
             files_to_create_if_they_dont_exist.each do |file|
               destination_file = File.join(site.source, '_attendease', 'templates', file)
