@@ -1,0 +1,27 @@
+{
+    "api_id": "20000000000000000000000000abcdef",
+    "dates": [
+        {
+            "date": "2014-07-08",
+            "date_formatted": "July 8, 2014",
+            "end_time": "16:20",
+            "end_time_formatted": "16:20",
+            "id": "000000000000000000abcdef",
+            "start_time": "10:00",
+            "start_time_formatted": "10:00"
+        }
+    ],
+    "id": "foobar",
+    "locale": "en",
+    "minute_increments": 15,
+    "name": "Foo Bar",
+    "primary_filter_id": null,
+    "session_waitlists": false,
+    "sponsor_levels": [
+        {
+            "_id": "gold",
+            "name": "Gold"
+        }
+    ],
+    "type": "event"
+}

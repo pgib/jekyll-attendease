@@ -7,7 +7,7 @@
     {% for day in page.dates %}
     <div class="attendease-day">
       <div class="attendease-date" data-date="{{ day.date }}">
-        <a href="/schedule/{{ day.date }}">{{ day.date_formatted }}</a>
+        <a href="/schedule/{{ day.date }}/">{{ day.date_formatted }}</a>
       </div>
 
       <div class="attendease-times" data-start-time="{{ day.start_time }}" data-end-time="{{ day.end_time }}">
@@ -18,7 +18,7 @@
   </div>
 
   <div class="attendease-all-sessions">
-    <a href="/schedule/sessions">Show all</a>
+    <a href="/schedule/sessions/">Show all</a>
   </div>
 
 </div>
