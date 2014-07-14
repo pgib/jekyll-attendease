@@ -27,18 +27,18 @@ module Jekyll
           @venues = JSON.parse(File.read("#{attendease_data_path}/venues.json")).sort{|v1, v2| v1['name'] <=> v2['name']}
 
           @presenters.each do |presenter|
-            presenter['slug'] = Helpers.parameterize("#{presenter['first_name']} #{presenter['last_name']}", '_') + '.html'
+            presenter['slug'] = Helpers.parameterize("#{presenter['first_name']} #{presenter['last_name']}") + '.html'
           end
 
           @venues.each do |venue|
-            venue['slug'] = Helpers.parameterize(venue['name'], '_') + '.html'
+            venue['slug'] = Helpers.parameterize(venue['name']) + '.html'
           end
 
           sessions.each do |session|
             if site.config['attendease']['session_slug_uses_code']
               session['slug'] = session['code'] + '.html'
             else
-              session['slug'] = Helpers.parameterize(session['name'], '_') + '.html'
+              session['slug'] = Helpers.parameterize(session['name']) + '.html'
             end
           end
 
@@ -122,7 +122,7 @@ module Jekyll
             item_names = []
             if !filter['items'].nil?
               filter['items'].each do |item|
-                filter_tags << Helpers.parameterize('attendease-filter-' + filter['name'] + "-" + item['name'])
+                filter_tags << Helpers.parameterize('attendease-filter-' + filter['name'] + "-" + item['name'], '-')
               end
             end
           end

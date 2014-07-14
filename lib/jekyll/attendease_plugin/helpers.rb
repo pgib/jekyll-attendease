@@ -1,15 +1,15 @@
 module Jekyll
   module AttendeasePlugin
     class Helpers
-      def self.parameterize(source, sep = '-')
+      def self.parameterize(source, sep = '_')
         return '' if source.nil?
 
         string = Helpers.convert_to_ascii(source.downcase)
 
-        # Turn unwanted chars into the separator
-        string.gsub!(/[^a-z0-9\-_]+/, sep)
-
         unless sep.nil? || sep.empty?
+          # Turn unwanted chars into the separator
+          string.gsub!(/[^a-z0-9]+/, sep)
+
           re_sep = Regexp.escape(sep)
           # No more than one of the separator in a row.
           string.gsub!(/#{re_sep}{2,}/, sep)
