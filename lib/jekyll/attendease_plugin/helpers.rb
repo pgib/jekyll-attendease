@@ -1,3 +1,4 @@
+# encoding: UTF-8
 module Jekyll
   module AttendeasePlugin
     class Helpers
