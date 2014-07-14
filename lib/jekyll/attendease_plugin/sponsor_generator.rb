@@ -24,10 +24,12 @@ module Jekyll
           # /sponsors pages.
           dir = site.config['attendease']['sponsors_path_name']
 
-          site.pages << SponsorsIndexPage.new(site, site.source, File.join(dir), site.config['attendease']['sponsor_levels'])
+          unless dir.nil?
+            site.pages << SponsorsIndexPage.new(site, site.source, File.join(dir), site.config['attendease']['sponsor_levels'])
+          end
 
           #sponsors.each do |sponsor|
-          #  site.pages << SponsorPage.new(site, site.source, File.join(dir, EventData.parameterize(sponsor['name']) + '.html', '_'), sponsor)
+          #  site.pages << SponsorPage.new(site, site.source, File.join(dir, Helpers.parameterize(sponsor['name']) + '.html', '_'), sponsor)
           #end
         end
       end

@@ -34,26 +34,26 @@ You will need to configure by editing your `_config.yml`:
 attendease:
   # Required
   api_host: https://your-event-subdomain.attendease.com/
-
-  # Optional
-  access_token: secret_access_token_for_access_to_private_events # Delete this if you don't have one or need one.
-  cache_expiry: 3600 # The number of seconds until we regerenate the data from the api. Otherwise data will be cached for speed.
-  generate_schedule_pages: false # Set to true if you want to generate static schedule pages.
-  schedule_path_name: 'schedule' # Set to the path your want your schedule pages to live at.
-  show_day_index: false # Set to true if you want an index of days
-  presenters_path_name: 'presenters' # folder off of the root to put the presenters page
-  venues_path_name: 'venues' # folder off of the root to put the venues page
-  sponsors_path_name: 'sponsors' # folder off of the root to put the sponsors page
-
-  schedule_sessions_title: 'Schedule: Sessions' # Override to set the page.title of the sessions listing page
-  schedule_session_page_title: 'Schedule: %s' # %s will be substituted with the session's name
-
-  presenters_index_title: 'Presenters' # Override to set the page.title of the presenters listing page
-  presenter_page_title: 'Presenter: %s' # %s will be substituted with the session's name
-
-  venues_index_title: 'Venues' # Override to set the page.title property of the Venues index page
-  venue_page_title: 'Venue: %s' # %s will be substituted with venue's name. Override to set the page.title property of the individual Venue page
 ```
+
+### Optional parameters in the `attendease` section:
+
+Key                         | Default            | Description
+--------------------------- | ------------------ | -----------
+access_token                | none               | Your top-secret API access token
+cache_expiry                | 3600               | The number of seconds until we regerenate the data from the api. Otherwise data will be cached for speed.
+generate_schedule_pages     | false              | Set to true if you want to generate static schedule pages.
+show_day_index              | false              | Set to true if you want an index of days
+schedule_path_name          | schedule           | Folder off of the root to put the schedule pages. Setting to blank will disable schedule page generation.
+presenters_path_name        | presenters         | Folder off of the root to put the presenters page. Setting to blank will disable presenter page generation.
+venues_path_name            | venues             | Folder off of the root to put the venues page. Setting to blank will disable venue page generation.
+sponsors_path_name          | sponsors           | Folder off of the root to put the sponsors page. Setting to blank will disable sponsor page generation.
+schedule_sessions_title     | Schedule: Sessions | Override to set the page.title of the sessions listing page
+schedule_session_page_title | Schedule: %s       | %s will be substituted with the session's name
+presenters_index_title      | Presenters         | Override to set the page.title of the presenters listing page
+presenter_page_title        | Presenter: %s      | %s will be substituted with the session's name
+venues_index_title          | Venues             | Override to set the page.title property of the Venues index page
+venue_page_title            | Venue: %s          | %s will be substituted with venue's name. Override to set the page.title property of the individual Venue page
 
 Remember to replace `https://your-event-subdomain.attendease.com/` with your actual event url, or crazy things will happen!
 
@@ -61,12 +61,12 @@ Remember to replace `https://your-event-subdomain.attendease.com/` with your act
 
 Now the event name can easily be used in your site like so:
 
-`{{ site.attendease.data.attendease_event_name }}`
+`{{ site.attendease.data.event_name }}`
 
 We can also use logical expressions like so:
 
 ```
-{% if site.attendease.data.attendease_has_registration %}
+{% if site.attendease.data.has_registration %}
   We have registration!
 {% endif %}
 ```
@@ -119,7 +119,6 @@ JekyllAttendease.onLoginCheck(function(e)
 });
 ```
 
-
 ## Static Schedule Pages
 
 In your `_config.yml` if you add the `generate_schedule_pages` set to `true` under `attendease` it will generate static schedule pages from the Attendease public API.
@@ -163,7 +162,7 @@ Copyright (C) 2013 Attendease (https://attendease.com/)
 The MIT License
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the “Software”), to deal in
+this software and associated documentation files (the "Software"), to deal in
 the Software without restriction, including without limitation the rights to
 use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 of the Software, and to permit persons to whom the Software is furnished to do
@@ -172,7 +171,7 @@ so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER

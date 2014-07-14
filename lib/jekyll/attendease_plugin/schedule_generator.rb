@@ -27,18 +27,18 @@ module Jekyll
           @venues = JSON.parse(File.read("#{attendease_data_path}/venues.json")).sort{|v1, v2| v1['name'] <=> v2['name']}
 
           @presenters.each do |presenter|
-            presenter['slug'] = EventDataGenerator.parameterize("#{presenter['first_name']} #{presenter['last_name']}", '_') + '.html'
+            presenter['slug'] = Helpers.parameterize("#{presenter['first_name']} #{presenter['last_name']}") + '.html'
           end
 
           @venues.each do |venue|
-            venue['slug'] = EventDataGenerator.parameterize(venue['name'], '_') + '.html'
+            venue['slug'] = Helpers.parameterize(venue['name']) + '.html'
           end
 
           sessions.each do |session|
             if site.config['attendease']['session_slug_uses_code']
               session['slug'] = session['code'] + '.html'
             else
-              session['slug'] = EventDataGenerator.parameterize(session['name'], '_') + '.html'
+              session['slug'] = Helpers.parameterize(session['name']) + '.html'
             end
           end
 
@@ -49,41 +49,47 @@ module Jekyll
           # /schedule pages.
           dir = site.config['attendease']['schedule_path_name']
 
-          if (site.config['attendease'] && site.config['attendease']['show_day_index'])
-            site.pages << ScheduleIndexPage.new(site, site.source, File.join(dir), @event['dates'])
-          else
-            site.pages << ScheduleDayPage.new(site, site.source, File.join(dir), @event['dates'].first, @sessions, @event['dates'])
-          end
+          unless dir.nil?
+            if (site.config['attendease'] && site.config['attendease']['show_day_index'])
+              site.pages << ScheduleIndexPage.new(site, site.source, File.join(dir), @event['dates'])
+            else
+              site.pages << ScheduleDayPage.new(site, site.source, File.join(dir), @event['dates'].first, @sessions, @event['dates'])
+            end
 
-          site.pages << ScheduleSessionsPage.new(site, site.source, File.join(dir, 'sessions'), @sessions, @event['dates'])
+            site.pages << ScheduleSessionsPage.new(site, site.source, File.join(dir, 'sessions'), @sessions, @event['dates'])
 
-          @event['dates'].each do |day|
-            site.pages << ScheduleDayPage.new(site, site.source, File.join(dir, day['date']), day, @sessions, @event['dates'])
-          end
+            @event['dates'].each do |day|
+              site.pages << ScheduleDayPage.new(site, site.source, File.join(dir, day['date']), day, @sessions, @event['dates'])
+            end
 
-          @sessions.each do |session|
-            site.pages << ScheduleSessionPage.new(site, site.source, File.join(dir, 'sessions'), session)
+            @sessions.each do |session|
+              site.pages << ScheduleSessionPage.new(site, site.source, File.join(dir, 'sessions'), session)
+            end
           end
 
           # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
           # /presenters pages.
           dir = site.config['attendease']['presenters_path_name']
 
-          @presenters.each do |presenter|
-            site.pages << PresenterPage.new(site, site.source, dir, presenter, @sessions)
-          end
+          unless dir.nil?
+            @presenters.each do |presenter|
+              site.pages << PresenterPage.new(site, site.source, dir, presenter, @sessions)
+            end
 
-          site.pages << PresentersIndexPage.new(site, site.source, File.join(dir), @presenters)
+            site.pages << PresentersIndexPage.new(site, site.source, File.join(dir), @presenters)
+          end
 
           # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
           # /venue pages.
           dir = site.config['attendease']['venues_path_name']
 
-          @venues.each do |venue|
-            site.pages << VenuePage.new(site, site.source, dir, venue)
-          end
+          unless dir.nil?
+            @venues.each do |venue|
+              site.pages << VenuePage.new(site, site.source, dir, venue)
+            end
 
-          site.pages << VenuesIndexPage.new(site, site.source, File.join(dir), @venues)
+            site.pages << VenuesIndexPage.new(site, site.source, File.join(dir), @venues)
+          end
         end
       end
 
@@ -122,7 +128,7 @@ module Jekyll
             item_names = []
             if !filter['items'].nil?
               filter['items'].each do |item|
-                filter_tags << EventDataGenerator.parameterize('attendease-filter-' + filter['name'] + "-" + item['name'])
+                filter_tags << Helpers.parameterize('attendease-filter-' + filter['name'] + "-" + item['name'], '-')
               end
             end
           end

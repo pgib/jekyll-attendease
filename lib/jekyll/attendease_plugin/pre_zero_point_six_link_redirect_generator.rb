@@ -24,7 +24,7 @@ module Jekyll
           # sessions
           dir = site.config['attendease']['schedule_path_name']
           schedule_generator.sessions.each do |o|
-            site.pages << RedirectPage.new(site, site.source, File.join(dir, o['code']), File.join('/', dir, o['slug']))
+            site.pages << RedirectPage.new(site, site.source, File.join(dir, o['code']), File.join('/', dir, 'sessions', o['slug']))
           end
         end
       end # end generate

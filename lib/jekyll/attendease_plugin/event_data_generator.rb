@@ -16,21 +16,6 @@ module Jekyll
         end
       end
 
-      def self.parameterize(source, sep = '-')
-        return '' if source.nil?
-        string = source.downcase
-        # Turn unwanted chars into the separator
-        string.gsub!(/[^a-z0-9\-_]+/, sep)
-        unless sep.nil? || sep.empty?
-          re_sep = Regexp.escape(sep)
-          # No more than one of the separator in a row.
-          string.gsub!(/#{re_sep}{2,}/, sep)
-          # Remove leading/trailing separator.
-          string.gsub!(/^#{re_sep}|#{re_sep}$/, '')
-        end
-        string
-      end
-
       def use_cache?(file)
         (Time.now.to_i - File.mtime(file).to_i) <= (@attendease_config['cache_expiry'].nil? ? 30 : @attendease_config['cache_expiry'])  # file is less than 30 seconds old
       end
@@ -53,6 +38,7 @@ module Jekyll
 
             data_files.each do |file_name|
               update_data = true
+              data = nil
 
               file = File.join(@attendease_data_path, file_name)
               if File.exists?(file) && use_cache?(file)
@@ -82,45 +68,48 @@ module Jekyll
                 options.merge!(:headers => {'X-Event-Token' => @attendease_config['access_token']}) if @attendease_config['access_token']
 
                 request_filename = file_name.gsub(/yml$/, 'yaml')
-                data = get("#{@attendease_config['api_host']}api/#{request_filename}", options)
+                response = get("#{@attendease_config['api_host']}api/#{request_filename}", options)
 
                 #if (file_name.match(/yaml$/) || data.is_a?(Hash) && !data['error']) || data.is_a?(Array)
-                if (!data.nil? && data.response.is_a?(Net::HTTPOK))
+                if (!response.nil? && response.response.is_a?(Net::HTTPOK))
                   Jekyll.logger.info "[Attendease] Saving #{file_name} data..."
 
                   if file_name.match(/json$/)
-                    File.open(file, 'w+') { |f| f.write(data.parsed_response.to_json) }
-                  else
-                    File.open(file, 'w+') { |f| f.write(data.body) }
+                    data = response.parsed_response
+                    File.open(file, 'w+') { |f| f.write(data.to_json) }
+                  else # yaml
+                    File.open(file, 'w+') { |f| f.write(response.body) }
                   end
                 else
                   raise "Request failed for #{@attendease_config['api_host']}api/#{request_filename}. Is your Attendease api_host site properly in _config.yml?"
                 end
               end
 
-              if file_name == 'site.json'
-                # Adding to site config so we can access these variables globally wihtout using a Liquid Tag so we can use if/else
-                site.config['attendease']['data'] = {}
+              if data.is_a?(Hash)
+                if file_name == 'site.json'
+                  # Adding to site config so we can access these variables globally wihtout using a Liquid Tag so we can use if/else
+                  site.config['attendease']['data'] = {}
 
-                data.keys.each do |tag|
-                  site.config['attendease']['data'][tag] = data[tag]
-                  # memorandum from the department of redundancy department:
-                  # --------------------------------------------------------
-                  # support accessing the attendease_* variables without the
-                  # attendease_ prefix because they're already namespaced in
-                  # site.attendease.data
-                  #
-                  # TODO: update all themes to not use attendease_ variables
-                  #       and then retire them from the ThemeManager.
-                  if tag.match(/^attendease_/)
-                    site.config['attendease']['data'][tag.gsub(/^attendease_/, '')] = data[tag]
+                  data.keys.each do |tag|
+                    site.config['attendease']['data'][tag] = data[tag]
+                    # memorandum from the department of redundancy department:
+                    # --------------------------------------------------------
+                    # support accessing the attendease_* variables without the
+                    # attendease_ prefix because they're already namespaced in
+                    # site.attendease.data
+                    #
+                    # TODO: update all themes to not use attendease_ variables
+                    #       and then retire them from the ThemeManager.
+                    if tag.match(/^attendease_/)
+                      site.config['attendease']['data'][tag.gsub(/^attendease_/, '')] = data[tag]
+                    end
                   end
-                end
-              elsif file_name == 'event.json'
-                site.config['attendease']['event'] = {}
+                elsif file_name == 'event.json'
+                  site.config['attendease']['event'] = {}
 
-                data.keys.each do |tag|
-                  site.config['attendease']['event'][tag] = data[tag]
+                  data.keys.each do |tag|
+                    site.config['attendease']['event'][tag] = data[tag]
+                  end
                 end
               end
             end

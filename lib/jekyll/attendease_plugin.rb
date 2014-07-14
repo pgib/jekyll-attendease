@@ -6,6 +6,7 @@ require 'jekyll/attendease_plugin/pre_zero_point_six_link_redirect_generator'
 require 'jekyll/attendease_plugin/redirect_page'
 require 'jekyll/attendease_plugin/tags'
 require 'jekyll/attendease_plugin/filters'
+require 'jekyll/attendease_plugin/helpers'
 
 require 'jekyll/attendease_plugin/presenters_index_page'
 require 'jekyll/attendease_plugin/presenter_page'
