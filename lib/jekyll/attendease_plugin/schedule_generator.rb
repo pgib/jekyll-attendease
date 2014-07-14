@@ -49,41 +49,47 @@ module Jekyll
           # /schedule pages.
           dir = site.config['attendease']['schedule_path_name']
 
-          if (site.config['attendease'] && site.config['attendease']['show_day_index'])
-            site.pages << ScheduleIndexPage.new(site, site.source, File.join(dir), @event['dates'])
-          else
-            site.pages << ScheduleDayPage.new(site, site.source, File.join(dir), @event['dates'].first, @sessions, @event['dates'])
-          end
+          unless dir.nil?
+            if (site.config['attendease'] && site.config['attendease']['show_day_index'])
+              site.pages << ScheduleIndexPage.new(site, site.source, File.join(dir), @event['dates'])
+            else
+              site.pages << ScheduleDayPage.new(site, site.source, File.join(dir), @event['dates'].first, @sessions, @event['dates'])
+            end
 
-          site.pages << ScheduleSessionsPage.new(site, site.source, File.join(dir, 'sessions'), @sessions, @event['dates'])
+            site.pages << ScheduleSessionsPage.new(site, site.source, File.join(dir, 'sessions'), @sessions, @event['dates'])
 
-          @event['dates'].each do |day|
-            site.pages << ScheduleDayPage.new(site, site.source, File.join(dir, day['date']), day, @sessions, @event['dates'])
-          end
+            @event['dates'].each do |day|
+              site.pages << ScheduleDayPage.new(site, site.source, File.join(dir, day['date']), day, @sessions, @event['dates'])
+            end
 
-          @sessions.each do |session|
-            site.pages << ScheduleSessionPage.new(site, site.source, File.join(dir, 'sessions'), session)
+            @sessions.each do |session|
+              site.pages << ScheduleSessionPage.new(site, site.source, File.join(dir, 'sessions'), session)
+            end
           end
 
           # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
           # /presenters pages.
           dir = site.config['attendease']['presenters_path_name']
 
-          @presenters.each do |presenter|
-            site.pages << PresenterPage.new(site, site.source, dir, presenter, @sessions)
-          end
+          unless dir.nil?
+            @presenters.each do |presenter|
+              site.pages << PresenterPage.new(site, site.source, dir, presenter, @sessions)
+            end
 
-          site.pages << PresentersIndexPage.new(site, site.source, File.join(dir), @presenters)
+            site.pages << PresentersIndexPage.new(site, site.source, File.join(dir), @presenters)
+          end
 
           # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
           # /venue pages.
           dir = site.config['attendease']['venues_path_name']
 
-          @venues.each do |venue|
-            site.pages << VenuePage.new(site, site.source, dir, venue)
-          end
+          unless dir.nil?
+            @venues.each do |venue|
+              site.pages << VenuePage.new(site, site.source, dir, venue)
+            end
 
-          site.pages << VenuesIndexPage.new(site, site.source, File.join(dir), @venues)
+            site.pages << VenuesIndexPage.new(site, site.source, File.join(dir), @venues)
+          end
         end
       end
 
