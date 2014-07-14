@@ -16,21 +16,6 @@ module Jekyll
         end
       end
 
-      def self.parameterize(source, sep = '-')
-        return '' if source.nil?
-        string = source.downcase
-        # Turn unwanted chars into the separator
-        string.gsub!(/[^a-z0-9\-_]+/, sep)
-        unless sep.nil? || sep.empty?
-          re_sep = Regexp.escape(sep)
-          # No more than one of the separator in a row.
-          string.gsub!(/#{re_sep}{2,}/, sep)
-          # Remove leading/trailing separator.
-          string.gsub!(/^#{re_sep}|#{re_sep}$/, '')
-        end
-        string
-      end
-
       def use_cache?(file)
         (Time.now.to_i - File.mtime(file).to_i) <= (@attendease_config['cache_expiry'].nil? ? 30 : @attendease_config['cache_expiry'])  # file is less than 30 seconds old
       end

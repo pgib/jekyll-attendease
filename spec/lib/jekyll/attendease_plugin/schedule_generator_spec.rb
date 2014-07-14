@@ -7,7 +7,7 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
     @date = @schedule_generator.event['dates'].first['date']
     @session_slug = @schedule_generator.sessions.first['slug']
     @presenter_slug = @schedule_generator.presenters.first['slug']
-    @venue_slug = Jekyll::AttendeasePlugin::EventDataGenerator.parameterize(@schedule_generator.venues.first['name'], '_') + '.html'
+    @venue_slug = Jekyll::AttendeasePlugin::Helpers.parameterize(@schedule_generator.venues.first['name'], '_') + '.html'
   end
 
   it 'creates a presenters index page' do
