@@ -1,6 +1,6 @@
 module Jekyll
   module AttendeasePlugin
-    class EventDataGenerator < ::Jekyll::Generator
+    class EventDataGenerator < Generator
       safe true
 
       priority :highest
