@@ -13,12 +13,11 @@ module Jekyll
         attendease_theme_layouts_path = File.join(site.source, '_attendease_layouts') # These are used for page generation (no output html file needed)
 
         FileUtils.mkdir_p(attendease_precompiled_theme_layouts_path)
-        FileUtils.mkdir_p(attendease_precompiled_theme_email_layouts_path)
         FileUtils.mkdir_p(attendease_theme_layouts_path)
 
 
         # Precompiled layouts for attendease app and jekyll generated pages.
-        base_layout = site.config['attendease']['base_layout']
+        base_layout = site.config['attendease']['base_layout'] || 'layout'
         layouts_to_precompile = %w{ layout register surveys } # These are compiled to the html site.
         layouts_to_precompile.each do |layout|
           # create a layout file if it already doesn't exist.
@@ -32,12 +31,12 @@ module Jekyll
 
 
         # Precompiled layouts for attendease email
-        base_email_layout = site.config['attendease']['base_email_layout']
+        base_email_layout = site.config['attendease']['base_email_layout'] || 'email'
         layouts_to_precompile = %w{ layout } # These are pre-compiled for email.
         layouts_to_precompile.each do |layout|
           # create a layout file if it already doesn't exist.
           unless File.exists?(File.join(attendease_precompiled_theme_email_layouts_path, "#{layout}.html"))
-            site.pages << EventLayoutPage.new(site, site.source, 'attendease_layouts', 'emails', "#{layout}.html", base_email_layout, layout.capitalize)
+            site.pages << EventLayoutPage.new(site, site.source, 'attendease_layouts/emails', "#{layout}.html", base_email_layout, layout.capitalize)
           end
         end
 

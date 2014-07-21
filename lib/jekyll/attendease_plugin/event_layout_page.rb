@@ -9,10 +9,15 @@ module Jekyll
 
         self.process(name)
 
-        self.read_yaml(File.join(File.dirname(__FILE__), '..', '..', '..', 'templates'), 'layout.html') # a template for the precompiled layout.
+        self.read_yaml(File.join(base, '_layouts'), "#{base_layout}.html")
 
         self.data = {}
+
         self.data['layout'] = base_layout
+        self.data['base_layout'] = base_layout
+
+        title_prefix = 'Hello' if title_prefix == 'Layout' # Use "Hello" for the title of the main layout page.
+
         self.data['title'] = title_prefix
       end
     end
