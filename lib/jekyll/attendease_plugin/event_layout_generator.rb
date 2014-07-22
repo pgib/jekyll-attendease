@@ -56,6 +56,10 @@ module Jekyll
 
         # Layouts to use for page generation. (These layouts do not need to be part of the html output)
         layouts_for_page_generation = %w{ layout schedule presenters venues sponsors }
+
+        source_template = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '..', 'templates', 'layout.html'))
+        html = Liquid::Template.parse(File.read(source_template)).render('page' => { 'base_layout' => base_layout })
+
         layouts_for_page_generation.each do |layout|
           base_layout_path = File.join(site.source, '_layouts', "#{base_layout}.html")
 
@@ -68,8 +72,11 @@ module Jekyll
             File.open(base_layout_path, 'w') { |f| f.write(html) }
           end
 
-          unless File.exists?(File.join(attendease_theme_layouts_path, "#{layout}.html"))
-            FileUtils.cp base_layout_path, File.join(site.source, '_attendease', 'layouts', "#{layout}.html")
+          layout_path = File.join(attendease_theme_layouts_path, "#{layout}.html")
+
+          unless File.exists?(layout_path)
+            #puts "generating #{layout}.html..."
+            File.open(layout_path, 'w') { |f| f.write(html) }
           end
         end
 
