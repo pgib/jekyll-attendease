@@ -9,7 +9,7 @@ module Jekyll
 
         self.process(@name)
 
-        self.read_yaml(File.join(base, '_attendease_layouts'), 'venues.html')
+        self.read_yaml(File.join(base, '_attendease', 'layouts'), 'venues.html')
 
         venue_page_title = site.config['venue_page_title'] ? site.config['venue_page_title'] : 'Venue: %s'
         self.data['title'] = sprintf(venue_page_title, venue['name'])

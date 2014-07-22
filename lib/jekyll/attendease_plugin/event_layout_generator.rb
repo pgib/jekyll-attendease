@@ -10,7 +10,7 @@ module Jekyll
 
         attendease_precompiled_theme_layouts_path = File.join(site.source, 'attendease_layouts') # These are compiled to the html site.
         attendease_precompiled_theme_email_layouts_path = File.join(site.source, 'attendease_layouts', 'emails') # These are compiled for email.
-        attendease_theme_layouts_path = File.join(site.source, '_attendease_layouts') # These are used for page generation (no output html file needed)
+        attendease_theme_layouts_path = File.join(site.source, '_attendease', 'layouts') # These are used for page generation (no output html file needed)
 
         FileUtils.mkdir_p(attendease_precompiled_theme_layouts_path)
         FileUtils.mkdir_p(attendease_theme_layouts_path)
@@ -42,7 +42,7 @@ module Jekyll
 
 
         # Layouts to use for page generation. (These layouts do not need to be part of the html output)
-        layouts_for_page_generation = %w{ layout register surveys schedule presenters venues sponsors }
+        layouts_for_page_generation = %w{ layout schedule presenters venues sponsors }
         layouts_for_page_generation.each do |layout|
           base_layout_path = File.join(site.source, '_layouts', "#{base_layout}.html")
 
@@ -56,7 +56,7 @@ module Jekyll
           end
 
           unless File.exists?(File.join(attendease_theme_layouts_path, "#{layout}.html"))
-            FileUtils.cp base_layout_path, File.join(site.source, '_attendease_layouts', "#{layout}.html")
+            FileUtils.cp base_layout_path, File.join(site.source, '_attendease', 'layouts', "#{layout}.html")
           end
         end
 

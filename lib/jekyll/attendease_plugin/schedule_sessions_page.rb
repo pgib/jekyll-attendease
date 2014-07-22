@@ -9,7 +9,7 @@ module Jekyll
 
         self.process(@name)
 
-        self.read_yaml(File.join(base, '_attendease_layouts'), 'schedule.html')
+        self.read_yaml(File.join(base, '_attendease', 'layouts'), 'schedule.html')
 
         self.data['title'] = site.config['schedule_sessions_title'] || 'Schedule: Sessions'
 

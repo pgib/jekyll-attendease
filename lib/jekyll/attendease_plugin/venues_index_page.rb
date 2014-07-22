@@ -9,7 +9,7 @@ module Jekyll
 
         self.process(@name)
 
-        self.read_yaml(File.join(base, '_attendease_layouts'), 'venues.html')
+        self.read_yaml(File.join(base, '_attendease', 'layouts'), 'venues.html')
 
         self.data['title'] = site.config['venues_index_title'] || 'Venues'
 
