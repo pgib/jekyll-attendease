@@ -40,6 +40,8 @@ attendease:
 
 Key                         | Default            | Description
 --------------------------- | ------------------ | -----------
+base_layout                 | layout             | When generating pages this will be the base layout for your html
+base_email_layout           | email              | When generating an email template this will be the base layout for your html
 access_token                | none               | Your top-secret API access token
 cache_expiry                | 3600               | The number of seconds until we regerenate the data from the api. Otherwise data will be cached for speed.
 generate_schedule_pages     | false              | Set to true if you want to generate static schedule pages.
