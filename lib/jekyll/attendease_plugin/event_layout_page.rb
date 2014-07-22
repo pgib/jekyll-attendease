@@ -19,6 +19,8 @@ module Jekyll
         title_prefix = 'Hello' if title_prefix == 'Layout' # Use "Hello" for the title of the main layout page.
 
         self.data['title'] = title_prefix
+
+        self.content = "{% raw %}{{ content }}{% endraw %}"
       end
     end
   end
