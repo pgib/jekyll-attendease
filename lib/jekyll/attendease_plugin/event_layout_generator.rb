@@ -18,6 +18,13 @@ module Jekyll
 
         # Precompiled layouts for attendease app and jekyll generated pages.
         base_layout = site.config['attendease']['base_layout'] || 'layout'
+
+        base_layout_file = File.join(site.source, '_layouts', "#{base_layout}.html")
+        unless File.exists?(base_layout_file)
+          # Generate an extremely simple base layout if it does not exist.
+          File.open(base_layout_file, 'w+') { |f| f.write("{{ content }}") }
+        end
+
         layouts_to_precompile = %w{ layout register surveys } # These are compiled to the html site.
         layouts_to_precompile.each do |layout|
           # create a layout file if it already doesn't exist.
@@ -32,6 +39,12 @@ module Jekyll
 
         # Precompiled layouts for attendease email
         base_email_layout = site.config['attendease']['base_email_layout'] || 'email'
+        base_email_layout_file = File.join(site.source, '_layouts', "#{base_email_layout}.html")
+        unless File.exists?(base_email_layout_file)
+          # Generate an extremely simple base email layout if it does not exist.
+          File.open(base_email_layout_file, 'w+') { |f| f.write("{{ content }}") }
+        end
+
         layouts_to_precompile = %w{ layout } # These are pre-compiled for email.
         layouts_to_precompile.each do |layout|
           # create a layout file if it already doesn't exist.
