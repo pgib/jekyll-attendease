@@ -9,7 +9,7 @@ module Jekyll
 
         self.process(@name)
 
-        self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
+        self.read_yaml(File.join(base, '_attendease', 'layouts'), 'schedule.html')
 
         session_day_title_prefix = site.config['schedule_day_title_prefix'] || 'Schedule: '
         self.data['title'] = "#{session_day_title_prefix}#{day['date_formatted']}"

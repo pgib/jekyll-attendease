@@ -9,7 +9,7 @@ module Jekyll
 
         self.process(@name)
 
-        self.read_yaml(File.join(base, 'attendease_layouts'), 'schedule.html')
+        self.read_yaml(File.join(base, '_attendease', 'layouts'), 'schedule.html')
 
         schedule_session_page_title = site.config['schedule_session_page_title'] || 'Schedule: %s'
         self.data['title'] = sprintf(schedule_session_page_title, session['name'])

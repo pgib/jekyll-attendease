@@ -1,6 +1,6 @@
 module Jekyll
   module AttendeasePlugin
-    class SponsorGenerator < ::Jekyll::Generator
+    class SponsorGenerator < Generator
       safe true
 
       def generate(site)
