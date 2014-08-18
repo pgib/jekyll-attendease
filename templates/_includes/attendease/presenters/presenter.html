@@ -16,6 +16,23 @@
       {{ page.presenter.company }}
     </div>
 
+    {% if page.presenter.social %}
+      <div class="attendease-presenter-social">
+        {% if page.presenter.social.twitter and page.presenter.social.twitter != '' %}
+          <a class="social-twitter" href="https://twitter.com/{{ presenter.social.twitter }}" target="_blank"><i class="fa fa-twitter-square fa-3"></i> Twitter</a>
+        {% endif %}
+        {% if page.presenter.social.facebook and page.presenter.social.facebook != '' %}
+          <a class="social-facebook" href="https://www.facebook.com/{{ presenter.social.facebook }}" target="_blank"><i class="fa fa-facebook-square fa-3"></i> Facebook</a>
+        {% endif %}
+        {% if page.presenter.social.linkedin and page.presenter.social.linkedin != '' %}
+          <a class="social-linkedin" href="https://www.linkedin.com/in/{{ presenter.social.linkedin }}" target="_blank"><i class="fa fa-linkedin-square"></i> LinkedIn</a>
+        {% endif %}
+        {% if page.presenter.social.googleplus and page.presenter.social.googleplus != '' %}
+          <a class="social-googleplus" href="https://plus.google.com/+{{ presenter.social.googleplus }}" target="_blank"><i class="fa fa-google-plus-square"></i> Google+</a>
+        {% endif %}
+      </div>
+    {% endif %}
+
     <div class="attendease-presenter-bio">
       {{ page.presenter.bio | markdownify }}
     </div>

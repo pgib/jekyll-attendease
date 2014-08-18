@@ -22,6 +22,23 @@
       <div class="attendease-presenter-company">
         {{ presenter.company }}
       </div>
+
+      {% if presenter.social %}
+        <div class="attendease-presenter-social">
+          {% if presenter.social.twitter and presenter.social.twitter != '' %}
+            <a class="social-twitter" href="https://twitter.com/{{ presenter.social.twitter }}" target="_blank"><i class="fa fa-twitter-square fa-3"></i> Twitter</a>
+          {% endif %}
+          {% if presenter.social.facebook and presenter.social.facebook != '' %}
+            <a class="social-facebook" href="https://www.facebook.com/{{ presenter.social.facebook }}" target="_blank"><i class="fa fa-facebook-square fa-3"></i> Facebook</a>
+          {% endif %}
+          {% if presenter.social.linkedin and presenter.social.linkedin != '' %}
+            <a class="social-linkedin" href="https://www.linkedin.com/in/{{ presenter.social.linkedin }}" target="_blank"><i class="fa fa-linkedin-square"></i> LinkedIn</a>
+          {% endif %}
+          {% if presenter.social.googleplus and presenter.social.googleplus != '' %}
+            <a class="social-googleplus" href="https://plus.google.com/+{{ presenter.social.googleplus }}" target="_blank"><i class="fa fa-google-plus-square"></i> Google+</a>
+          {% endif %}
+        </div>
+      {% endif %}
     </div>
   {% endfor %}
 </div>
