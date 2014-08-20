@@ -1,5 +1,24 @@
 module Jekyll
   module AttendeasePlugin
+    class ScheduleWidgetTag < Liquid::Tag
+      def render(context)
+        schedule_data = ScheduleDataParser.new(context.registers[:site])
+        base = File.join(context.registers[:site].config['source'])
+
+        instances = schedule_data.sessions.inject([]) do |memo, s|
+          s['instances'].each do |instance|
+            instance['session'] = s
+            memo << instance
+          end
+        end
+        instances.sort!{|x,y| [x['time'], x['session']['name']] <=> [y['time'], y['session']['name']]}
+
+        source_template_path = File.join(base, '_attendease', 'templates', 'schedule', 'widget.html')
+
+        Liquid::Template.parse(File.read(source_template_path)).render('instances' => instances)
+      end
+    end
+
     class AuthScriptTag < Liquid::Tag
       def render(context)
         api_host = context.registers[:site].config['attendease']['api_host']
