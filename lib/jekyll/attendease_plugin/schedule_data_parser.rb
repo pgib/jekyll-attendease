@@ -101,11 +101,12 @@ module Jekyll
       def populate_session_filters!(session, source)
         filters_for_session_hash = {}
         filters.each do |filter|
-          filter['filter_items'].each do |filter_item|
+          filter['filter_items'].each_with_index do |filter_item, index|
             if source['filters'].include?(filter_item['id'])
               filters_for_session_hash[filter['name']] ||= []
               filters_for_session_hash[filter['name']] << {
-                'name' => filter_item['name']
+                'name' => filter_item['name'],
+                'index' => index,
               }
               if event['primary_filter_id'] && event['primary_filter_id'] == filter['id']
                 session['primary_filter_name'] = filter['name']
@@ -117,7 +118,6 @@ module Jekyll
 
         session['filters'] = filters_for_session_hash.map { |key, value| { 'name' => key, 'items' => value } }
         session['filter_tags'] = get_session_filter_tags(session['filters'])
-        puts session.inspect
       end
 
       def get_session_filter_tags(session_filters)

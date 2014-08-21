@@ -10,12 +10,13 @@ module Jekyll
             instance['session'] = s
             memo << instance
           end
+          memo
         end
         instances.sort!{|x,y| [x['time'], x['session']['name']] <=> [y['time'], y['session']['name']]}
 
         source_template_path = File.join(base, '_attendease', 'templates', 'schedule', 'widget.html')
 
-        Liquid::Template.parse(File.read(source_template_path)).render('instances' => instances)
+        Liquid::Template.parse(File.read(source_template_path)).render('instances' => instances, 'filters' => schedule_data.filters)
       end
     end
 
