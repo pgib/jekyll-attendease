@@ -13,13 +13,13 @@ module Jekyll
       end
 
       def presenters
-        raw_presenters.each do |presenter|
+        @presenters ||= raw_presenters.each do |presenter|
           presenter['slug'] = Helpers.parameterize("#{presenter['first_name']} #{presenter['last_name']}") + '.html'
         end
       end
 
       def venues
-        raw_venues.each do |venue|
+        @venues ||= raw_venues.each do |venue|
           venue['slug'] = Helpers.parameterize(venue['name']) + '.html'
         end
       end
@@ -29,15 +29,16 @@ module Jekyll
       end
 
       def sessions
-        raw_sessions.each do |session|
-          if site.config['attendease']['session_slug_uses_code']
-            session['slug'] = session['code'] + '.html'
-          else
-            session['slug'] = Helpers.parameterize(session['name']) + '.html'
+        @sessions ||= begin
+          raw_sessions.each do |session|
+            if site.config['attendease']['session_slug_uses_code']
+              session['slug'] = session['code'] + '.html'
+            else
+              session['slug'] = Helpers.parameterize(session['name']) + '.html'
+            end
           end
+          populate_sessions_with_related_data!(raw_sessions)
         end
-
-        populate_sessions_with_related_data!(raw_sessions)
       end
 
       def filters
