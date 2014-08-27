@@ -4,12 +4,12 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
 
   before(:all) do
     @schedule_generator = find_generator(described_class)
-    @date = @schedule_generator.event['dates'].first['date']
+    @date = @schedule_generator.schedule_data.event['dates'].first['date']
     @index_file = 'index.html'
-    @session_slug = @schedule_generator.sessions.first['slug']
-    @presenter_slug = @schedule_generator.presenters.first['slug']
-    @presenter_social = @schedule_generator.presenters.first['social']
-    @venue_slug = Jekyll::AttendeasePlugin::Helpers.parameterize(@schedule_generator.venues.first['name'], '_') + '.html'
+    @session_slug = @schedule_generator.schedule_data.sessions.first['slug']
+    @presenter_slug = @schedule_generator.schedule_data.presenters.first['slug']
+    @presenter_social = @schedule_generator.schedule_data.presenters.first['social']
+    @venue_slug = Jekyll::AttendeasePlugin::Helpers.parameterize(@schedule_generator.schedule_data.venues.first['name'], '_') + '.html'
   end
 
   it 'creates a presenters index page' do
@@ -114,7 +114,7 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
     it 'creates a schedule session page' do
       @site = build_site({ 'attendease' => { 'session_slug_uses_code' => true } })
       @schedule_generator = find_generator(described_class)
-      session_slug = @schedule_generator.sessions.first['slug']
+      session_slug = @schedule_generator.schedule_data.sessions.first['slug']
 
       expect(File.exists?(File.join(@site.config['destination'], @site.config['attendease']['schedule_path_name'], 'sessions', session_slug))).to eq(true)
     end
