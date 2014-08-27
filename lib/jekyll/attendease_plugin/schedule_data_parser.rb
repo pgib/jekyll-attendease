@@ -45,7 +45,7 @@ module Jekyll
         raw_filters
       end
 
-      protected 
+      protected
 
       def raw_presenters
         @raw_presenters ||= JSON.parse(File.read("#{data_path}/presenters.json")).sort{|p1, p2| p1['last_name'] <=> p2['last_name']}
@@ -73,7 +73,7 @@ module Jekyll
 
       def populate_sessions_with_related_data!(sessions)
         sessions.inject([]) do |memo, s|
-          session = s.select do |k, v| 
+          session = s.select do |k, v|
             %w{ id name description code speaker_ids slug }.include?(k)
           end
 
@@ -86,12 +86,12 @@ module Jekyll
       end
 
       def get_session_presenters(session)
-        session_presenters = presenters.select do |presenter| 
+        session_presenters = presenters.select do |presenter|
           session['speaker_ids'].include?(presenter['id'])
         end
-          
+
         session_presenters.inject([]) do |memo, presenter|
-          memo << presenter.select do |k, v| 
+          memo << presenter.select do |k, v|
             %w{ id first_name last_name company title profile_url slug }.include?(k)
           end
         end
@@ -133,7 +133,7 @@ module Jekyll
       def get_session_instances(session)
         session['instances'] ||= []
         session['instances'].inject([]) do |memo, i|
-          instance = i.select do |k, v| 
+          instance = i.select do |k, v|
             %w{ id date time end_time duration date_formatted time_formatted end_time_formatted duration_formatted room_id }.include?(k)
           end
 
