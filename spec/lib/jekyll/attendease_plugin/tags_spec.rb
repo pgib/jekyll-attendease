@@ -41,5 +41,73 @@ RSpec.describe "Jekyll Attendease tags" do
     subject { render("{% attendease_auth_action %}") }
     it { is_expected.to eq '<div id="attendease-auth-action"></div>' }
   end
+
+  context "{% attendease_schedule_widget %}" do
+    subject { render("{% attendease_schedule_widget %}") }
+    #{ is_expected.to eq schedule_widget_data }
+    it 'should render the correct html' do
+      # lines and spaces were giving me issues. Just check if the html is equal.
+      expect(subject.gsub(' ', '').gsub("\n", '')).to eq(schedule_widget_data.gsub(' ', '').gsub("\n", ''))
+    end
+  end
 end
 
+def schedule_widget_data
+<<eos
+<div class="attendease-schedule-widget">
+
+    <div class="attendease-date" data-date="2014-07-08" data-date-id="000000000000000000abcdef">
+      July 8, 2014
+    </div>
+
+        <div class="attendease-session-and-instance attendease-filter-foo-bar" data-instance-id="53bc13b702c8bc9994000056" data-session-id="53bc133102c8bc9994000053">
+          <div class="attendease-instance-details">
+            <div class="attendease-instance-detail attendease-time-range" data-duration="60" data-start-time="08:45">
+              08:45 - 09:45
+
+              <div class="attendease-duration" data-duration="60">
+                1 hour
+              </div>
+            </div>
+          </div>
+          <div class="attendease-name">
+            Swimming 101
+          </div>
+        </div>
+
+        <div class="attendease-session-and-instance attendease-filter-foo-bar" data-instance-id="53bc13b702c8bc9994000057" data-session-id="53bc133102c8bc9994000054">
+          <div class="attendease-instance-details">
+            <div class="attendease-instance-detail attendease-time-range" data-duration="60" data-start-time="10:45">
+              10:45 - 11:45
+
+              <div class="attendease-duration" data-duration="60">
+                1 hour
+              </div>
+            </div>
+          </div>
+          <div class="attendease-name">
+            Swimming 102
+          </div>
+        </div>
+
+    <div class="attendease-date" data-date="2014-07-09" data-date-id="000000000000000000abcdeg">
+      July 9, 2014
+    </div>
+
+        <div class="attendease-session-and-instance attendease-filter-foo-bar" data-instance-id="53bc13b702c8bc9994000058" data-session-id="53bc133102c8bc9994000055">
+          <div class="attendease-instance-details">
+            <div class="attendease-instance-detail attendease-time-range" data-duration="60" data-start-time="08:45">
+              08:45 - 09:45
+
+              <div class="attendease-duration" data-duration="60">
+                1 hour
+              </div>
+            </div>
+          </div>
+          <div class="attendease-name">
+            Swimming 201
+          </div>
+        </div>
+</div>
+eos
+end

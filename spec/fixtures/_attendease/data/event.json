@@ -9,6 +9,15 @@
             "id": "000000000000000000abcdef",
             "start_time": "10:00",
             "start_time_formatted": "10:00"
+        },
+        {
+            "date": "2014-07-09",
+            "date_formatted": "July 9, 2014",
+            "end_time": "16:20",
+            "end_time_formatted": "16:20",
+            "id": "000000000000000000abcdeg",
+            "start_time": "10:00",
+            "start_time_formatted": "10:00"
         }
     ],
     "id": "foobar",

@@ -144,10 +144,11 @@ For Session Day pages:
 ## Preparing for a release
 
 1. Start with a pre-release version. Adding non-numeric characters achieves
-   this. (e.g. 0.6.8pre in `lib/jekyll/attendease_plugin/version.rb`)
-2. `gem build jekyll-attendease.gemspec`
-3. `gem push jekyll-attendease-0.6.8pre.gem`
-4. Update Attendease respectively to test.
+   this. (e.g. 0.6.9.pre in `lib/jekyll/attendease_plugin/version.rb`)
+2. Update the gem's release date in `jekyll-attendease.gemspec`
+3. `gem build jekyll-attendease.gemspec`
+4. `gem push jekyll-attendease-0.6.9.pre.gem`
+5. Update Attendease respectively to test.
 
 
 ## Releasing final version

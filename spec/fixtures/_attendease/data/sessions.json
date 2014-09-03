@@ -1,1 +1,89 @@
-[{"public":true,"id":"53bc133102c8bc9994000053","name":"Swimming","code":"53bc133102c8bc9994000053","description":"","filters":["53bc192402c8bc9994000057"],"locked":false,"speaker_ids":["53bc134b02c8bc9994000054"],"instances":[{"id":"53bc13b702c8bc9994000056","room_id":"53bc132702c8bc9994000052","duration":60,"date":"2014-07-08","time":"08:45","end_time":"2014-07-08T09:45:00Z","duration_formatted":"1 hour ","date_formatted":"July  8, 2014","time_formatted":"08:45","end_time_formatted":"09:45","capacity":200,"attendance":0}]}]
+[
+  {
+    "id":"53bc133102c8bc9994000054",
+    "name":"Swimming 102",
+    "code":"53bc133102c8bc9994000054",
+    "description":"",
+    "filters":[
+      "53bc192402c8bc9994000057"
+    ],
+    "locked":false,
+    "speaker_ids":[
+      "53bc134b02c8bc9994000054"
+    ],
+    "instances":[
+      {
+        "id":"53bc13b702c8bc9994000057",
+        "room_id":"53bc132702c8bc9994000052",
+        "duration":60,
+        "date":"2014-07-08",
+        "time":"10:45",
+        "end_time":"2014-07-08T11:45:00Z",
+        "duration_formatted":"1 hour",
+        "date_formatted":"July 9, 2014",
+        "time_formatted":"10:45",
+        "end_time_formatted":"11:45",
+        "capacity":200,
+        "attendance":0
+      }
+    ]
+  },
+  {
+    "id":"53bc133102c8bc9994000053",
+    "name":"Swimming 101",
+    "code":"53bc133102c8bc9994000053",
+    "description":"",
+    "filters":[
+      "53bc192402c8bc9994000057"
+    ],
+    "locked":false,
+    "speaker_ids":[
+      "53bc134b02c8bc9994000054"
+    ],
+    "instances":[
+      {
+        "id":"53bc13b702c8bc9994000056",
+        "room_id":"53bc132702c8bc9994000052",
+        "duration":60,
+        "date":"2014-07-08",
+        "time":"08:45",
+        "end_time":"2014-07-08T09:45:00Z",
+        "duration_formatted":"1 hour",
+        "date_formatted":"July 8, 2014",
+        "time_formatted":"08:45",
+        "end_time_formatted":"09:45",
+        "capacity":200,
+        "attendance":0
+      }
+    ]
+  },
+  {
+    "id":"53bc133102c8bc9994000055",
+    "name":"Swimming 201",
+    "code":"53bc133102c8bc9994000055",
+    "description":"",
+    "filters":[
+      "53bc192402c8bc9994000057"
+    ],
+    "locked":false,
+    "speaker_ids":[
+      "53bc134b02c8bc9994000054"
+    ],
+    "instances":[
+      {
+        "id":"53bc13b702c8bc9994000058",
+        "room_id":"53bc132702c8bc9994000052",
+        "duration":60,
+        "date":"2014-07-09",
+        "time":"08:45",
+        "end_time":"2014-07-09T09:45:00Z",
+        "duration_formatted":"1 hour",
+        "date_formatted":"July  8, 2014",
+        "time_formatted":"08:45",
+        "end_time_formatted":"09:45",
+        "capacity":200,
+        "attendance":0
+      }
+    ]
+  }
+]
