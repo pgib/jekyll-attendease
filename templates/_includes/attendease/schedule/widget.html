@@ -1,22 +1,26 @@
 <div class="attendease-schedule-widget">
-  {% for instance in instances %}
-    <div class="attendease-session-and-instance {{ instance.session.filter_tags }}" data-instance-id="{{ instance.id }}" data-session-id="{{ instance.session.id }}">
-      <div class="attendease-instance-details">
-        <div class="attendease-instance-detail attendease-time-range" data-duration="{{ instance.duration }}" data-start-time="{{ instance.time }}">
-          {{ instance.time_formatted }} - {{ instance.end_time_formatted}}
+  {% for date in dates %}
+    <div class="attendease-date" data-date="{{ date.date }}" data-date-id="{{ date.id }}">
+      {{ date.date_formatted }}
+    </div>
 
-          <div class="attendease-duration" data-duration="{{ instance.duration }}">
-            {{ instance.duration_formatted }}
+    {% for instance in instances %}
+      {% if instance.date == date.date %}
+        <div class="attendease-session-and-instance {{ instance.session.filter_tags }}" data-instance-id="{{ instance.id }}" data-session-id="{{ instance.session.id }}">
+          <div class="attendease-instance-details">
+            <div class="attendease-instance-detail attendease-time-range" data-duration="{{ instance.duration }}" data-start-time="{{ instance.time }}">
+              {{ instance.time_formatted }} - {{ instance.end_time_formatted}}
+
+              <div class="attendease-duration" data-duration="{{ instance.duration }}">
+                {{ instance.duration_formatted }}
+              </div>
+            </div>
+          </div>
+          <div class="attendease-name">
+            {{ instance.session.name }}
           </div>
         </div>
-      </div>
-      <div class="attendease-name">
-        {% for tag in instance.session.filter_tags %}
-        <span class="{{ tag }}">{{ tag }}</span>
-        {% endfor %}
-        <h2>{{ instance.session.name }}</h2>
-      </div>
-    </div>
+      {% endif %}
+    {% endfor %}
   {% endfor %}
 </div>
-

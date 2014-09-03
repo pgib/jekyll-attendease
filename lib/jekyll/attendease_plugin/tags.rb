@@ -16,7 +16,7 @@ module Jekyll
 
         source_template_path = File.join(base, '_attendease', 'templates', 'schedule', 'widget.html')
 
-        Liquid::Template.parse(File.read(source_template_path)).render('instances' => instances, 'filters' => schedule_data.filters)
+        Liquid::Template.parse(File.read(source_template_path)).render('dates' => schedule_data.event['dates'], 'instances' => instances, 'filters' => schedule_data.filters)
       end
     end
 
