@@ -137,12 +137,15 @@ module Jekyll
             %w{ id date time end_time duration date_formatted time_formatted end_time_formatted duration_formatted room_id }.include?(k)
           end
 
-          room  = rooms.select { |r| r['id'] == i['room_id'] }.first
-          venue = venues.select { |v| v['id'] == room['venue_id'] }.first
-          instance['room'] = room.merge({ 'venue_name' => venue['name'] })
-          instance['venue_slug'] = venue['slug']
+          if room = rooms.select { |r| r['id'] == i['room_id'] }.first
+            venue = venues.select { |v| v['id'] == room['venue_id'] }.first
+            instance['room'] = room.merge({ 'venue_name' => venue['name'] })
+            instance['venue_slug'] = venue['slug']
 
-          memo << instance
+            memo << instance
+          else
+            memo
+          end
         end
       end
     end
