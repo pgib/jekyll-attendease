@@ -1,0 +1,265 @@
+<div class="jumbotron">
+  {% if site.attendease.data.event_marquee_landing_page_foreground_image_url %}
+    <div class="event-marquee-foreground-image">
+      <img class="img-responsive center-block" src="{{ site.attendease.data.event_marquee_landing_page_foreground_image_url }}" />
+    </div>
+  {% else %}
+    <div class="container">
+      <h1>{{ site.attendease.data.event_marquee_title }}</h1>
+
+      {% if site.attendease.data.event_marquee_tagline %}
+      <h2>{{ site.attendease.data.event_marquee_tagline }}</h2>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+
+{% if site.attendease.data.event_host %}
+  <div class="event-details">
+    <div class="container">
+    <div class="row">
+        <div class="col-md-2">
+          <h2>WHO</h2>
+        </div>
+        <div class="col-md-10">
+          <div class="info">{{ site.attendease.data.event_host }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if site.attendease.data.event_dates %}
+  <div class="event-details">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2">
+          <h2>WHEN</h2>
+        </div>
+        <div class="col-md-10">
+         <div class="info">{{ site.attendease.data.event_dates }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if site.attendease.data.event_location %}
+  <div class="event-details">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2">
+          <h2>WHERE</h2>
+        </div>
+
+        <div class="col-md-10">
+          <div class="info">{{ site.attendease.data.event_location }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<div class="event-details event-details-cta-section">
+  <div class="container">
+    {% if site.attendease.data.event_description %}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="description">{{ site.attendease.data.event_description }}</div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if site.attendease.data.attendease_has_registration_button %}
+      <div id="register-cta-blurb">
+        <a href="/register" class="btn btn-primary btn-cta">{% t event.register.actions.register %}</a>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% if site.attendease.data.attendease_event_has_address and site.attendease.data.event_map %}
+  <div class="event-details">
+    <div id="map" class="attendease-map"></div>
+  </div>
+
+  <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key={{ site.attendease.data.event_map }}&sensor=false&callback=initializeMap"></script>
+
+  <script type="text/javascript">
+    // map include...
+    var marker;
+    var map;
+
+    var initializeMap = function()
+    {
+      var eventName = "{{ site.attendease.data.attendease_event_name }}";
+      var eventLocation = "{{ site.attendease.data.attendease_event_location }}";
+      if (!eventName) eventName = "Set your event name with Attendease!";
+      if (!eventLocation) eventLocation = "Set your event's venue name in the Attendease console.";
+
+      var latitude = "{{ site.attendease.data.attendease_event_address.latitude }}";
+      var longitude = "{{ site.attendease.data.attendease_event_address.longitude }}";
+
+      var venues = [];
+      {% for venue in site.attendease.data.attendease_event_venues %}
+        venues.push( { 'primary': '{{ venue.primary }}', 'name': '{{ venue.name }}', 'address1': '{{ venue.address1 }}', 'address2': '{{ venue.address2 }}', 'city': '{{ venue.city }}', 'state': '{{ venue.state }}', 'zip': '{{ venue.zip }}', 'country': '{{ venue.country }}', 'latitude': '{{ venue.latitude }}', 'longitude': '{{ venue.longitude }}'  } );
+      {% endfor %}
+
+      // center the map to the primary venue
+      var myLatlng = new google.maps.LatLng(latitude, longitude);
+
+      var mapOptions = {
+        zoom: 14,
+        disableDefaultUI: false,
+        scrollwheel: false,
+        draggable: false,
+        zoomControl: true,
+        center: myLatlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+
+      var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+      var primaryMarker = null;
+      var markers = [];
+
+      for (var i = 0; i < venues.length; i++)
+      {
+        var venue = venues[i];
+
+        var venue_primary = venue.primary;
+        var venue_name = venue.name;
+        var venue_address1 = venue.address1;
+        var venue_address2 = venue.address2;
+        var venue_city = venue.city;
+        var venue_state = venue.state;
+        var venue_zip = venue.zip;
+        var venue_country = venue.country;
+        var venue_latitude = venue.latitude;
+        var venue_longitude = venue.longitude;
+
+        var venue_coords = new google.maps.LatLng(venue_latitude, venue_longitude);
+
+        var contentString = '<div class="map-content">' +
+                '<h4>' + venue_name + '</h4>' + '<p>';
+
+        if (venue_address1 && venue_city)
+        {
+          contentString += venue_address1 + '<br />';
+
+          if (venue_address2)
+          {
+            contentString += venue_address2 + '<br />';
+          }
+
+          contentString += venue_city
+
+          if (venue_state)
+          {
+            contentString += ', ' + venue_state;
+          }
+
+          if (venue_country)
+          {
+            contentString += ', ' + venue_country;
+          }
+
+          if (venue_zip)
+          {
+            contentString += ' ' + '<br />';
+            contentString += ' ' + venue_zip;
+          }
+
+          contentString += '<br><a target="_blank" href="http://maps.google.com/?q=@' + venue_latitude + ',' + venue_longitude + '">Open in Google Maps</a>'
+        }
+
+        contentString += '</p></div>';
+
+        if(venue_primary == 'true')
+        {
+          map_icon = '//maps.google.com/mapfiles/ms/icons/blue-dot.png';
+        }
+        else
+        {
+          map_icon = '//maps.google.com/mapfiles/ms/icons/red-dot.png';
+        }
+
+        markers.push(new google.maps.Marker({
+          position:  venue_coords,
+          map:       map,
+          title:     venue_name,
+          animation: google.maps.Animation.DROP,
+          html:      contentString,
+          primary:   venue_primary,
+          icon:      map_icon
+        }));
+      }
+
+      var infoWindow = new google.maps.InfoWindow({
+          content: ""
+      });
+
+      for (var j = 0; j < markers.length; j++)
+      {
+        var marker = markers[j];
+
+        if (marker.primary == 'true')
+        {
+          primaryMarker = marker;
+        }
+
+        google.maps.event.addListener(marker, 'click', function () {
+          infoWindow.setContent(this.html);
+          infoWindow.open(map, this);
+        });
+      }
+
+      // open the primary marker's info window
+      if (primaryMarker)
+      {
+        setTimeout(function() {
+          infoWindow.setContent(primaryMarker.html);
+          infoWindow.open(map, primaryMarker)
+        }, 2000);
+      }
+
+      if (markers.length > 1)
+      {
+        // Center the map on all the points
+        var bounds = new google.maps.LatLngBounds();
+        for (var k = 0; k < markers.length; k++)
+        {
+          bounds.extend(markers[k].position);
+        }
+        map.fitBounds(bounds);
+      }
+    };
+
+  </script>
+{% endif %}
+
+{% if site.attendease.data.event_social_widgets or site.attendease.data.event_ical %}
+  <div class="event-details">
+    <div class="container">
+      <div id="social">
+        {% if site.attendease.data.event_ical %}
+          <div class="ical">
+            <a href="{{ site.attendease.api_host }}attendease/calendar.ics">
+              <img src='/images/icons/ical.png' width="21" height="21" /> ADD
+            </a>
+          </div>
+        {% endif %}
+
+        {% if site.attendease.data.event_social_widgets %}
+          <div class="twitter-tweet">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-lang="en" target="_blank"><img src='/images/icons/twitter.png' width="22" height="21" /> TWEET</a>
+          </div>
+
+          <div class="facebook-like">
+            <a id="facebook-share" href="https://www.facebook.com/sharer/sharer.php?u={{ site.attendease.api_host }}" target="_blank"><img src='/images/icons/facebook.png' width="21" height="21" /> SHARE</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endif %}
