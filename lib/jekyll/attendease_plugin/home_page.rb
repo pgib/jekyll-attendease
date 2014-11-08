@@ -15,18 +15,13 @@ module Jekyll
 
         self.data['title'] = site.config['homepage_title'] || 'Welcome'
 
-        if site.config['attendease'] && templates = site.config['attendease']['templates']
-          if t = templates.detect{|t| t['page'] == 'index'}
-            template = t['data']
-          end
-        end
-
-        if template.nil?
-          # use the included template in the gem
-          self.content = File.read(File.join(base, '_attendease', 'templates', 'index.html'))
-        else
+        # Check if Attendease API has a template for this page
+        if template = Helpers.get_template(site, 'index')
           # use the template file from the attendease api
           self.content = template
+        else
+          # use the included template in the gem
+          self.content = File.read(File.join(base, '_attendease', 'templates', 'index.html'))
         end
       end
     end
