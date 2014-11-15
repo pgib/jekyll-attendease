@@ -18,7 +18,14 @@ module Jekyll
         self.data['sessions'] = sessions
         self.data['dates'] = dates
 
-        self.content = File.read(File.join(base, '_attendease', 'templates', 'schedule', 'sessions.html'))
+        # Check if Attendease API has a template for this page
+        if template = Helpers.get_template(site, 'schedule/sessions')
+          # use the template file from the attendease api
+          self.content = template
+        else
+          # use the included template in the gem
+          self.content = File.read(File.join(base, '_attendease', 'templates', 'schedule', 'sessions.html'))
+        end
       end
     end
   end
