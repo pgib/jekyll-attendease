@@ -9,7 +9,7 @@ module Jekyll
 
         self.process(@name)
 
-        self.read_yaml(File.join(base, '_attendease', 'layouts'), 'presenters.html')
+        self.read_yaml(File.join(base, '_attendease', 'templates', 'presenters'), 'presenter.html')
 
         presenter_page_title = site.config['presenter_page_title'] ? site.config['presenter_page_title'] : 'Presenter: %s'
         self.data['title'] = sprintf(presenter_page_title, presenter['first_name'] + ' ' + presenter['last_name'])
@@ -23,15 +23,6 @@ module Jekyll
         end
 
         self.data['presenter'] = presenter
-
-        # Check if Attendease API has a template for this page
-        if template = Helpers.get_template(site, 'presenters/presenter')
-          # use the template file from the attendease api
-          self.content = template
-        else
-          # use the included template in the gem
-          self.content = File.read(File.join(base, '_attendease', 'templates', 'presenters', 'presenter.html'))
-        end
       end
     end
   end
