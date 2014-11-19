@@ -45,7 +45,7 @@ base_email_layout           | email              | When generating an email temp
 access_token                | none               | Your top-secret API access token
 cache_expiry                | 3600               | The number of seconds until we regerenate the data from the api. Otherwise data will be cached for speed.
 generate_schedule_pages     | false              | Set to true if you want to generate static schedule pages.
-show_day_index              | false              | Set to true if you want an index of days
+show_schedule_index         | false              | Set to true if you want a schedule index page. Otherwise it will just show the first day at /schedule.
 schedule_path_name          | schedule           | Folder off of the root to put the schedule pages. Setting to blank will disable schedule page generation.
 presenters_path_name        | presenters         | Folder off of the root to put the presenters page. Setting to blank will disable presenter page generation.
 venues_path_name            | venues             | Folder off of the root to put the venues page. Setting to blank will disable venue page generation.

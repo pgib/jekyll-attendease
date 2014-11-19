@@ -19,16 +19,16 @@
     {% if page.presenter.social %}
       <div class="attendease-presenter-social">
         {% if page.presenter.social.twitter and page.presenter.social.twitter != '' %}
-          <a class="social-icon twitter" href="https://twitter.com/{{ page.presenter.social.twitter }}" target="_blank"><i class="fa fa-twitter-square fa-3"></i></a>
+          <a class="attendease-social-icon twitter" href="https://twitter.com/{{ page.presenter.social.twitter }}" target="_blank"><i class="fa fa-twitter-square fa-3"></i></a>
         {% endif %}
         {% if page.presenter.social.facebook and page.presenter.social.facebook != '' %}
-          <a class="social-icon facebook" href="https://www.facebook.com/{{ page.presenter.social.facebook }}" target="_blank"><i class="fa fa-facebook-square fa-3"></i></a>
+          <a class="attendease-social-icon facebook" href="https://www.facebook.com/{{ page.presenter.social.facebook }}" target="_blank"><i class="fa fa-facebook-square fa-3"></i></a>
         {% endif %}
         {% if page.presenter.social.linkedin and page.presenter.social.linkedin != '' %}
-          <a class="social-icon linkedin" href="{{ page.presenter.social.linkedin }}" target="_blank"><i class="fa fa-linkedin-square"></i></a>
+          <a class="attendease-social-icon linkedin" href="{{ page.presenter.social.linkedin }}" target="_blank"><i class="fa fa-linkedin-square"></i></a>
         {% endif %}
         {% if page.presenter.social.googleplus and page.presenter.social.googleplus != '' %}
-          <a class="social-icon googleplus" href="{{ page.presenter.social.googleplus }}" target="_blank"><i class="fa fa-google-plus-square"></i></a>
+          <a class="attendease-social-icon googleplus" href="{{ page.presenter.social.googleplus }}" target="_blank"><i class="fa fa-google-plus-square"></i></a>
         {% endif %}
       </div>
     {% endif %}
