@@ -134,6 +134,31 @@ For Session Day pages:
 - `_includes/attendease/filter.html` - A filter and its items in the instance
 - `_includes/attendease/presenter_item.html` - A presenter item in the instance
 
+
+## Testing
+
+1. Make sure the specs pass! `bundle exec rake spec`
+2. Add new specs if you've added new functionality.
+
+
+## Preparing for a release
+
+1. Start with a pre-release version. Adding non-numeric characters achieves
+   this. (e.g. 0.6.9.pre in `lib/jekyll/attendease_plugin/version.rb`)
+2. Update the gem's release date in `jekyll-attendease.gemspec`
+3. `gem build jekyll-attendease.gemspec`
+4. `gem push jekyll-attendease-0.6.9.pre.gem`
+5. Update Attendease respectively to test.
+
+
+## Releasing final version
+
+1. Bump the version
+2. Tag the release
+3. Build and push the gem
+4. Push the tags to the upstream
+
+
 ## Contributing
 
 1. Fork it
@@ -144,7 +169,7 @@ For Session Day pages:
 
 ## Updating the gem on beta and production
 
-1. log into the jail as root
+1. log into the jail via the jail's console.
 2. gem install jekyll-attendease -v x.x.x
 
 ## Testing

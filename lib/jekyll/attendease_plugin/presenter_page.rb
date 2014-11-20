@@ -24,7 +24,14 @@ module Jekyll
 
         self.data['presenter'] = presenter
 
-        self.content = File.read(File.join(base, '_attendease', 'templates', 'presenters', 'presenter.html'))
+        # Check if Attendease API has a template for this page
+        if template = Helpers.get_template(site, 'presenters/presenter')
+          # use the template file from the attendease api
+          self.content = template
+        else
+          # use the included template in the gem
+          self.content = File.read(File.join(base, '_attendease', 'templates', 'presenters', 'presenter.html'))
+        end
       end
     end
   end

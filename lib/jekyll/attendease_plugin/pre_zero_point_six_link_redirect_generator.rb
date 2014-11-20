@@ -11,19 +11,19 @@ module Jekyll
 
           # presenters
           dir = site.config['attendease']['presenters_path_name']
-          schedule_generator.presenters.each do |o|
+          schedule_generator.schedule_data.presenters.each do |o|
             site.pages << RedirectPage.new(site, site.source, File.join(dir, o['id']), File.join('/', dir, o['slug']))
           end
 
           # venues
           dir = site.config['attendease']['venues_path_name']
-          schedule_generator.venues.each do |o|
+          schedule_generator.schedule_data.venues.each do |o|
             site.pages << RedirectPage.new(site, site.source, File.join(dir, o['id']), File.join('/', dir, o['slug']))
           end
 
           # sessions
           dir = site.config['attendease']['schedule_path_name']
-          schedule_generator.sessions.each do |o|
+          schedule_generator.schedule_data.sessions.each do |o|
             site.pages << RedirectPage.new(site, site.source, File.join(dir, o['code']), File.join('/', dir, 'sessions', o['slug']))
           end
         end
