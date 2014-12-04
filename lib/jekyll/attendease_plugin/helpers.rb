@@ -37,6 +37,18 @@ module Jekyll
         s.encode('ASCII',
         fallback: lambda { |c| fallback.key?(c) ? fallback[c] : undefined })
       end
+
+      def self.get_template(site, template_string)
+        template = nil
+
+        if site.config['attendease'] && templates = site.config['attendease']['templates']
+          if t = templates.detect{|t| t['page'] == template_string}
+            template = t['data']
+          end
+        end
+
+        template
+      end
     end
   end
 end

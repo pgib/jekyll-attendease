@@ -30,7 +30,14 @@ module Jekyll
 
         self.data['instances'] = instances.sort{|x,y| [x['time'], x['session']['name']] <=> [y['time'], y['session']['name']]}
 
-        self.content = File.read(File.join(base, '_attendease', 'templates', 'schedule', 'day.html'))
+        # Check if Attendease API has a template for this page
+        if template = Helpers.get_template(site, 'schedule/day')
+          # use the template file from the attendease api
+          self.content = template
+        else
+          # use the included template in the gem
+          self.content = File.read(File.join(base, '_attendease', 'templates', 'schedule', 'day.html'))
+        end
       end
     end
   end

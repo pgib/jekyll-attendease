@@ -34,7 +34,7 @@ module Jekyll
 
             FileUtils.mkdir_p(@attendease_data_path)
 
-            data_files = %w{ site event sessions presenters rooms filters venues sponsors }.map { |m| "#{m}.json"} << 'lingo.yml'
+            data_files = %w{ site templates event sessions presenters rooms filters venues sponsors }.map { |m| "#{m}.json"} << 'lingo.yml'
 
             data_files.each do |file_name|
               update_data = true
@@ -121,13 +121,16 @@ module Jekyll
               raise "Could not create #{path}." unless File.exists?(path)
             end
 
-            template_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '..', 'templates', '_includes', 'attendease'))
+            template_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '..', 'templates', 'attendease'))
             files_to_create_if_they_dont_exist = Dir.chdir(template_path) { Dir.glob('*/**.html') + Dir.glob('*.html') }
 
             files_to_create_if_they_dont_exist.each do |file|
               destination_file = File.join(site.source, '_attendease', 'templates', file)
               FileUtils.cp(File.join(template_path, file), destination_file) unless File.exists?(destination_file)
             end
+
+            # Override the template files with template data from the Attendease event
+            site.config['attendease']['templates'] = JSON.parse(File.read(File.join(site.config['source'], '_attendease', 'data', 'templates.json')))
 
             # make the event available to anyone
             event = JSON.parse(File.read("#{@attendease_data_path}/event.json"))
