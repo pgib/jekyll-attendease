@@ -78,6 +78,7 @@ We can also use logical expressions like so:
 Simply add the auth script tag and the auth action and account tags and our system will know if you logged in or out and will be able to link to your account!
 
 The script tag sets up an AJAX callback to the server to determine if we are online or offline.
+
 `{% attendease_auth_script %}`
 
 This is simple a div with the id `attendease-auth-account`, maybe more in the future. When used with the `attendease_auth_script` tag it will populate with the link to the account of the attendee.
@@ -98,7 +99,7 @@ This script tag sets up lingo so your event can sound like you want it to sound 
 
 A quick way to use our lingo stuff in our jekyll templates.
 
-`{% t %}`
+`{% attendease_t %}`
 
 ## Listening for the auth callback
 
