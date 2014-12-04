@@ -14,7 +14,7 @@
       <div class="attendease-instances">
         {% if site.attendease.data.event_session_times_heading == true %}
         {% assign t_size = page.session.instances.size %}
-        <h2 class="attendease-times-heading">{% t event.lingo.times %}</h2>
+        <h2 class="attendease-times-heading">{% attendease_t event.lingo.times %}</h2>
         {% endif %}
 
         {% for instance in page.session.instances %}
@@ -64,7 +64,7 @@
     <div class="attendease-presenters attendease-meta-item">
       {% if site.attendease.data.event_session_presenters_heading == true %}
       {% assign t_size = page.session.presenters.size %}
-      <h2 class="attendease-presenter-heading">{% t event.lingo.presenters %}</h2>
+      <h2 class="attendease-presenter-heading">{% attendease_t event.lingo.presenters %}</h2>
       {% endif %}
 
       {% for presenter in page.session.presenters %}
@@ -93,7 +93,7 @@
       {% if site.attendease.data.event_session_filters_heading == true %}
       {% assign t_size = page.session.filters.size %}
         {% if t_size > 0 %}
-          <h2 class="attendease-filter-heading">{% t event.lingo.filters %}</h2>
+          <h2 class="attendease-filter-heading">{% attendease_t event.lingo.filters %}</h2>
         {% endif %}
       {% endif %}
 
