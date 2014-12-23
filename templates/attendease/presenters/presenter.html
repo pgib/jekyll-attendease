@@ -42,7 +42,7 @@
   <div class="attendease-sessions attendease-schedule">
     {% if site.attendease.data.event_session_times_heading == true %}
     {% assign t_size = page.presenter.sessions.size %}
-    <h2 class="attendease-sessions-heading">{% t event.lingo.sessions %}</h2>
+    <h2 class="attendease-sessions-heading">{% attendease_t event.lingo.sessions %}</h2>
     {% endif %}
 
     {% for session in page.presenter.sessions %}

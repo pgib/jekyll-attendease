@@ -11,6 +11,6 @@ Liquid::Template.register_tag('attendease_scheduler_script', Jekyll::AttendeaseP
 Liquid::Template.register_tag('attendease_locales_script', Jekyll::AttendeasePlugin::LocalesScriptTag)
 Liquid::Template.register_tag('attendease_auth_account', Jekyll::AttendeasePlugin::AuthAccountTag)
 Liquid::Template.register_tag('attendease_auth_action', Jekyll::AttendeasePlugin::AuthActionTag)
-Liquid::Template.register_tag('t', Jekyll::AttendeasePlugin::TranslateTag)
+Liquid::Template.register_tag('attendease_t', Jekyll::AttendeasePlugin::TranslateTag)
 
 Liquid::Template.register_filter(Jekyll::AttendeasePlugin::Filters)

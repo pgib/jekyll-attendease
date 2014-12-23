@@ -22,13 +22,13 @@ RSpec.describe "Jekyll Attendease tags" do
     it { is_expected.to include "/api/lingo.json" }
   end
 
-  context "{% t event.lingo.sponsors %}" do
-    subject { render("{% t event.lingo.sponsors %}") }
+  context "{% attendease_t event.lingo.sponsors %}" do
+    subject { render("{% attendease_t event.lingo.sponsors %}") }
     it { is_expected.to eq "Sponsors" }
   end
 
-  context "{% t event.lingo.sponsors, t_size: 1 %}" do
-    subject { render("{% t event.lingo.sponsors, t_size: 1 %}") }
+  context "{% attendease_t event.lingo.sponsors, t_size: 1 %}" do
+    subject { render("{% attendease_t event.lingo.sponsors, t_size: 1 %}") }
     it { is_expected.to eq "Sponsor" }
   end
 
