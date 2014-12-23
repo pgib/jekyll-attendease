@@ -56,6 +56,7 @@ presenters_index_title      | Presenters         | Override to set the page.titl
 presenter_page_title        | Presenter: %s      | %s will be substituted with the session's name
 venues_index_title          | Venues             | Override to set the page.title property of the Venues index page
 venue_page_title            | Venue: %s          | %s will be substituted with venue's name. Override to set the page.title property of the individual Venue page
+session_slug_uses_code      | false              | If true, the slugs used for session pages.
 
 Remember to replace `https://your-event-subdomain.attendease.com/` with your actual event url, or crazy things will happen!
 
