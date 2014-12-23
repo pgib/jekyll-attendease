@@ -103,10 +103,10 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
     end
   end
 
-  context 'in a site with attendease.show_day_index = true' do
-    it 'creates the day index page' do
-      site = build_site({ 'attendease' => { 'show_day_index' => true } })
-      expect(File.read(File.join(site.config['destination'], site.config['attendease']['schedule_path_name'], @index_file))).to_not include 'attendease-session-and-instance'
+  context 'in a site with attendease.show_schedule_index = true' do
+    it 'creates the day index page and show schedule widget' do
+      site = build_site({ 'attendease' => { 'show_schedule_index' => true } })
+      expect(File.read(File.join(site.config['destination'], site.config['attendease']['schedule_path_name'], @index_file))).to include 'attendease-schedule-widget'
     end
   end
 
