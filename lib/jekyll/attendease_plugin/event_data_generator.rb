@@ -114,24 +114,6 @@ module Jekyll
               end
             end
 
-            # Generate the template files if they don't yet exist.
-            %w{ schedule presenters venues sponsors}.each do |p|
-              path = File.join(site.source, '_attendease', 'templates', p)
-              FileUtils.mkdir_p(path)
-              raise "Could not create #{path}." unless File.exists?(path)
-            end
-
-            template_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '..', 'templates', 'attendease'))
-            files_to_create_if_they_dont_exist = Dir.chdir(template_path) { Dir.glob('*/**.html') + Dir.glob('*.html') }
-
-            files_to_create_if_they_dont_exist.each do |file|
-              destination_file = File.join(site.source, '_attendease', 'templates', file)
-              FileUtils.cp(File.join(template_path, file), destination_file) unless File.exists?(destination_file)
-            end
-
-            # Override the template files with template data from the Attendease event
-            site.config['attendease']['templates'] = JSON.parse(File.read(File.join(site.config['source'], '_attendease', 'data', 'templates.json')))
-
             # make the event available to anyone
             event = JSON.parse(File.read("#{@attendease_data_path}/event.json"))
             site.config['attendease']['event'] = event

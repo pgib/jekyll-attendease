@@ -9,12 +9,12 @@ module Jekyll
 
         self.process(@name)
 
-        self.read_yaml(File.join(base, '_attendease', 'layouts'), 'layout.html')
+
         self.data = {}
 
         self.data['redirect_url'] = redirect_url
 
-        self.content = File.read(File.join(base, '_attendease', 'templates', 'redirect.html'))
+        self.content = File.read(File.join(File.dirname(__FILE__), '..', '..', '..', 'templates', 'redirect.html'))
       end
     end
   end

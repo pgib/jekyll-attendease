@@ -12,11 +12,6 @@
 </div>
 
 <div class="attendease-schedule">
-  <div class="attendease-header">
-    {% assign t_size = page.session.size %}
-    <h1>{% attendease_t event.lingo.sessions %}</h2>
-  </div>
-
   {% for session in page.sessions %}
     <div class="attendease-session-and-instance {{ session.filter_tags }}" data-session-id="{{ session.id }}">
       <div class="attendease-name">

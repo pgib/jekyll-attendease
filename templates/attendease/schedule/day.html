@@ -12,10 +12,6 @@
 </div>
 
 <div class="attendease-schedule" data-date="{{ page.day.date }}">
-  <div class="attendease-header">
-    <h1>{{ page.day.date_formatted }}</h1>
-  </div>
-
   {% for instance in page.instances %}
     <div class="attendease-session-and-instance {{ instance.session.filter_tags }}" data-instance-id="{{ instance.id }}" data-session-id="{{ instance.session.id }}">
       <div class="attendease-name">
