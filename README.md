@@ -2,6 +2,8 @@
 
 A Jekyll plugin, brings in data from your Attendease event and allows you to use it in your Jekyll templates for awesome event websites.
 
+![Travis status](https://api.travis-ci.org/attendease/jekyll-attendease.png)
+
 ## Installation
 
 Add this line to your application's Gemfile:
