@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'spec_helper'
 
 RSpec.describe Jekyll::AttendeasePlugin::Helpers do
