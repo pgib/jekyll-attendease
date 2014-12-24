@@ -1,3 +1,11 @@
+# Create attendease layouts in `_layouts`.
+# These layouts will be used in page generators
+# - /attendease_home.html (Home page)
+# - /attendease_presenters.html (Presenter pages)
+# - /attendease_schedule.html (Schedule pages)
+# - /attendease_sponsors.html (Sponsor pages)
+# - /attendease_venues.html (Venue pages)
+
 module Jekyll
   module AttendeasePlugin
     class EventLayoutGenerator < Generator
@@ -10,16 +18,14 @@ module Jekyll
 
         attendease_precompiled_theme_layouts_path = File.join(site.source, 'attendease_layouts') # These are compiled to the html site.
         attendease_precompiled_theme_email_layouts_path = File.join(site.source, 'attendease_layouts', 'emails') # These are compiled for email.
-        attendease_theme_layouts_path = File.join(site.source, '_attendease', 'layouts') # These are used for page generation (no output html file needed)
+        layouts_path = File.join(site.source, '_layouts')
 
         FileUtils.mkdir_p(attendease_precompiled_theme_layouts_path)
-        FileUtils.mkdir_p(attendease_theme_layouts_path)
-
 
         # Precompiled layouts for attendease app and jekyll generated pages.
         base_layout = site.config['attendease']['base_layout'] || 'layout'
 
-        base_layout_file = File.join(site.source, '_layouts', "#{base_layout}.html")
+        base_layout_file = File.join(layouts_path, "#{base_layout}.html")
         unless File.exists?(base_layout_file)
           # Generate an extremely simple base layout if it does not exist.
           File.open(base_layout_file, 'w+') { |f| f.write("{{ content }}") }
@@ -39,7 +45,7 @@ module Jekyll
 
         # Precompiled layouts for attendease email
         base_email_layout = site.config['attendease']['base_email_layout'] || 'email'
-        base_email_layout_file = File.join(site.source, '_layouts', "#{base_email_layout}.html")
+        base_email_layout_file = File.join(layouts_path, "#{base_email_layout}.html")
         unless File.exists?(base_email_layout_file)
           # Generate an extremely simple base email layout if it does not exist.
           File.open(base_email_layout_file, 'w+') { |f| f.write("{{ content }}") }
@@ -52,34 +58,6 @@ module Jekyll
             site.pages << EventLayoutPage.new(site, site.source, 'attendease_layouts/emails', "#{layout}.html", base_email_layout, layout.capitalize)
           end
         end
-
-
-        # Layouts to use for page generation. (These layouts do not need to be part of the html output)
-        layouts_for_page_generation = %w{ layout schedule presenters venues sponsors }
-
-        source_template = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '..', 'templates', 'layout.html'))
-        html = Liquid::Template.parse(File.read(source_template)).render('page' => { 'base_layout' => base_layout })
-
-        layouts_for_page_generation.each do |layout|
-          base_layout_path = File.join(site.source, '_layouts', "#{base_layout}.html")
-
-          unless File.exists?(base_layout_path)
-            Jekyll.logger.debug "Could not find _layouts/#{base_layout}.html in your site source. Using the built-in template from jekyll-attendease."
-
-            source_template = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '..', 'templates', 'layout.html'))
-            html = Liquid::Template.parse(File.read(source_template)).render('page' => { 'base_layout' => base_layout })
-
-            File.open(base_layout_path, 'w') { |f| f.write(html) }
-          end
-
-          layout_path = File.join(attendease_theme_layouts_path, "#{layout}.html")
-
-          unless File.exists?(layout_path)
-            #puts "generating #{layout}.html..."
-            File.open(layout_path, 'w') { |f| f.write(html) }
-          end
-        end
-
       end
     end
   end

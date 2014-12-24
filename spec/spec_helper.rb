@@ -23,6 +23,7 @@ RSpec.configure do |config|
 
     FileUtils.touch Dir.glob(File.join(File.dirname(__FILE__), 'fixtures', '_attendease', 'data', '*.*'))
     @site = build_site
+    @page = Jekyll::Page.new(@site, File.join(File.dirname(__FILE__), 'fixtures'), '', 'page.html')
   end
 
   def test_dir(*subdirs)

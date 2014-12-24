@@ -2,6 +2,8 @@
 
 A Jekyll plugin, brings in data from your Attendease event and allows you to use it in your Jekyll templates for awesome event websites.
 
+![Travis status](https://api.travis-ci.org/attendease/jekyll-attendease.png)
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -45,7 +47,7 @@ base_email_layout           | email              | When generating an email temp
 access_token                | none               | Your top-secret API access token
 cache_expiry                | 3600               | The number of seconds until we regerenate the data from the api. Otherwise data will be cached for speed.
 generate_schedule_pages     | false              | Set to true if you want to generate static schedule pages.
-show_day_index              | false              | Set to true if you want an index of days
+show_schedule_index         | false              | Set to true if you want a schedule index page. Otherwise it will just show the first day at /schedule.
 schedule_path_name          | schedule           | Folder off of the root to put the schedule pages. Setting to blank will disable schedule page generation.
 presenters_path_name        | presenters         | Folder off of the root to put the presenters page. Setting to blank will disable presenter page generation.
 venues_path_name            | venues             | Folder off of the root to put the venues page. Setting to blank will disable venue page generation.
@@ -56,6 +58,7 @@ presenters_index_title      | Presenters         | Override to set the page.titl
 presenter_page_title        | Presenter: %s      | %s will be substituted with the session's name
 venues_index_title          | Venues             | Override to set the page.title property of the Venues index page
 venue_page_title            | Venue: %s          | %s will be substituted with venue's name. Override to set the page.title property of the individual Venue page
+session_slug_uses_code      | false              | If true, the slugs used for session pages.
 
 Remember to replace `https://your-event-subdomain.attendease.com/` with your actual event url, or crazy things will happen!
 
@@ -78,6 +81,7 @@ We can also use logical expressions like so:
 Simply add the auth script tag and the auth action and account tags and our system will know if you logged in or out and will be able to link to your account!
 
 The script tag sets up an AJAX callback to the server to determine if we are online or offline.
+
 `{% attendease_auth_script %}`
 
 This is simple a div with the id `attendease-auth-account`, maybe more in the future. When used with the `attendease_auth_script` tag it will populate with the link to the account of the attendee.
@@ -98,7 +102,7 @@ This script tag sets up lingo so your event can sound like you want it to sound 
 
 A quick way to use our lingo stuff in our jekyll templates.
 
-`{% t %}`
+`{% attendease_t %}`
 
 ## Listening for the auth callback
 
@@ -144,10 +148,10 @@ For Session Day pages:
 ## Preparing for a release
 
 1. Start with a pre-release version. Adding non-numeric characters achieves
-   this. (e.g. 0.6.9.pre in `lib/jekyll/attendease_plugin/version.rb`)
+   this. (e.g. 0.6.13.pre in `lib/jekyll/attendease_plugin/version.rb`)
 2. Update the gem's release date in `jekyll-attendease.gemspec`
 3. `gem build jekyll-attendease.gemspec`
-4. `gem push jekyll-attendease-0.6.9.pre.gem`
+4. `gem push jekyll-attendease-0.6.13.pre.gem`
 5. Update Attendease respectively to test.
 
 

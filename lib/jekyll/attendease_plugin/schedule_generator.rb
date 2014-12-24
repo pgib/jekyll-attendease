@@ -16,7 +16,7 @@ module Jekyll
           dir = site.config['attendease']['schedule_path_name']
 
           unless dir.nil?
-            if (site.config['attendease'] && site.config['attendease']['show_day_index'])
+            if (site.config['attendease'] && site.config['attendease']['show_schedule_index'])
               site.pages << ScheduleIndexPage.new(site, site.source, File.join(dir), @schedule_data.event['dates'])
             else
               site.pages << ScheduleDayPage.new(site, site.source, File.join(dir), @schedule_data.event['dates'].first, @schedule_data.sessions, @schedule_data.event['dates'])

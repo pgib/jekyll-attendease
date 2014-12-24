@@ -4,6 +4,7 @@ require 'jekyll/attendease_plugin/schedule_data_parser'
 # Generators:
 require 'jekyll/attendease_plugin/event_data_generator'
 require 'jekyll/attendease_plugin/event_layout_generator'
+require 'jekyll/attendease_plugin/event_template_generator'
 require 'jekyll/attendease_plugin/home_page_generator'
 require 'jekyll/attendease_plugin/schedule_generator'
 require 'jekyll/attendease_plugin/sponsor_generator'
