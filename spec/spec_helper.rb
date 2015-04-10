@@ -57,6 +57,7 @@ RSpec.configure do |config|
         'schedule_path_name'      => 'schedule',
         'presenters_path_name'    => 'presenters',
         'sponsors_path_name'      => 'sponsors',
+        'venue_path_name'         => 'venue',
         'venues_path_name'        => 'venues',
         'base_layout'             => 'layout',
         'generate_schedule_pages' => true,

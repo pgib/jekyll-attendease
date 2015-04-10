@@ -50,7 +50,7 @@ generate_schedule_pages     | false              | Set to true if you want to ge
 show_schedule_index         | false              | Set to true if you want a schedule index page. Otherwise it will just show the first day at /schedule.
 schedule_path_name          | schedule           | Folder off of the root to put the schedule pages. Setting to blank will disable schedule page generation.
 presenters_path_name        | presenters         | Folder off of the root to put the presenters page. Setting to blank will disable presenter page generation.
-venues_path_name            | venues             | Folder off of the root to put the venues page. Setting to blank will disable venue page generation.
+venue_path_name             | venue              | Folder off of the root to put the venue venues_path_name            | venues             | Folder off of the root to put the venues page. Setting to blank will disable venue page generation.
 sponsors_path_name          | sponsors           | Folder off of the root to put the sponsors page. Setting to blank will disable sponsor page generation.
 schedule_sessions_title     | Schedule: Sessions | Override to set the page.title of the sessions listing page
 schedule_session_page_title | Schedule: %s       | %s will be substituted with the session's name

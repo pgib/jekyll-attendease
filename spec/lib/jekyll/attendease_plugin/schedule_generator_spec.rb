@@ -24,18 +24,6 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
     expect(File.file?(file)).to eq(true)
   end
 
-  it 'creates a venue index page' do
-    file = File.join(@site.config['destination'], @site.config['attendease']['venues_path_name'], @index_file)
-    expect(File.exists?(file)).to eq(true)
-    expect(File.file?(file)).to eq(true)
-  end
-
-  it 'creates a venue page' do
-    file = File.join(@site.config['destination'], @site.config['attendease']['venues_path_name'], @venue_slug)
-    expect(File.exists?(file)).to eq(true)
-    expect(File.file?(file)).to eq(true)
-  end
-
   it 'creates a schedule index page' do
     file = File.join(@site.config['destination'], @site.config['attendease']['schedule_path_name'], @index_file)
     expect(File.exists?(file)).to eq(true)
@@ -68,6 +56,28 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
 
     it 'links presenters correctly from the session page' do
       expect(File.read(File.join(@site.config['destination'], @site.config['attendease']['schedule_path_name'], 'sessions', @session_slug))).to include @presenter_slug
+    end
+  end
+
+  context 'a single venue' do
+    pending 'creates a venue index page' do
+      file = File.join(@site.config['destination'], @site.config['attendease']['venue_path_name'], @index_file)
+      expect(File.exists?(file)).to eq(true)
+      expect(File.file?(file)).to eq(true)
+    end
+  end
+
+  context 'multiple venues' do
+    it 'creates a venue index page' do
+      file = File.join(@site.config['destination'], @site.config['attendease']['venues_path_name'], @index_file)
+      expect(File.exists?(file)).to eq(true)
+      expect(File.file?(file)).to eq(true)
+    end
+
+    it 'creates a venue page' do
+      file = File.join(@site.config['destination'], @site.config['attendease']['venues_path_name'], @venue_slug)
+      expect(File.exists?(file)).to eq(true)
+      expect(File.file?(file)).to eq(true)
     end
   end
 
@@ -134,7 +144,7 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
     end
 
     it 'no venues folder exists' do
-      @site = build_site({ 'attendease' => { 'venues_path_name' => nil } })
+      @site = build_site({ 'attendease' => { 'venues_path_name' => nil, 'venue_path_name' => nil } })
 
       expect(File.exists?(File.join(@site.config['destination'], 'venues'))).to eq(false)
     end
@@ -147,4 +157,3 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
   end
 
 end
-

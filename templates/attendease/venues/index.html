@@ -26,19 +26,55 @@
         <a href="/venues/{{ venue.slug }}">{{ venue.name }}</a>
       </div>
 
-      {% if venue.address.address1 && venue.address.city %}
-        <div class="attendease-venue-address">
+      <div class="attendease-venue-address">
+        {% if venue.address.address1 and venue.address.address1 != "" %}
           <div class="attendease-venue-address-address1">
             {{ venue.address.address1 }}
           </div>
+        {% endif %}
 
-          {% if venue.address.address2 %}
-            <div class="attendease-venue-address-address2">
-              {{ venue.address.address2 }}
-            </div>
+        {% if venue.address.address2 and venue.address.address2 != "" %}
+          <div class="attendease-venue-address-address2">
+            {{ venue.address.address2 }}
+          </div>
+        {% endif %}
+
+        <div class="attendease-venue-address-location">
+          {% assign has_state = false %}
+          {% assign has_city = false %}
+          {% assign has_country = false %}
+
+          {% if venue.address.state and venue.address.state != "" %}
+            {% assign has_state = true %}
+          {% endif %}
+
+          {% if venue.address.city and venue.address.city != "" %}
+            {% assign has_city = true %}
+          {% endif %}
+
+          {% if venue.address.country and venue.address.country != "" %}
+            {% assign has_country = true %}
+          {% endif %}
+
+          {% if has_city %}
+            {{ venue.address.city }}{% if has_state or has_country %},{% endif %}
+          {% endif %}
+
+          {% if has_state %}
+            {{ venue.address.state }}{% if has_country %},{% endif %}
+          {% endif %}
+
+          {% if has_country %}
+            {{ venue.address.country }}
           {% endif %}
         </div>
-      {% endif %}
+
+        {% if venue.address.zip and venue.address.zip != "" %}
+          <div class="attendease-venue-address-zip">
+            {{ venue.address.zip }}
+          </div>
+        {% endif %}
+      </div>
 
     </div>
   {% endfor %}
