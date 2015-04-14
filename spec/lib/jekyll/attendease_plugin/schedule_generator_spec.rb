@@ -9,7 +9,7 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
     @session_slug = @schedule_generator.schedule_data.sessions.first['slug']
     @presenter_slug = @schedule_generator.schedule_data.presenters.first['slug']
     @presenter_social = @schedule_generator.schedule_data.presenters.first['social']
-    @venue_slug = Jekyll::AttendeasePlugin::Helpers.parameterize(@schedule_generator.schedule_data.venues.first['name'], '_') + '.html'
+    @venue_slug = @schedule_generator.schedule_data.venues.first['slug']
   end
 
   it 'creates a presenters index page' do
@@ -47,6 +47,44 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
     file = File.join(@site.config['destination'], @site.config['attendease']['schedule_path_name'], 'sessions', @session_slug)
     expect(File.exists?(file)).to eq(true)
     expect(File.file?(file)).to eq(true)
+  end
+
+  context 'with a localized name' do
+    before do
+      @session_slug_localized = @schedule_generator.schedule_data.sessions.last['slug']
+      @presenter_slug_localized = @schedule_generator.schedule_data.presenters.last['slug']
+      @venue_slug_localized = @schedule_generator.schedule_data.venues.last['slug']
+    end
+
+    it 'should use the session code' do
+      expect(@session_slug_localized).to eq('420.html')
+    end
+
+    it 'creates a schedule session page for the name' do
+      file = File.join(@site.config['destination'], @site.config['attendease']['schedule_path_name'], 'sessions', @session_slug_localized)
+      expect(File.exists?(file)).to eq(true)
+      expect(File.file?(file)).to eq(true)
+    end
+
+    it 'should use the presenter id' do
+      expect(@presenter_slug_localized).to eq('53bc134b02c8bc9994000055.html')
+    end
+
+    it 'creates a presenter page' do
+      file = File.join(@site.config['destination'], @site.config['attendease']['presenters_path_name'], @presenter_slug_localized)
+      expect(File.exists?(file)).to eq(true)
+      expect(File.file?(file)).to eq(true)
+    end
+
+    it 'should use the venue id' do
+      expect(@venue_slug_localized).to eq('53bc120d02c8bc9994000032.html')
+    end
+
+    it 'creates a venue page' do
+      file = File.join(@site.config['destination'], @site.config['attendease']['venues_path_name'], @venue_slug_localized)
+      expect(File.exists?(file)).to eq(true)
+      expect(File.file?(file)).to eq(true)
+    end
   end
 
   context 'presenter linking' do
