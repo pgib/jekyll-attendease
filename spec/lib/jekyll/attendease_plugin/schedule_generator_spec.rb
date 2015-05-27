@@ -9,7 +9,7 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
     @session_slug = @schedule_generator.schedule_data.sessions.first['slug']
     @presenter_slug = @schedule_generator.schedule_data.presenters.first['slug']
     @presenter_social = @schedule_generator.schedule_data.presenters.first['social']
-    @venue_slug = Jekyll::AttendeasePlugin::Helpers.parameterize(@schedule_generator.schedule_data.venues.first['name'], '_') + '.html'
+    @venue_slug = @schedule_generator.schedule_data.venues.first['slug']
   end
 
   it 'creates a presenters index page' do
@@ -20,18 +20,6 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
 
   it 'creates a presenter page' do
     file = File.join(@site.config['destination'], @site.config['attendease']['presenters_path_name'], @presenter_slug)
-    expect(File.exists?(file)).to eq(true)
-    expect(File.file?(file)).to eq(true)
-  end
-
-  it 'creates a venue index page' do
-    file = File.join(@site.config['destination'], @site.config['attendease']['venues_path_name'], @index_file)
-    expect(File.exists?(file)).to eq(true)
-    expect(File.file?(file)).to eq(true)
-  end
-
-  it 'creates a venue page' do
-    file = File.join(@site.config['destination'], @site.config['attendease']['venues_path_name'], @venue_slug)
     expect(File.exists?(file)).to eq(true)
     expect(File.file?(file)).to eq(true)
   end
@@ -61,6 +49,44 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
     expect(File.file?(file)).to eq(true)
   end
 
+  context 'with a localized name' do
+    before do
+      @session_slug_localized = @schedule_generator.schedule_data.sessions.last['slug']
+      @presenter_slug_localized = @schedule_generator.schedule_data.presenters.last['slug']
+      @venue_slug_localized = @schedule_generator.schedule_data.venues.last['slug']
+    end
+
+    it 'should use the session code' do
+      expect(@session_slug_localized).to eq('420.html')
+    end
+
+    it 'creates a schedule session page for the name' do
+      file = File.join(@site.config['destination'], @site.config['attendease']['schedule_path_name'], 'sessions', @session_slug_localized)
+      expect(File.exists?(file)).to eq(true)
+      expect(File.file?(file)).to eq(true)
+    end
+
+    it 'should use the presenter id' do
+      expect(@presenter_slug_localized).to eq('53bc134b02c8bc9994000055.html')
+    end
+
+    it 'creates a presenter page' do
+      file = File.join(@site.config['destination'], @site.config['attendease']['presenters_path_name'], @presenter_slug_localized)
+      expect(File.exists?(file)).to eq(true)
+      expect(File.file?(file)).to eq(true)
+    end
+
+    it 'should use the venue id' do
+      expect(@venue_slug_localized).to eq('53bc120d02c8bc9994000032.html')
+    end
+
+    it 'creates a venue page' do
+      file = File.join(@site.config['destination'], @site.config['attendease']['venues_path_name'], @venue_slug_localized)
+      expect(File.exists?(file)).to eq(true)
+      expect(File.file?(file)).to eq(true)
+    end
+  end
+
   context 'presenter linking' do
     it 'links presenters correctly from the presenter index page' do
       expect(File.read(File.join(@site.config['destination'], @site.config['attendease']['presenters_path_name'], @index_file))).to include @presenter_slug
@@ -68,6 +94,28 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
 
     it 'links presenters correctly from the session page' do
       expect(File.read(File.join(@site.config['destination'], @site.config['attendease']['schedule_path_name'], 'sessions', @session_slug))).to include @presenter_slug
+    end
+  end
+
+  context 'a single venue' do
+    pending 'creates a venue index page' do
+      file = File.join(@site.config['destination'], @site.config['attendease']['venue_path_name'], @index_file)
+      expect(File.exists?(file)).to eq(true)
+      expect(File.file?(file)).to eq(true)
+    end
+  end
+
+  context 'multiple venues' do
+    it 'creates a venue index page' do
+      file = File.join(@site.config['destination'], @site.config['attendease']['venues_path_name'], @index_file)
+      expect(File.exists?(file)).to eq(true)
+      expect(File.file?(file)).to eq(true)
+    end
+
+    it 'creates a venue page' do
+      file = File.join(@site.config['destination'], @site.config['attendease']['venues_path_name'], @venue_slug)
+      expect(File.exists?(file)).to eq(true)
+      expect(File.file?(file)).to eq(true)
     end
   end
 
@@ -134,7 +182,7 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
     end
 
     it 'no venues folder exists' do
-      @site = build_site({ 'attendease' => { 'venues_path_name' => nil } })
+      @site = build_site({ 'attendease' => { 'venues_path_name' => nil, 'venue_path_name' => nil } })
 
       expect(File.exists?(File.join(@site.config['destination'], 'venues'))).to eq(false)
     end
@@ -147,4 +195,3 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
   end
 
 end
-

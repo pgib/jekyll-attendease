@@ -1,6 +1,6 @@
 <div class="attendease-venue-profile">
   <div class="attendease-venue" data-venue-id="{{ page.venue.id }}">
-    {% if page.venue.address.latitude && page.venue.address.longitude %}
+    {% if page.venue.address.latitude and page.venue.address.longitude %}
 
       {% if page.venue.primary %}
         {% assign marker_colour = 'blue' %}
@@ -23,29 +23,51 @@
       <h1>{{ page.venue.name }}</h1>
     </div>
 
-    {% if page.venue.address.address1 && page.venue.address.city %}
-      <div class="attendease-venue-address">
+    <div class="attendease-venue-address">
+      {% if page.venue.address.address1 and page.venue.address.address1 != "" %}
         <div class="attendease-venue-address-address1">
           {{ page.venue.address.address1 }}
         </div>
+      {% endif %}
 
-        {% if page.venue.address.address2 %}
-          <div class="attendease-venue-address-address2">
-            {{ page.venue.address.address2 }}
-          </div>
+      {% if page.venue.address.address2 and page.venue.address.address2 != "" %}
+        <div class="attendease-venue-address-address2">
+          {{ page.venue.address.address2 }}
+        </div>
+      {% endif %}
+
+      <div class="attendease-venue-address-location">
+        {% if page.venue.address.state and page.venue.address.state != "" %}
+          {% assign has_state = true %}
         {% endif %}
 
-        <div class="attendease-venue-address-location">
-          {{ page.venue.address.city }}{% if page.venue.address.state %}, {{ page.venue.address.state }}{% endif %}{% if page.venue.address.country %}, {{ page.venue.address.country }}{% endif %}
-        </div>
+        {% if page.venue.address.city and page.venue.address.city != "" %}
+          {% assign has_city = true %}
+        {% endif %}
 
-        {% if page.venue.address.zip %}
-          <div class="attendease-venue-address-zip">
-            {{ page.venue.address.zip }}
-          </div>
+        {% if page.venue.address.country and page.venue.address.country != "" %}
+          {% assign has_country = true %}
+        {% endif %}
+
+        {% if has_city %}
+          {{ page.venue.address.city }}{% if has_state or has_country %},{% endif %}
+        {% endif %}
+
+        {% if has_state %}
+          {{ page.venue.address.state }}{% if has_country %},{% endif %}
+        {% endif %}
+
+        {% if has_country %}
+          {{ page.venue.address.country }}
         {% endif %}
       </div>
-    {% endif %}
+
+      {% if page.venue.address.zip and page.venue.address.zip != "" %}
+        <div class="attendease-venue-address-zip">
+          {{ page.venue.address.zip }}
+        </div>
+      {% endif %}
+    </div>
 
   </div>
 </div>

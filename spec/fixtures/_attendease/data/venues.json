@@ -16,5 +16,23 @@
         "room_ids": [
             "53bc132702c8bc9994000052"
         ]
+    },
+    {
+        "address": {
+            "address1": null,
+            "address2": null,
+            "city": "Vancouver",
+            "country": "Canada",
+            "latitude": null,
+            "longitude": null,
+            "state": "British Columbia",
+            "zip": null
+        },
+        "id": "53bc120d02c8bc9994000032",
+        "name": "פתיחה וברכות",
+        "primary": true,
+        "room_ids": [
+            "53bc132702c8bc9994000053"
+        ]
     }
 ]

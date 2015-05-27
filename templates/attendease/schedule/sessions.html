@@ -12,6 +12,10 @@
 </div>
 
 <div class="attendease-schedule">
+  {% unless page.sessions.size > 0 %}
+    <p>No sessions are currently available.</p>
+  {% endunless %}
+
   {% for session in page.sessions %}
     <div class="attendease-session-and-instance {{ session.filter_tags }}" data-session-id="{{ session.id }}">
       <div class="attendease-name">

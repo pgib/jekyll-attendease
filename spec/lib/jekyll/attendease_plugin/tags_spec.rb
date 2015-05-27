@@ -105,7 +105,7 @@ def schedule_widget_data
             </div>
           </div>
           <div class="attendease-name">
-            Swimming 201
+          פתיחה וברכות
           </div>
         </div>
 </div>

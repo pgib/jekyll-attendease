@@ -47,6 +47,18 @@ module Jekyll
 
           # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
           # /venue pages.
+
+
+          # Create a single venue page at /venue
+          if @schedule_data.venues.length == 1
+            dir = site.config['attendease']['venue_path_name']
+
+            unless dir.nil?
+              site.pages << VenuePage.new(site, site.source, dir, @schedule_data.venues.first, true)
+            end
+          end
+
+          # Create a list of venues and venue pages to keep backwards compatibility.
           dir = site.config['attendease']['venues_path_name']
 
           unless dir.nil?
@@ -61,4 +73,3 @@ module Jekyll
     end
   end
 end
-
