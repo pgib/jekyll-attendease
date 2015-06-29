@@ -103,7 +103,7 @@ module Jekyll
 
         session_presenters.inject([]) do |memo, presenter|
           memo << presenter.select do |k, v|
-            %w{ id first_name last_name company title profile_url slug }.include?(k)
+            %w{ id first_name last_name company title profile_url featured slug }.include?(k)
           end
         end
       end
