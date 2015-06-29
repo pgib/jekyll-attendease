@@ -1,5 +1,5 @@
 <div class="attendease-presenter-profile">
-  <div class="attendease-presenter" data-presenter-id="{{ page.presenter.id }}">
+  <div class="attendease-presenter{% if page.presenter.featured %} attendease-featured-presenter{% endif %}" data-presenter-id="{{ page.presenter.id }}">
     <div class="attendease-presenter-profile-image">
       <img src="{{ page.presenter.profile_url }}" />
     </div>

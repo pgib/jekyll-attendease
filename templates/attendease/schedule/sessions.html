@@ -23,7 +23,7 @@
       </div>
       <div class="attendease-presenters">
         {% for presenter in session.presenters %}
-          <div class="attendease-presenter-mini" data-presenter-id="{{ presenter.id }}">
+          <div class="attendease-presenter-mini{% if presenter.featured %} attendease-featured-presenter{% endif %}" data-presenter-id="{{ presenter.id }}">
             <div class="attendease-presenter-name">
               <a href="/presenters/{{ presenter.slug }}">{{ presenter.first_name }} {{ presenter.last_name }}</a>
             </div>

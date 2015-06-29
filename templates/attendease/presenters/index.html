@@ -8,7 +8,7 @@
   {% endunless %}
 
   {% for presenter in page.presenters %}
-    <div class="attendease-presenter" data-presenter-id="{{ presenter.id }}">
+    <div class="attendease-presenter{% if presenter.featured %} attendease-featured-presenter{% endif %}" data-presenter-id="{{ presenter.id }}">
       <div class="attendease-presenter-profile-image">
         <a href="/presenters/{{ presenter.slug }}">
           <img src="{{ presenter.profile_url }}" />
