@@ -4,6 +4,9 @@ A Jekyll plugin, brings in data from your Attendease event and allows you to use
 
 ![Travis status](https://api.travis-ci.org/attendease/jekyll-attendease.png)
 
+[![Coverage
+Status](https://coveralls.io/repos/attendease/jekyll-attendease/badge.svg?branch=master&service=github)](https://coveralls.io/github/attendease/jekyll-attendease?branch=master)
+
 ## Installation
 
 Add this line to your application's Gemfile:
