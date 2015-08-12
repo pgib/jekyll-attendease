@@ -85,6 +85,9 @@ module Jekyll
                 end
               end
 
+              # make this data available to anything that wants it
+              site.data[File.basename(file_name, '.*')] = data
+
               if data.is_a?(Hash)
                 if file_name == 'site.json'
                   # Adding to site config so we can access these variables globally wihtout using a Liquid Tag so we can use if/else
@@ -118,11 +121,6 @@ module Jekyll
             event = JSON.parse(File.read("#{@attendease_data_path}/event.json"))
             site.config['attendease']['event'] = event
 
-            # as well as all different resources
-            resources = %w{ site event sessions presenters rooms filters venues sponsors }
-            resources.each do |resource|
-              site.config['attendease'][resource] = JSON.parse(File.read("#{@attendease_data_path}/#{resource}.json"))
-            end
           end
 
         else
