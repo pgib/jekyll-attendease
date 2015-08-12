@@ -138,6 +138,23 @@ For Session Day pages:
 - `_includes/attendease/filter.html` - A filter and its items in the instance
 - `_includes/attendease/presenter_item.html` - A presenter item in the instance
 
+## Available Data
+
+Jekyll's `site.data` structure is populated by this plug-in to include the following
+datasets:
+
+Key         | Description                                                        | Type
+----------- | ------------------------------------------------------------------ | ----
+site        | Includes various information about the event/site (/api/site.json) | Hash
+templates   | Event template data (/api/templates.json)                          | Array
+event       | Event data such as dates (/api/event.json)                         | Hash
+sessions    | All of the sessions for the event (/api/sessions.json)             | Array
+presenters  | All of the presenters for the event (/api/presenters.json)         | Array
+rooms       | All of the room data for the event (/api/rooms.json)               | Array
+filters     | All of the event's filters (/api/filters.json)                     | Array
+venues      | All of the venue data for the event (/api/venues.json)             | Array
+sponsors    | All of the sponsor data for the event (/api/sponsors.json)         | Array
+lingo       | All of the locale-related data for the event                       | Hash
 
 ## Testing
 
