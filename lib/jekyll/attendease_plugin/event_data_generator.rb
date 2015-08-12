@@ -86,7 +86,7 @@ module Jekyll
               end
 
               # make this data available to anything that wants it
-              site.data[File.basename(file_name, '.*')] = data
+              site.config['attendease'][File.basename(file_name, '.*')] = data
 
               if data.is_a?(Hash)
                 if file_name == 'site.json'
@@ -106,12 +106,6 @@ module Jekyll
                     if tag.match(/^attendease_/)
                       site.config['attendease']['data'][tag.gsub(/^attendease_/, '')] = data[tag]
                     end
-                  end
-                elsif file_name == 'event.json'
-                  site.config['attendease']['event'] = {}
-
-                  data.keys.each do |tag|
-                    site.config['attendease']['event'][tag] = data[tag]
                   end
                 end
               end

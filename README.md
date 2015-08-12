@@ -140,7 +140,7 @@ For Session Day pages:
 
 ## Available Data
 
-Jekyll's `site.data` structure is populated by this plug-in to include the following
+Using the `site.attendease` structure, you can access the following datasets:
 datasets:
 
 Key         | Description                                                        | Type
@@ -155,6 +155,14 @@ filters     | All of the event's filters (/api/filters.json)                    
 venues      | All of the venue data for the event (/api/venues.json)             | Array
 sponsors    | All of the sponsor data for the event (/api/sponsors.json)         | Array
 lingo       | All of the locale-related data for the event                       | Hash
+
+Liquid Example:
+
+```
+{% for session in site.attendease.sessions %}
+  {{ session.name }}
+{% endfor %}
+```
 
 ## Testing
 
