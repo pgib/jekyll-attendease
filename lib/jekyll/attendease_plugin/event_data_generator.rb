@@ -117,6 +117,12 @@ module Jekyll
             # make the event available to anyone
             event = JSON.parse(File.read("#{@attendease_data_path}/event.json"))
             site.config['attendease']['event'] = event
+
+            # as well as all different resources
+            resources = %w{ site event sessions presenters rooms filters venues sponsors }
+            resources.each do |resource|
+              site.config['attendease'][resource] = JSON.parse(File.read("#{@attendease_data_path}/#{resource}.json"))
+            end
           end
 
         else
