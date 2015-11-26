@@ -198,7 +198,7 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
     @site = build_site
 
     expect(@site.config['attendease']['event']['id']).to eq('foobar')
-    %w{ site templates event sessions presenters rooms filters venues sponsors lingo }.each do |key|
+    %w{ site event sessions presenters rooms filters venues sponsors lingo }.each do |key|
       expect(@site.config['attendease'].include?(key)).to eq(true)
     end
   end

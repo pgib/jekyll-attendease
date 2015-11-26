@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    jekyll-attendease (0.6.18)
+    jekyll-attendease (0.6.19.pre)
       httparty (~> 0.13.5)
       i18n (~> 0.6.9)
       json (~> 1.8.1)
@@ -113,3 +113,6 @@ DEPENDENCIES
   jekyll-attendease!
   rake
   rspec
+
+BUNDLED WITH
+   1.10.6

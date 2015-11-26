@@ -34,7 +34,7 @@ module Jekyll
 
             FileUtils.mkdir_p(@attendease_data_path)
 
-            data_files = %w{ site templates event sessions presenters rooms filters venues sponsors }.map { |m| "#{m}.json"} << 'lingo.yml'
+            data_files = %w{ site event sessions presenters rooms filters venues sponsors }.map { |m| "#{m}.json"} << 'lingo.yml'
 
             data_files.each do |file_name|
               update_data = true

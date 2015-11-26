@@ -37,4 +37,3 @@ RSpec.describe Jekyll::AttendeasePlugin::PreZeroPointSixLinkRedirectGenerator do
   end
 
 end
-

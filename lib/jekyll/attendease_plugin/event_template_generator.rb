@@ -24,11 +24,6 @@ module Jekyll
       def generate(site)
         Jekyll.logger.info "[Attendease] Generating theme templates..."
 
-        # Template data from the Attendease event for overriding specific templates
-        templates = JSON.parse(File.read(File.join(site.source, '_attendease', 'data', 'templates.json')))
-
-        site.config['attendease']['templates'] = templates
-
         # Generate the template files if they don't yet exist.
         %w{ schedule presenters venues sponsors}.each do |p|
           path = File.join(site.source, '_attendease', 'templates', p)
@@ -62,17 +57,9 @@ EOF
         }.each do |page|
           destination_file = File.join(site.source, '_attendease', 'templates', "#{page}.html")
 
-          if template_data = get_template(templates, page)
-            unless template_data.start_with?('---')
-              template_data = front_matter + template_data
-            end
-
+          unless File.exists?(destination_file)
+            template_data = front_matter + File.read(File.join(template_path, "#{page}.html"))
             File.open(destination_file, 'w+') { |f| f.write(template_data) }
-          else
-            unless File.exists?(destination_file)
-              template_data = front_matter + File.read(File.join(template_path, "#{page}.html"))
-              File.open(destination_file, 'w+') { |f| f.write(template_data) }
-            end
           end
         end
 
@@ -86,16 +73,8 @@ EOF
           File.open(destination_file, 'w+') { |f| f.write(template_data) }
         end
 
-
       end
 
-      def get_template(templates, page)
-        template = nil
-        if t = templates.detect{|t| t['page'] == page}
-          template = t['data']
-        end
-        template
-      end
     end
   end
 end
