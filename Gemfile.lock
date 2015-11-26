@@ -108,7 +108,6 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.3)
   coveralls
-  httparty (~> 0.13.5)
   jekyll (= 1.5.1)
   jekyll-attendease!
   rake
