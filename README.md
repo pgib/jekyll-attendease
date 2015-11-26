@@ -149,7 +149,6 @@ datasets:
 Key         | Description                                                        | Type
 ----------- | ------------------------------------------------------------------ | ----
 site        | Includes various information about the event/site (/api/site.json) | Hash
-templates   | Event template data (/api/templates.json)                          | Array
 event       | Event data such as dates (/api/event.json)                         | Hash
 sessions    | All of the sessions for the event (/api/sessions.json)             | Array
 presenters  | All of the presenters for the event (/api/presenters.json)         | Array
@@ -212,7 +211,7 @@ During development, you can create and install local builds:
 
 And then install it:
 
-    gem install jekyll-attendease-`cat jekyll-attendease.gemspec|grep s.version|awk '{print $3}'|sed s/\'//g`.gem
+    gem install jekyll-attendease-`cat lib/jekyll/attendease_plugin/version.rb|grep VERSION|awk '{print $3}'|sed s/\'//g`.gem
 
 ## License
 
