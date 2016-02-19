@@ -68,7 +68,7 @@ module Jekyll
                 options.merge!(:headers => {'X-Event-Token' => @attendease_config['access_token']}) if @attendease_config['access_token']
 
                 request_filename = file_name.gsub(/yml$/, 'yaml')
-                response = get("#{@attendease_config['api_host']}api/#{request_filename}", options)
+                response = get("#{@attendease_config['api_host']}api/#{request_filename}?meta=true", options)
 
                 #if (file_name.match(/yaml$/) || data.is_a?(Hash) && !data['error']) || data.is_a?(Array)
                 if (!response.nil? && response.response.is_a?(Net::HTTPOK))
