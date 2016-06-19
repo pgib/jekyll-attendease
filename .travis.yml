@@ -1,1 +1,3 @@
 sudo: false
+gemfile:
+  - Gemfile.travisci

@@ -115,6 +115,11 @@ module Jekyll
             event = JSON.parse(File.read("#{@attendease_data_path}/event.json"))
             site.config['attendease']['event'] = event
 
+            if @attendease_config['copy_data']
+              FileUtils.cp_r(@attendease_data_path, File.join(site.source, 'attendease_data'))
+              # tell Jekyll about these new static files to publish
+              site.read_directories 'attendease_data'
+            end
           end
 
         else
