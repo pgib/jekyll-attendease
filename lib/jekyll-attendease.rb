@@ -1,7 +1,7 @@
 require 'jekyll'
 begin
   require 'httparty'
-rescue
+rescue LoadError
   # work around TravisCI issue
 end
 require 'json'
