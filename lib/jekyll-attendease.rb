@@ -1,5 +1,9 @@
 require 'jekyll'
-require 'httparty'
+begin
+  require 'httparty'
+rescue
+  # work around TravisCI issue
+end
 require 'json'
 require 'i18n'
 
