@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'json',      '~> 1.8.1'
   s.add_runtime_dependency 'i18n',      '~> 0.6.9'
 
+  # don't forget to update Gemfile.travisci
   s.add_development_dependency 'bundler', '~> 1.3'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'
