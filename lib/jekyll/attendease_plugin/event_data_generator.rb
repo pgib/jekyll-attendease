@@ -116,9 +116,23 @@ module Jekyll
             site.config['attendease']['event'] = event
 
             if @attendease_config['copy_data']
-              FileUtils.cp_r(@attendease_data_path, File.join(site.source, 'attendease_data'))
+              data_dir = File.join(site.source, 'attendease_data')
+              FileUtils.mkdir(data_dir) unless File.exists?(data_dir)
+              site.config['attendease']['data_files'] = {}
+
+              Dir.chdir(@attendease_data_path) do
+                extension = '.json'
+                Dir.glob('*.json').each do |f|
+                  base_name = File.basename(f, extension)
+                  digest = Digest::SHA2.file(f).hexdigest
+                  digest_file = "#{base_name}-#{digest}.json"
+                  FileUtils.cp(f, File.join(data_dir, digest_file))
+                  site.config['attendease']['data_files'][base_name] = digest_file
+                end
+              end
+
               # tell Jekyll about these new static files to publish
-              site.read_directories 'attendease_data'
+              site.reader.read_directories 'attendease_data'
             end
           end
 

@@ -15,7 +15,7 @@ module Jekyll
           # /schedule pages.
           dir = site.config['attendease']['schedule_path_name']
 
-          unless dir.nil?
+          if dir
             if (site.config['attendease'] && site.config['attendease']['show_schedule_index'])
               site.pages << ScheduleIndexPage.new(site, site.source, File.join(dir), @schedule_data.event['dates'])
             else
@@ -37,7 +37,7 @@ module Jekyll
           # /presenters pages.
           dir = site.config['attendease']['presenters_path_name']
 
-          unless dir.nil?
+          if dir
             @schedule_data.presenters.each do |presenter|
               site.pages << PresenterPage.new(site, site.source, dir, presenter, @schedule_data.sessions)
             end
@@ -53,7 +53,7 @@ module Jekyll
           if @schedule_data.venues.length == 1
             dir = site.config['attendease']['venue_path_name']
 
-            unless dir.nil?
+            if dir
               site.pages << VenuePage.new(site, site.source, dir, @schedule_data.venues.first, true)
             end
           end
@@ -61,7 +61,7 @@ module Jekyll
           # Create a list of venues and venue pages to keep backwards compatibility.
           dir = site.config['attendease']['venues_path_name']
 
-          unless dir.nil?
+          if dir
             @schedule_data.venues.each do |venue|
               site.pages << VenuePage.new(site, site.source, dir, venue)
             end

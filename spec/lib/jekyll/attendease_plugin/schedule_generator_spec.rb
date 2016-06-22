@@ -170,25 +170,25 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
 
   context 'in a site with the page paths set to nil' do
     it 'no schedule folder exists' do
-      @site = build_site({ 'attendease' => { 'schedule_path_name' => nil } })
+      @site = build_site({ 'attendease' => { 'schedule_path_name' => false } })
 
       expect(File.exists?(File.join(@site.config['destination'], 'schedule'))).to eq(false)
     end
 
     it 'no presenters folder exists' do
-      @site = build_site({ 'attendease' => { 'presenters_path_name' => nil } })
+      @site = build_site({ 'attendease' => { 'presenters_path_name' => false } })
 
       expect(File.exists?(File.join(@site.config['destination'], 'presenters'))).to eq(false)
     end
 
     it 'no venues folder exists' do
-      @site = build_site({ 'attendease' => { 'venues_path_name' => nil, 'venue_path_name' => nil } })
+      @site = build_site({ 'attendease' => { 'venues_path_name' => false, 'venue_path_name' => false } })
 
       expect(File.exists?(File.join(@site.config['destination'], 'venues'))).to eq(false)
     end
 
     it 'no sponsors folder exists' do
-      @site = build_site({ 'attendease' => { 'sponsors_path_name' => nil } })
+      @site = build_site({ 'attendease' => { 'sponsors_path_name' => false } })
 
       expect(File.exists?(File.join(@site.config['destination'], 'sponsors'))).to eq(false)
     end

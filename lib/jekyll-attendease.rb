@@ -2,6 +2,7 @@ require 'jekyll'
 require 'httparty'
 require 'json'
 require 'i18n'
+require 'digest'
 
 require 'jekyll/attendease_plugin'
 

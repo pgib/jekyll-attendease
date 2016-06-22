@@ -24,7 +24,7 @@ module Jekyll
           # /sponsors pages.
           dir = site.config['attendease']['sponsors_path_name']
 
-          unless dir.nil?
+          if dir
             site.pages << SponsorsIndexPage.new(site, site.source, File.join(dir), site.config['attendease']['sponsor_levels'])
           end
 

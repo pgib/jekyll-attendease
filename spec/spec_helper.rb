@@ -41,7 +41,7 @@ RSpec.configure do |config|
   end
 
   def build_configs(overrides, base_hash = Jekyll::Configuration::DEFAULTS)
-    base_hash.deep_merge(overrides)
+    Jekyll::Utils.deep_merge_hashes(base_hash, overrides)
   end
 
   def find_generator(generator_class)
@@ -49,7 +49,7 @@ RSpec.configure do |config|
   end
 
   def site_configuration(overrides = {})
-    build_configs({
+    Jekyll::Utils.deep_merge_hashes(build_configs({
       'source'               => fixtures_path.to_s,
       'destination'          => @dest.to_s,
       'attendease'           => {
@@ -70,7 +70,7 @@ RSpec.configure do |config|
         'has_filters'             => true,
         'has_venues'              => true
       }
-    }.deep_merge(overrides))
+    }), overrides)
   end
 
   def build_site(config = {})
@@ -81,7 +81,7 @@ RSpec.configure do |config|
 
   config.after(:all) do
     @dest.rmtree if @dest.exist?
-    fixtures_path.join('_attendease', 'templates').rmtree
-    fixtures_path.join('attendease_layouts').rmtree
+    fixtures_path.join('_attendease', 'templates').rmtree if fixtures_path.join('_attendease', 'templates').exist?
+    fixtures_path.join('attendease_layouts').rmtree if fixtures_path.join('attendease_layouts').exist?
   end
 end
