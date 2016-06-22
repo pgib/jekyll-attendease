@@ -14,4 +14,3 @@ en:
       keys:
       - :one
       - :other
-      rule: !ruby/object:Proc {}

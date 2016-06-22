@@ -7,6 +7,23 @@ A Jekyll plugin, brings in data from your Attendease event and allows you to use
 [![Coverage
 Status](https://coveralls.io/repos/attendease/jekyll-attendease/badge.svg?branch=master&service=github)](https://coveralls.io/github/attendease/jekyll-attendease?branch=master)
 
+## Changes
+
+### 0.6.22
+
+* jekyll-attendease now expects Jekyll 3.1.x
+* with the `copy_data` option, data files now use a SHA2 digest in the filename.
+  The filenames are available as Liquid variables:
+
+```
+{{ site.attendease.data_files.event }}
+{{ site.attendease.data_files.presenters }}
+{{ site.attendease.data_files.venues }}
+{{ site.attendease.data_files.sponsors }}
+{{ site.attendease.data_files.sessions }}
+{{ site.attendease.data_files.filters }}
+```
+
 ## Installation
 
 Add this line to your application's Gemfile:
