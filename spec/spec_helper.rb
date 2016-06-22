@@ -41,9 +41,7 @@ RSpec.configure do |config|
   end
 
   def build_configs(overrides, base_hash = Jekyll::Configuration::DEFAULTS)
-    # why does deep_merge behave opposite to merge?!
-    #{}.deep_merge(base_hash).deep_merge(overrides)
-    overrides.deep_merge(base_hash)
+    Jekyll::Utils.deep_merge_hashes(base_hash, overrides)
   end
 
   def find_generator(generator_class)
