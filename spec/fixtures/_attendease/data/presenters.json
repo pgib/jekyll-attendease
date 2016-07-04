@@ -11,6 +11,10 @@
             "twitter":  "pepelepew",
             "facebook": "pepe.lepew"
         },
+        "meta": {
+          "foo": "bar",
+          "bat": "baz"
+        },
         "title": null
     },
     {
@@ -24,6 +28,10 @@
         "social": {
             "twitter":  "one",
             "facebook": "two"
+        },
+        "meta": {
+          "foo": "bar",
+          "bat": "baz"
         },
         "title": null
     }
