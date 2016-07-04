@@ -1,10 +1,10 @@
 PATH
   remote: .
   specs:
-    jekyll-attendease (0.6.22)
-      httparty (~> 0.13.5)
+    jekyll-attendease (0.6.23)
+      httparty (~> 0.13)
       i18n (~> 0.6.9)
-      json (~> 1.8.1)
+      json (~> 1.8)
 
 GEM
   remote: https://rubygems.org/
@@ -98,4 +98,4 @@ DEPENDENCIES
   rspec
 
 BUNDLED WITH
-   1.10.6
+   1.11.2

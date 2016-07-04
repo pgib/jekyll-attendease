@@ -9,6 +9,10 @@ Status](https://coveralls.io/repos/attendease/jekyll-attendease/badge.svg?branch
 
 ## Changes
 
+### 0.6.23
+
+* minor fix to support alternate sponsor level format
+
 ### 0.6.22
 
 * jekyll-attendease now expects Jekyll 3.1.x

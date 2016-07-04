@@ -5,7 +5,7 @@ require 'jekyll/attendease_plugin/version'
 Gem::Specification.new do |s|
   s.name          = 'jekyll-attendease'
   s.version       = Jekyll::AttendeasePlugin::VERSION
-  s.date          = '2016-06-21'
+  s.date          = '2016-07-04'
   s.summary       = 'Attendease event helper for Jekyll'
   s.description   = 'Bring your event data into Jekyll for amazing event websites.'
   s.authors       = [ 'Michael Wood', 'Patrick Gibson', 'Jamie Lubiner', 'Antoine Censi' ]
@@ -17,8 +17,8 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://attendease.com/'
   s.licenses    = [ 'MIT' ]
 
-  s.add_runtime_dependency 'httparty',  '~> 0.13.5'
-  s.add_runtime_dependency 'json',      '~> 1.8.1'
+  s.add_runtime_dependency 'httparty',  '~> 0.13'
+  s.add_runtime_dependency 'json',      '~> 1.8'
   s.add_runtime_dependency 'i18n',      '~> 0.6.9'
 
   # don't forget to update Gemfile.travisci
