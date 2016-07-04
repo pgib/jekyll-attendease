@@ -14,7 +14,11 @@ module Jekyll
           end
 
           sponsors.each do |sponsor|
-            level = sponsor_levels.select { |m| m['_id'] == sponsor['level_id'] }.first
+            level = sponsor_levels.select do |m|
+              key = 'id'
+              key = '_id' if m[key].nil?
+              m[key] == sponsor['level_id']
+            end.first
             level['sponsors'] << sponsor
           end
 
