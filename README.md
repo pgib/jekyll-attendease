@@ -9,6 +9,13 @@ Status](https://coveralls.io/repos/attendease/jekyll-attendease/badge.svg?branch
 
 ## Changes
 
+### 0.6.24
+
+* expose `site.attendease.days` which allows any page to access the days and
+  session timeslots on a particular day.
+* add an `awesome_inspect` Liquid filter to look at an object
+* ensure session filters include the `colour`
+
 ### 0.6.23
 
 * minor fix to support alternate sponsor level format
@@ -179,6 +186,7 @@ filters     | All of the event's filters (/api/filters.json)                    
 venues      | All of the venue data for the event (/api/venues.json)             | Array
 sponsors    | All of the sponsor data for the event (/api/sponsors.json)         | Array
 lingo       | All of the locale-related data for the event                       | Hash
+days        | All of the event days and session timeslots contained therein      | Array
 
 Liquid Example:
 
@@ -187,6 +195,28 @@ Liquid Example:
   {{ session.name }}
 {% endfor %}
 ```
+
+```
+{% for day in site.attendease.days %}
+  {{ day.date_formatted }}
+  {% for instance in day.instances %}
+    {{ instance.time }} - {{ instance.end_time }}
+
+    {{ instance.session.name }}
+    {{ instance.session.description }}
+  {% endfor %}
+{% endfor %}
+```
+
+## Filters
+
+The following Liquid filters are available as part of this gem:
+
+Filter            | Description
+------------------+------------
+`json`            | Convert an object to a JSON string
+`awesome_inspect` | Pretty print an object in HTML (for debugging/inspecting)
+
 
 ## Testing
 

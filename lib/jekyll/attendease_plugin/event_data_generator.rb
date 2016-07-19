@@ -111,6 +111,25 @@ module Jekyll
               end
             end
 
+            # provide a structure of session instances (timeslots) grouped
+            # by day (suitable for displaying a schedule)
+            site.config['attendease']['days'] = []
+            schedule_data = ScheduleDataParser.new(site)
+            site.config['attendease']['event']['dates'].each do |day|
+              instances = []
+              schedule_data.sessions.each do |s|
+                s['instances'].each do |instance|
+                  if instance['date'] == day['date']
+                    instance['session'] = s
+                    instances << instance
+                  end
+                end
+              end
+
+              day['instances'] = instances.sort {|x,y| [x['time'], x['session']['name']] <=> [y['time'], y['session']['name']]}
+              site.config['attendease']['days'] << day
+            end
+
             # make the event available to anyone
             event = JSON.parse(File.read("#{@attendease_data_path}/event.json"))
             site.config['attendease']['event'] = event

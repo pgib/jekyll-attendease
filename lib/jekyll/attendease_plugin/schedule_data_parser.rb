@@ -59,23 +59,23 @@ module Jekyll
       protected
 
       def raw_presenters
-        @raw_presenters ||= JSON.parse(File.read("#{data_path}/presenters.json")).sort{|p1, p2| p1['last_name'] <=> p2['last_name']}
+        @raw_presenters ||= @site.config['attendease']['presenters'].sort{|p1, p2| p1['last_name'] <=> p2['last_name']}
       end
 
       def raw_venues
-        @raw_venues ||= JSON.parse(File.read("#{data_path}/venues.json")).sort{|v1, v2| v1['name'] <=> v2['name']}
+        @raw_venues ||= @site.config['attendease']['venues'].sort{|v1, v2| v1['name'] <=> v2['name']}
       end
 
       def raw_rooms
-        @raw_rooms ||= JSON.parse(File.read("#{data_path}/rooms.json")).sort{|r1, r2| r1['name'] <=> r2['name']}
+        @raw_rooms ||= @site.config['attendease']['rooms'].sort{|r1, r2| r1['name'] <=> r2['name']}
       end
 
       def raw_sessions
-        @raw_sessions ||= JSON.parse(File.read("#{data_path}/sessions.json")).sort{|s1, s2| s1['name'] <=> s2['name']}
+        @raw_sessions ||= @site.config['attendease']['sessions'].sort{|s1, s2| s1['name'] <=> s2['name']}
       end
 
       def raw_filters
-        @raw_filters ||= JSON.parse(File.read("#{data_path}/filters.json")).sort{|f1, f2| f1['name'] <=> f2['name']}
+        @raw_filters ||= @site.config['attendease']['filters'].sort{|f1, f2| f1['name'] <=> f2['name']}
       end
 
       def data_path
@@ -108,17 +108,18 @@ module Jekyll
         end
       end
 
-      # Populates filter realted data into session,
+      # Populates filter related data into session,
       # from source.
       def populate_session_filters!(session, source)
         filters_for_session_hash = {}
         filters.each do |filter|
           filter['filter_items'].each_with_index do |filter_item, index|
             if source['filters'].include?(filter_item['id'])
-              filters_for_session_hash[filter['name']] ||= []
-              filters_for_session_hash[filter['name']] << {
-                'name' => filter_item['name'],
-                'index' => index,
+              filters_for_session_hash[filter['name']] ||= { :colour => filter['colour'], :items => [] }
+              filters_for_session_hash[filter['name']][:items] << {
+                'name'   => filter_item['name'],
+                'colour' => filter_item['colour'],
+                'index'  => index,
               }
               if event['primary_filter_id'] && event['primary_filter_id'] == filter['id']
                 session['primary_filter_name'] = filter['name']
@@ -128,7 +129,7 @@ module Jekyll
           end
         end
 
-        session['filters'] = filters_for_session_hash.map { |key, value| { 'name' => key, 'items' => value } }
+        session['filters'] = filters_for_session_hash.map { |key, value| { 'name' => key, 'items' => value[:items], 'colour' => value[:colour] } }
         session['filter_tags'] = get_session_filter_tags(session['filters'])
       end
 
