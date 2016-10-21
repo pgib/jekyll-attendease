@@ -50,6 +50,11 @@ RSpec.describe "Jekyll Attendease tags" do
       expect(subject.gsub(' ', '').gsub("\n", '')).to eq(schedule_widget_data.gsub(' ', '').gsub("\n", ''))
     end
   end
+
+  context "{% attendease_nav %}" do
+    subject { render("{% attendease_nav %}{% raw %}<li><a href=\"/{{ page.slug }}/\">{{ page.name }}</a></li>{% endraw %}{% endattendease_nav %}") }
+    it { is_expected.to match(/<li><a href="\/schedule\/"/) }
+  end
 end
 
 def schedule_widget_data

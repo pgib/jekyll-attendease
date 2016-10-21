@@ -34,7 +34,7 @@ module Jekyll
 
             FileUtils.mkdir_p(@attendease_data_path)
 
-            data_files = %w{ site event sessions presenters rooms filters venues sponsors }.map { |m| "#{m}.json"} << 'lingo.yml'
+            data_files = %w{ site event sessions presenters rooms filters venues sponsors pages }.map { |m| "#{m}.json"} << 'lingo.yml'
 
             data_files.each do |file_name|
               update_data = true
@@ -87,6 +87,7 @@ module Jekyll
 
               # make this data available to anything that wants it
               site.config['attendease'][File.basename(file_name, '.*')] = data
+              site.data[File.basename(file_name, '.*')] = data
 
               if data.is_a?(Hash)
                 if file_name == 'site.json'

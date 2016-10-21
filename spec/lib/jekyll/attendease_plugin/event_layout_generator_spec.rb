@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe Jekyll::AttendeasePlugin::EventLayoutGenerator do
 
   it 'creates the pre-compiled layout stubs' do
-    %w{ layout register surveys }.each do |layout|
+    %w{ layout register surveys pages }.each do |layout|
       expect(File.exists?(File.join(@site.config['destination'], 'attendease_layouts', "#{layout}.html"))).to eq(true)
     end
   end

@@ -8,6 +8,7 @@ require 'jekyll/attendease_plugin/event_template_generator'
 require 'jekyll/attendease_plugin/home_page_generator'
 require 'jekyll/attendease_plugin/schedule_generator'
 require 'jekyll/attendease_plugin/sponsor_generator'
+require 'jekyll/attendease_plugin/site_pages_generator'
 require 'jekyll/attendease_plugin/pre_zero_point_six_link_redirect_generator'
 
 # Redirect page
@@ -30,6 +31,7 @@ require 'jekyll/attendease_plugin/schedule_session_page'
 require 'jekyll/attendease_plugin/sponsors_index_page'
 require 'jekyll/attendease_plugin/venues_index_page'
 require 'jekyll/attendease_plugin/venue_page'
+require 'jekyll/attendease_plugin/site_page'
 
 # Ve.rs.ion
 require 'jekyll/attendease_plugin/version'

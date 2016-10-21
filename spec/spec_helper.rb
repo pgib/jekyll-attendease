@@ -65,7 +65,7 @@ RSpec.configure do |config|
         'generate_schedule_pages' => true,
         'has_sessions'            => true,
         'has_presenters'          => true,
-        'has_sponsors'            => true,
+        'has_sponsors'            => false,
         'has_rooms'               => true,
         'has_filters'             => true,
         'has_venues'              => true
@@ -75,7 +75,7 @@ RSpec.configure do |config|
 
   def build_site(config = {})
     site = Jekyll::Site.new(site_configuration(config))
-    foo = site.process
+    site.process
     site
   end
 

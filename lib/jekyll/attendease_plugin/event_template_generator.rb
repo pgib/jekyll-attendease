@@ -25,7 +25,7 @@ module Jekyll
         Jekyll.logger.info "[Attendease] Generating theme templates..."
 
         # Generate the template files if they don't yet exist.
-        %w{ schedule presenters venues sponsors}.each do |p|
+        %w{ schedule presenters venues sponsors pages }.each do |p|
           path = File.join(site.source, '_attendease', 'templates', p)
           FileUtils.mkdir_p(path)
           raise "Could not create #{path}." unless File.exists?(path)
@@ -54,6 +54,7 @@ EOF
           venues/index
           venues/venue
           sponsors/index
+          pages/default
         }.each do |page|
           destination_file = File.join(site.source, '_attendease', 'templates', "#{page}.html")
 
