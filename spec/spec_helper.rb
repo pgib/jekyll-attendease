@@ -48,6 +48,18 @@ RSpec.configure do |config|
     @site.generators.select { |m| m.class == generator_class }.first
   end
 
+  def find_page(page_class, lambda_matcher = false)
+    @site.pages.select do |m|
+      if m.class == page_class
+        match = true
+        if lambda_matcher
+          match = lambda_matcher.call(m)
+        end
+        m if match
+      end
+    end.first
+  end
+
   def site_configuration(overrides = {})
     Jekyll::Utils.deep_merge_hashes(build_configs({
       'source'               => fixtures_path.to_s,
