@@ -150,6 +150,7 @@
         "block_instances": [
             {
                 "id": 6,
+                "component": "AttendeaseBlockHeading",
                 "content": {
                     "text": "Hello world"
                 },

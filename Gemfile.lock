@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    jekyll-attendease (0.6.25c)
+    jekyll-attendease (0.6.25d)
       awesome_print
       httparty (~> 0.13)
       i18n (~> 0.6.9)
@@ -107,4 +107,4 @@ DEPENDENCIES
   rspec
 
 BUNDLED WITH
-   1.12.5
+   1.13.6

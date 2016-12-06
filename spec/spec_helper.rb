@@ -77,7 +77,7 @@ RSpec.configure do |config|
         'generate_schedule_pages' => true,
         'has_sessions'            => true,
         'has_presenters'          => true,
-        'has_sponsors'            => false,
+        'has_sponsors'            => true,
         'has_rooms'               => true,
         'has_filters'             => true,
         'has_venues'              => true
@@ -93,7 +93,12 @@ RSpec.configure do |config|
 
   config.after(:all) do
     @dest.rmtree if @dest.exist?
-    fixtures_path.join('_attendease', 'templates').rmtree if fixtures_path.join('_attendease', 'templates').exist?
-    fixtures_path.join('attendease_layouts').rmtree if fixtures_path.join('attendease_layouts').exist?
+    fixtures_path.join('_attendease', 'templates').rmtree if File.exists?(fixtures_path.join('_attendease', 'templates'))
+    fixtures_path.join('attendease_layouts').rmtree if File.exists?(fixtures_path.join('attendease_layouts'))
+    Dir.glob(File.join(@source, '**', 'index.json')).map do |i|
+      puts "Removing #{Pathname.new(i).parent}"
+
+      FileUtils.rm_r Pathname.new(i).parent
+    end
   end
 end
