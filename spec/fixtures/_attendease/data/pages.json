@@ -1,6 +1,7 @@
 [
     {
         "active": true,
+        "layout": "layout",
         "description": "Schedule",
         "hidden": false,
         "id": "48b9c3da-e172-4de1-96b4-7807bb0e4ee4",
@@ -11,10 +12,11 @@
         "top_level": true,
         "updated_at": "2016-10-21T18:06:53Z",
         "weight": 0,
-        "widget_instances": []
+        "block_instances": []
     },
     {
         "active": true,
+        "layout": "layout",
         "description": "Session Listing",
         "hidden": false,
         "id": "3d3d2ee9-3994-46b9-9ae4-b12a672e74dc",
@@ -25,10 +27,11 @@
         "top_level": false,
         "updated_at": "2016-10-21T18:06:53Z",
         "weight": 1,
-        "widget_instances": []
+        "block_instances": []
     },
     {
         "active": true,
+        "layout": "layout",
         "description": "Individual Session",
         "hidden": false,
         "id": "093802cf-7c4e-4e55-89e4-581ceed9f543",
@@ -39,10 +42,11 @@
         "top_level": false,
         "updated_at": "2016-10-21T18:06:53Z",
         "weight": 2,
-        "widget_instances": []
+        "block_instances": []
     },
     {
         "active": true,
+        "layout": "layout",
         "description": "Presenter Listing",
         "hidden": false,
         "id": "0b37fb44-fab9-41d4-accb-215bd34d8c4f",
@@ -53,10 +57,11 @@
         "top_level": true,
         "updated_at": "2016-10-21T18:06:53Z",
         "weight": 3,
-        "widget_instances": []
+        "block_instances": []
     },
     {
         "active": true,
+        "layout": "layout",
         "description": "Individual Presenter",
         "hidden": false,
         "id": "891760a5-202b-41a1-9d1a-fd1b7938fd39",
@@ -67,10 +72,11 @@
         "top_level": false,
         "updated_at": "2016-10-21T18:06:53Z",
         "weight": 4,
-        "widget_instances": []
+        "block_instances": []
     },
     {
         "active": true,
+        "layout": "layout",
         "description": "Venue Listing",
         "hidden": false,
         "id": "ce9cb40d-fbfa-4528-983e-9efd5612a7e2",
@@ -81,10 +87,11 @@
         "top_level": true,
         "updated_at": "2016-10-21T18:06:53Z",
         "weight": 5,
-        "widget_instances": []
+        "block_instances": []
     },
     {
         "active": true,
+        "layout": "layout",
         "description": "Individual Venue",
         "hidden": false,
         "id": "a8d16427-998e-416b-b25d-0accd304bfa1",
@@ -95,10 +102,11 @@
         "top_level": false,
         "updated_at": "2016-10-21T18:06:53Z",
         "weight": 6,
-        "widget_instances": []
+        "block_instances": []
     },
     {
         "active": true,
+        "layout": "layout",
         "description": "Sponsor Listing",
         "hidden": false,
         "id": "fe541a28-f62c-435e-a1c0-477a6120f9b7",
@@ -109,10 +117,11 @@
         "top_level": true,
         "updated_at": "2016-10-21T18:06:53Z",
         "weight": 7,
-        "widget_instances": []
+        "block_instances": []
     },
     {
         "active": true,
+        "layout": "layout",
         "description": "Individual Sponsor",
         "hidden": false,
         "id": "67c362a0-c243-401f-924a-d61fe4df0798",
@@ -123,10 +132,11 @@
         "top_level": false,
         "updated_at": "2016-10-21T18:06:53Z",
         "weight": 8,
-        "widget_instances": []
+        "block_instances": []
     },
     {
         "active": true,
+        "layout": "layout",
         "description": "",
         "hidden": false,
         "id": "0ed60951-3225-4637-8d42-016ead98f334",
@@ -137,14 +147,15 @@
         "top_level": true,
         "updated_at": "2016-11-15T19:22:19Z",
         "weight": 9,
-        "widget_instances": [
+        "block_instances": [
             {
                 "id": 6,
-                "properties": {
-                    "heading": "h1",
+                "content": {
                     "text": "Hello world"
                 },
-                "rendered_html": "<h1>Hello world</h1>",
+                "properties": {
+                    "heading": "h1"
+                },
                 "weight": 0,
                 "zone": "dropzone1"
             }
