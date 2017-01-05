@@ -19,7 +19,7 @@ module Jekyll
 
               # sort each bucket by widget weight
               zones.each do |k, zone|
-                zone.sort! { |x, y| y['weight'] <=> x['weight'] }
+                zone.sort! { |x, y| x['weight'] <=> y['weight'] }
               end
 
               page_source_path = File.join(site.source, page['slug'])
