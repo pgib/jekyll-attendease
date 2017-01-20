@@ -13,6 +13,7 @@ RSpec.describe Jekyll::AttendeasePlugin::SitePagesGenerator do
     file = File.join(@site.config['destination'], slug, 'index.html')
     expect(File.exists?(file)).to eq(true)
     expect(File.file?(file)).to eq(true)
+    expect(File.read(file)).to include '<title>Test Page</title>'
   end
 
   it 'creates a block instance json file using the provided slug' do
