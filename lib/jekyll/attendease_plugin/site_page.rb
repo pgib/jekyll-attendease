@@ -11,7 +11,7 @@ module Jekyll
 
         self.read_yaml(File.join(base, '_layouts'), "#{page['layout']}.html")
 
-        self.data['title'] = page['title']
+        self.data['title'] = page['name']
         self.data['layout'] = page['layout']
 
         self.data['site_page'] = page
