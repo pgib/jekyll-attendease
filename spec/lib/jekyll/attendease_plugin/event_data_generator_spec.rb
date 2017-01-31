@@ -51,6 +51,11 @@ RSpec.describe Jekyll::AttendeasePlugin::EventDataGenerator do
     expect(@site.data['event'].class).to eq(Hash)
   end
 
+  it 'populates a site wide settings object' do
+    expect(@site.data['site_settings'].class).to eq(Hash)
+    expect(@site.data['site_settings']['look_and_feel']['body_font_family']).to eq('serif')
+  end
+
 
 end
 
