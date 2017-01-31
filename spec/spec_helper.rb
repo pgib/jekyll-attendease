@@ -95,7 +95,7 @@ RSpec.configure do |config|
     @dest.rmtree if @dest.exist?
     fixtures_path.join('_attendease', 'templates').rmtree if File.exists?(fixtures_path.join('_attendease', 'templates'))
     fixtures_path.join('attendease_layouts').rmtree if File.exists?(fixtures_path.join('attendease_layouts'))
-    Dir.glob(File.join(@source, '**', 'index.json')).map do |i|
+    Dir.glob(File.join(@site.source, '**', 'index.json')).map do |i|
       puts "Removing #{Pathname.new(i).parent}"
 
       FileUtils.rm_r Pathname.new(i).parent
