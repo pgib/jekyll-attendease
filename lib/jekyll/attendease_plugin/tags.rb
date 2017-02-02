@@ -37,7 +37,8 @@ module Jekyll
     class LocalesScriptTag < Liquid::Tag
       def render(context)
         locale = context.registers[:site].config['attendease']['locale']
-        '<script type="text/javascript">String.locale="' + locale + '";String.toLocaleString("/api/lingo.json");</script>'
+        api_host = context.registers[:site].config['attendease']['api_host']
+        "<script type=\"text/javascript\">String.locale=\"#{locale}\";String.toLocaleString(\"#{api_host}api/lingo.json\");</script>"
       end
     end
 

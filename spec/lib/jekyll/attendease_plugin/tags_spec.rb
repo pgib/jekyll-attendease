@@ -20,6 +20,7 @@ RSpec.describe "Jekyll Attendease tags" do
   context "{% attendease_locales_script %}" do
     subject { render("{% attendease_locales_script %}") }
     it { is_expected.to include "/api/lingo.json" }
+    it { is_expected.to include @site.config['attendease']['api_host'] }
   end
 
   context "{% attendease_t event.lingo.sponsors %}" do
