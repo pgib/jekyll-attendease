@@ -138,7 +138,7 @@
         "active": true,
         "layout": "layout",
         "description": "",
-        "hidden": false,
+        "hidden": true,
         "id": "0ed60951-3225-4637-8d42-016ead98f334",
         "name": "Test Page",
         "page_key": null,

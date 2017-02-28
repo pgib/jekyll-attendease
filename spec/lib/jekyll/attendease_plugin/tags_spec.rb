@@ -55,6 +55,9 @@ RSpec.describe "Jekyll Attendease tags" do
   context "{% attendease_nav %}" do
     subject { render("{% attendease_nav %}{% raw %}<li><a href=\"/{{ page.slug }}/\">{{ page.name }}</a></li>{% endraw %}{% endattendease_nav %}") }
     it { is_expected.to match(/<li><a href="\/schedule\/"/) }
+
+    # hidden page
+    it { is_expected.to_not match(/<li><a href="\/test\/"/) }
   end
 end
 

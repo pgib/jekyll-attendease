@@ -104,7 +104,7 @@ module Jekyll
           pages.sort! { |a, b| a['weight'] <=> b['weight'] }
           key_mapping = { 'schedule' => 'sessions' }
           pages.select { |p| p['top_level'] }.each do |page|
-            if page['active'] || !page['hidden']
+            if page['active'] && !page['hidden']
               # only activate nav links if there is content
               config_key = "has_#{key_mapping[page['page_key']] || page['page_key']}"
               if config[config_key].nil? || (!config[config_key].nil? && config[config_key] == true)
