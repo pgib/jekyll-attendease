@@ -20,6 +20,7 @@ RSpec.describe "Jekyll Attendease tags" do
   context "{% attendease_locales_script %}" do
     subject { render("{% attendease_locales_script %}") }
     it { is_expected.to include "/api/lingo.json" }
+    it { is_expected.to include @site.config['attendease']['api_host'] }
   end
 
   context "{% attendease_t event.lingo.sponsors %}" do
@@ -49,6 +50,14 @@ RSpec.describe "Jekyll Attendease tags" do
       # lines and spaces were giving me issues. Just check if the html is equal.
       expect(subject.gsub(' ', '').gsub("\n", '')).to eq(schedule_widget_data.gsub(' ', '').gsub("\n", ''))
     end
+  end
+
+  context "{% attendease_nav %}" do
+    subject { render("{% attendease_nav %}{% raw %}<li><a href=\"/{{ page.slug }}/\">{{ page.name }}</a></li>{% endraw %}{% endattendease_nav %}") }
+    it { is_expected.to match(/<li><a href="\/schedule\/"/) }
+
+    # hidden page
+    it { is_expected.to_not match(/<li><a href="\/test\/"/) }
   end
 end
 

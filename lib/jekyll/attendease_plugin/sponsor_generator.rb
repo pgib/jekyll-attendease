@@ -4,9 +4,8 @@ module Jekyll
       safe true
 
       def generate(site)
-        if site.config['attendease']['has_sponsors']
-          @attendease_data_path = File.join(site.source, '_attendease', 'data')
-          sponsors = JSON.parse(File.read("#{@attendease_data_path}/sponsors.json"))
+        if site.config['attendease']['has_sponsors'] && site.config['attendease']['generate_sponsor_pages']
+          sponsors = site.data['sponsors']
 
           sponsor_levels = site.config['attendease']['event']['sponsor_levels']
           sponsor_levels.each do |level|
@@ -40,4 +39,3 @@ module Jekyll
     end
   end
 end
-

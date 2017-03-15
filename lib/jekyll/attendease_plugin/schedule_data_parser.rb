@@ -59,23 +59,23 @@ module Jekyll
       protected
 
       def raw_presenters
-        @raw_presenters ||= @site.config['attendease']['presenters'].sort{|p1, p2| p1['last_name'] <=> p2['last_name']}
+        @raw_presenters ||= @site.data['presenters'].sort{|p1, p2| p1['last_name'] <=> p2['last_name']}
       end
 
       def raw_venues
-        @raw_venues ||= @site.config['attendease']['venues'].sort{|v1, v2| v1['name'] <=> v2['name']}
+        @raw_venues ||= @site.data['venues'].sort{|v1, v2| v1['name'] <=> v2['name']}
       end
 
       def raw_rooms
-        @raw_rooms ||= @site.config['attendease']['rooms'].sort{|r1, r2| r1['name'] <=> r2['name']}
+        @raw_rooms ||= @site.data['rooms'].sort{|r1, r2| r1['name'] <=> r2['name']}
       end
 
       def raw_sessions
-        @raw_sessions ||= @site.config['attendease']['sessions'].sort{|s1, s2| s1['name'] <=> s2['name']}
+        @raw_sessions ||= @site.data['sessions'].sort{|s1, s2| s1['name'] <=> s2['name']}
       end
 
       def raw_filters
-        @raw_filters ||= @site.config['attendease']['filters'].sort{|f1, f2| f1['name'] <=> f2['name']}
+        @raw_filters ||= @site.data['filters'].sort{|f1, f2| f1['name'] <=> f2['name']}
       end
 
       def data_path

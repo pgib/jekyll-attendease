@@ -8,7 +8,7 @@
 
     <div class="attendease-venue" data-venue-id="{{ venue.id }}">
 
-      {% if venue.address.latitude && venue.address.longitude %}
+      {% if venue.address.latitude and venue.address.longitude %}
         {% if venue.primary %}
           {% assign marker_colour = 'blue' %}
         {% else %}

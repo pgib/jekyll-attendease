@@ -1,1 +1,11 @@
-[{"id":"abc","name":"Foo Bar","description":"","url":null,"logo_url":null,"level_id":"gold","level":"Gold"}]
+[
+    {
+        "description": "",
+        "id": "abc",
+        "level": "Gold",
+        "level_id": "gold",
+        "logo_url": null,
+        "name": "Foo Bar",
+        "url": null
+    }
+]
