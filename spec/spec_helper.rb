@@ -75,6 +75,7 @@ RSpec.configure do |config|
         'venues_path_name'        => 'venues',
         'base_layout'             => 'layout',
         'generate_schedule_pages' => true,
+        'generate_sponsor_pages'  => true,
         'has_sessions'            => true,
         'has_presenters'          => true,
         'has_sponsors'            => true,
