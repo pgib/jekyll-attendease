@@ -78,6 +78,7 @@ base_email_layout           | email              | When generating an email temp
 access_token                | none               | Your top-secret API access token
 cache_expiry                | 3600               | The number of seconds until we regerenate the data from the api. Otherwise data will be cached for speed.
 generate_schedule_pages     | false              | Set to true if you want to generate static schedule pages.
+generate_sponsor_pages      | false              | Set to true if you want to generate static sponsor pages.
 show_schedule_index         | false              | Set to true if you want a schedule index page. Otherwise it will just show the first day at /schedule.
 schedule_path_name          | schedule           | Folder off of the root to put the schedule pages. Setting to blank will disable schedule page generation.
 presenters_path_name        | presenters         | Folder off of the root to put the presenters page. Setting to blank will disable presenter page generation.
@@ -213,7 +214,7 @@ Liquid Example:
 The following Liquid filters are available as part of this gem:
 
 Filter            | Description
-------------------+------------
+----------------- | ----------------------------------------------------------
 `json`            | Convert an object to a JSON string
 `awesome_inspect` | Pretty print an object in HTML (for debugging/inspecting)
 

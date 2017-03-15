@@ -4,7 +4,7 @@ module Jekyll
       safe true
 
       def generate(site)
-        if site.config['attendease']['has_sponsors']
+        if site.config['attendease']['has_sponsors'] && site.config['attendease']['generate_sponsor_pages']
           sponsors = site.data['sponsors']
 
           sponsor_levels = site.config['attendease']['event']['sponsor_levels']
@@ -39,4 +39,3 @@ module Jekyll
     end
   end
 end
-
