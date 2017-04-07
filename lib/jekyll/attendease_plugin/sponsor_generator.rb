@@ -4,10 +4,12 @@ module Jekyll
       safe true
 
       def generate(site)
+        return unless site.config.event? && !site.config.cms_theme?
+
         if site.config['attendease']['has_sponsors'] && site.config['attendease']['generate_sponsor_pages']
           sponsors = site.data['sponsors']
+          sponsor_levels = site.data['event']['sponsor_levels']
 
-          sponsor_levels = site.config['attendease']['event']['sponsor_levels']
           sponsor_levels.each do |level|
             level['sponsors'] = []
           end
@@ -22,7 +24,7 @@ module Jekyll
           end
 
           # make this available to any page that wants it
-          site.config['attendease']['sponsor_levels'] = sponsor_levels
+          site.data['sponsor_levels'] = sponsor_levels
 
           # /sponsors pages.
           dir = site.config['attendease']['sponsors_path_name']
