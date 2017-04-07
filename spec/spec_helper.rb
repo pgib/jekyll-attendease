@@ -24,8 +24,21 @@ RSpec.configure do |config|
     @dest = fixtures_path.join('_site')
 
     FileUtils.touch Dir.glob(File.join(File.dirname(__FILE__), 'fixtures', '_attendease', 'data', '*.*'))
-    @site = build_site
-    @page = Jekyll::Page.new(@site, File.join(File.dirname(__FILE__), 'fixtures'), '', 'page.html')
+    #let!(:site) { build_site }
+    #let!(:org_site) { build_site({ attendease: { mode: 'organization' } }) }
+    #let!(:page) { Jekyll::Page.new(@site, File.join(File.dirname(__FILE__), 'fixtures'), '', 'page.html') }
+  end
+
+  def site
+    @site ||= build_site
+  end
+
+  def build_org_site
+    build_site({ 'attendease' => { 'mode' => 'organization' } })
+  end
+
+  def page
+    Jekyll::Page.new(site, File.join(File.dirname(__FILE__), 'fixtures'), '', 'page.html')
   end
 
   def test_dir(*subdirs)
@@ -44,12 +57,12 @@ RSpec.configure do |config|
     Jekyll::Utils.deep_merge_hashes(base_hash, overrides)
   end
 
-  def find_generator(generator_class)
-    @site.generators.select { |m| m.class == generator_class }.first
+  def find_generator(site, generator_class)
+    site.generators.select { |m| m.class == generator_class }.first
   end
 
-  def find_page(page_class, lambda_matcher = false)
-    @site.pages.select do |m|
+  def find_page(site, page_class, lambda_matcher = false)
+    site.pages.select do |m|
       if m.class == page_class
         match = true
         if lambda_matcher
@@ -66,16 +79,6 @@ RSpec.configure do |config|
       'destination'          => @dest.to_s,
       'attendease'           => {
         'api_host'                => 'http://foobar/',
-        'test_mode'               => false,
-        'locale'                  => 'en',
-        'schedule_path_name'      => 'schedule',
-        'presenters_path_name'    => 'presenters',
-        'sponsors_path_name'      => 'sponsors',
-        'venue_path_name'         => 'venue',
-        'venues_path_name'        => 'venues',
-        'base_layout'             => 'layout',
-        'generate_schedule_pages' => true,
-        'generate_sponsor_pages'  => true,
         'has_sessions'            => true,
         'has_presenters'          => true,
         'has_sponsors'            => true,
@@ -87,6 +90,7 @@ RSpec.configure do |config|
   end
 
   def build_site(config = {})
+    @dest.rmtree if @dest.exist?
     site = Jekyll::Site.new(site_configuration(config))
     site.process
     site
@@ -96,10 +100,12 @@ RSpec.configure do |config|
     @dest.rmtree if @dest.exist?
     fixtures_path.join('_attendease', 'templates').rmtree if File.exists?(fixtures_path.join('_attendease', 'templates'))
     fixtures_path.join('attendease_layouts').rmtree if File.exists?(fixtures_path.join('attendease_layouts'))
-    Dir.glob(File.join(@site.source, '**', 'index.json')).map do |i|
-      puts "Removing #{Pathname.new(i).parent}"
+    unless @site.nil?
+      Dir.glob(File.join(@site.source, '**', 'index.json')).map do |i|
+        puts "Removing #{Pathname.new(i).parent}"
 
-      FileUtils.rm_r Pathname.new(i).parent
+        FileUtils.rm_r Pathname.new(i).parent
+      end
     end
   end
 end

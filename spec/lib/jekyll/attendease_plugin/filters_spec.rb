@@ -1,10 +1,12 @@
 require 'spec_helper'
 
 RSpec.describe "Jekyll Attendease filters" do
-  let(:page_data) { @page.data['foo'] }
+  let(:site) { build_site }
+  let(:page) { Jekyll::Page.new(site, File.join(File.dirname(__FILE__), 'fixtures'), '', 'page.html') }
+  let(:page_data) { page.data['foo'] }
 
   def render(content)
-    ::Liquid::Template.parse(content).render({'page' => @page.data})
+    ::Liquid::Template.parse(content).render({'page' => page.data})
   end
 
   context "{{ 'foo Bar bat' | slugify %}" do

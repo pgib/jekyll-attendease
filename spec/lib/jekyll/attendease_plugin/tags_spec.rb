@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe "Jekyll Attendease tags" do
-  let(:context) { { :registers => { :site => @site, :page => {} } } }
+  let(:site) { build_site }
+  let(:context) { { :registers => { :site => site, :page => {} } } }
 
   def render(content)
     ::Liquid::Template.parse(content).render({}, context)
@@ -20,7 +21,7 @@ RSpec.describe "Jekyll Attendease tags" do
   context "{% attendease_locales_script %}" do
     subject { render("{% attendease_locales_script %}") }
     it { is_expected.to include "/api/lingo.json" }
-    it { is_expected.to include @site.config['attendease']['api_host'] }
+    it { is_expected.to include site.config['attendease']['api_host'] }
   end
 
   context "{% attendease_t event.lingo.sponsors %}" do
