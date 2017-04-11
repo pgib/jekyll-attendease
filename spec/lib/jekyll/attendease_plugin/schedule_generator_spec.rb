@@ -101,13 +101,14 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
       end
     end
 
-    context 'a single venue' do
-      pending 'creates a venue index page' do
-        file = File.join(site.dest, site.config['attendease']['venue_path_name'], index_file)
-        expect(File.exists?(file)).to eq(true)
-        expect(File.file?(file)).to eq(true)
-      end
-    end
+    # can't easily test this since we need to provide a different data set.
+    #context 'a single venue' do
+      #it 'creates a venue index page' do
+        #file = File.join(site.dest, site.config['attendease']['venue_path_name'], index_file)
+        #expect(File.exists?(file)).to eq(true)
+        #expect(File.file?(file)).to eq(true)
+      #end
+    #end
 
     context 'multiple venues' do
       it 'creates a venue index page' do
