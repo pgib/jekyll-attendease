@@ -4,7 +4,7 @@ module Jekyll
       safe true
 
       def generate(site)
-        return unless site.config.event? && !site.config.cms_theme?
+        return if !site.config.event? || (site.config.event? && site.config.cms_theme?)
 
         if site.config['attendease']['has_sponsors'] && site.config['attendease']['generate_sponsor_pages']
           sponsors = site.data['sponsors']

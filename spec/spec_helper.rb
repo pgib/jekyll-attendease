@@ -21,8 +21,6 @@ RSpec.configure do |config|
     end
 
     @template_root = File.expand_path(File.join(File.dirname(__FILE__), '..', 'templates'))
-    @dest = fixtures_path.join('_site')
-
     FileUtils.touch Dir.glob(File.join(File.dirname(__FILE__), 'fixtures', '_attendease', 'data', '*.*'))
     #let!(:site) { build_site }
     #let!(:org_site) { build_site({ attendease: { mode: 'organization' } }) }
@@ -30,11 +28,11 @@ RSpec.configure do |config|
   end
 
   def site
-    @site ||= build_site
+    @site
   end
 
-  def build_org_site
-    build_site({ 'attendease' => { 'mode' => 'organization' } })
+  def dest
+    @dest ||= fixtures_path.join('_site')
   end
 
   def page
@@ -76,9 +74,9 @@ RSpec.configure do |config|
   def site_configuration(overrides = {})
     Jekyll::Utils.deep_merge_hashes(build_configs({
       'source'               => fixtures_path.to_s,
-      'destination'          => @dest.to_s,
+      'destination'          => dest.to_s,
       'attendease'           => {
-        'api_host'                => 'http://foobar/',
+        'api_host'                => 'https://foobar/',
         'has_sessions'            => true,
         'has_presenters'          => true,
         'has_sponsors'            => true,
@@ -90,14 +88,18 @@ RSpec.configure do |config|
   end
 
   def build_site(config = {})
-    @dest.rmtree if @dest.exist?
-    site = Jekyll::Site.new(site_configuration(config))
-    site.process
-    site
+    #dest.rmtree if dest.exist?
+    @site = Jekyll::Site.new(site_configuration(config))
+    @site.process
+    @site
   end
 
-  config.after(:all) do
-    @dest.rmtree if @dest.exist?
+  def build_org_site
+    build_site({ 'attendease' => { 'mode' => 'organization', 'jekyll33' => true } })
+  end
+
+  config.after(:each) do
+    dest.rmtree if dest.exist?
     fixtures_path.join('_attendease', 'templates').rmtree if File.exists?(fixtures_path.join('_attendease', 'templates'))
     fixtures_path.join('attendease_layouts').rmtree if File.exists?(fixtures_path.join('attendease_layouts'))
     unless @site.nil?

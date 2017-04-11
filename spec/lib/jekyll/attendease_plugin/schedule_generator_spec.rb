@@ -48,6 +48,13 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
       expect(File.file?(file)).to eq(true)
     end
 
+    it 'makes all data available to the entire site' do
+      expect(site.config['attendease']['event']['id']).to eq('foobar')
+      %w{ site event sessions presenters rooms filters venues sponsors lingo }.each do |key|
+        expect(site.config['attendease'].include?(key)).to eq(true)
+      end
+    end
+
     context 'with a localized name' do
       let(:session_slug_localized) { schedule_generator.schedule_data.sessions.last['slug'] }
       let(:presenter_slug_localized) { schedule_generator.schedule_data.presenters.last['slug'] }
@@ -185,7 +192,6 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
       expect(File.exists?(File.join(site.dest, 'sponsors', 'index.html'))).to eq(false)
     end
   end
-
   context 'in a site with the page paths set to nil' do
     let(:site) { build_site({ 'attendease' => {
       'schedule_path_name'   => false,
@@ -209,13 +215,6 @@ RSpec.describe Jekyll::AttendeasePlugin::ScheduleGenerator do
 
     it 'does not create a sponsors folder' do
       expect(File.exists?(File.join(site.dest, 'sponsors', 'index.html'))).to eq(false)
-    end
-  end
-
-  it 'makes all data available to the entire site' do
-    expect(site.config['attendease']['event']['id']).to eq('foobar')
-    %w{ site event sessions presenters rooms filters venues sponsors lingo }.each do |key|
-      expect(site.config['attendease'].include?(key)).to eq(true)
     end
   end
 

@@ -4,7 +4,7 @@ module Jekyll
       safe true
 
       def generate(site)
-        site.config['attendease']['pages'].each do |page|
+        site.data['pages'].each do |page|
           if !page['permanent']
             site.pages << SitePage.new(site, site.source, page)
 
