@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.description   = 'Bring your event data into Jekyll for amazing event websites.'
   s.authors       = [ 'Michael Wood', 'Patrick Gibson', 'Jamie Lubiner', 'Antoine Censi' ]
   s.email         = 'support@attendease.com'
-  s.files         = (Dir.glob('lib/**/*.rb') + Dir.glob('templates/**/*.html'))
+  s.files         = (Dir.glob('lib/**/*.{rb,yaml}') + Dir.glob('templates/**/*.html'))
   s.test_files    = Dir.glob('spec/**/*.rb').grep(/^(test|spec|features)\//)
   s.require_paths = [ 'lib' ]
 
