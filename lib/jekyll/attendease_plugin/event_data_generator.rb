@@ -34,7 +34,7 @@ module Jekyll
 
             FileUtils.mkdir_p(@attendease_data_path)
 
-            data_files = %w{ site event sessions presenters rooms filters venues sponsors pages site_settings }.map { |m| "#{m}.json"} << 'lingo.yml'
+            data_files = %w{ site event sessions presenters rooms filters venues sponsors pages portal_pages site_settings }.map { |m| "#{m}.json"} << 'lingo.yml'
 
             # no more site in nextgen themes
             #data_files.shift if @attendease_config['jekyll33']
