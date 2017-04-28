@@ -1,10 +1,13 @@
 require 'spec_helper'
 
+# Error reading file /Users/patrick/work/jekyll-attendease/spec/lib/jekyll/attendease_plugin/fixtures/page.html: No such file or directory @ rb_sysopen - /Users/patrick/work/jekyll-attendease/spec/fixtures/Users/patrick/work/jekyll-attendease/spec/lib/jekyll/attendease_plugin/fixtures/page.html
 RSpec.describe "Jekyll Attendease filters" do
-  let(:page_data) { @page.data['foo'] }
+  let(:site) { build_site }
+  let(:page) { Jekyll::Page.new(site, fixtures_path.to_s, '', 'page.html') }
+  let(:page_data) { page.data['foo'] }
 
   def render(content)
-    ::Liquid::Template.parse(content).render({'page' => @page.data})
+    ::Liquid::Template.parse(content).render({'page' => page.data})
   end
 
   context "{{ 'foo Bar bat' | slugify %}" do

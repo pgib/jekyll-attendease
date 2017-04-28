@@ -16,107 +16,113 @@ module Jekyll
         end
       end
 
-      def use_cache?(file)
-        (Time.now.to_i - File.mtime(file).to_i) <= (@attendease_config['cache_expiry'].nil? ? 30 : @attendease_config['cache_expiry'])  # file is less than 30 seconds old
+      def use_cache?(site, file)
+        (Time.now.to_i - File.mtime(file).to_i) <= (site.config.attendease['cache_expiry'].nil? ? 30 : site.config.attendease['cache_expiry'])  # file is less than 30 seconds old
       end
 
       def generate(site)
-        if @attendease_config = site.config['attendease']
-          if @attendease_config['api_host'] && !@attendease_config['api_host'].match(/^http/)
-            raise "Is your Attendease api_host site properly in _config.yml? Needs to be something like https://myevent.attendease.com/"
+        return if site.config.organization?
+
+        if site.config.attendease['api_host'] && !site.config.attendease['api_host'].match(/^https/)
+          raise "Is your Attendease api_host site properly in _config.yml? Needs to be something like https://myevent.attendease.com/"
+        else
+          # add a trailing slash if we are missing one.
+          if site.config.attendease['api_host'][-1, 1] != '/'
+            site.config.attendease['api_host'] += '/'
+          end
+
+          @attendease_data_path = File.join(site.source, '_attendease', 'data')
+
+          FileUtils.mkdir_p(@attendease_data_path)
+
+          if site.config.cms_theme?
+            data_files = %w{ site event pages portal_pages site_settings }.map { |m| "#{m}.json"} << 'lingo.yml'
           else
-            # add a trailing slash if we are missing one.
-            if @attendease_config['api_host'][-1, 1] != '/'
-              @attendease_config['api_host'] += '/'
+            data_files = %w{ site event sessions presenters rooms filters venues sponsors pages site_settings }.map { |m| "#{m}.json"} << 'lingo.yml'
+          end
+
+          # no more site in nextgen themes
+          #data_files.shift if site.config.attendease['jekyll33']
+
+          data_files.each do |filename|
+            update_data = true
+            data = nil
+
+            file = File.join(@attendease_data_path, filename)
+            if File.exists?(file) && use_cache?(site, file)
+              update_data = false
+
+              if filename.match(/json$/)
+                begin
+                  data = JSON.parse(File.read(file))
+                rescue => e
+                  raise "Error parsing #{file}: #{e.inspect}"
+                end
+              else
+                data = File.read(file)
+              end
             end
 
-            @attendease_data_path = File.join(site.source, '_attendease', 'data')
+            key = "has_#{filename.split('.')[0]}"
 
-            FileUtils.mkdir_p(@attendease_data_path)
+            # don't bother making a request for resources that don't exist in the event
+            if !site.config.attendease[key].nil? && !site.config.attendease[key]
+              update_data = false
+              data = []
+            end
 
-            data_files = %w{ site event sessions presenters rooms filters venues sponsors pages portal_pages site_settings }.map { |m| "#{m}.json"} << 'lingo.yml'
+            if update_data
+              options = {}
+              options.merge!(:headers => {'X-Event-Token' => site.config.attendease['access_token']}) if site.config.attendease['access_token']
 
-            # no more site in nextgen themes
-            #data_files.shift if @attendease_config['jekyll33']
+              request_filename = filename.gsub(/yml$/, 'yaml')
+              response = get("#{site.config.attendease['api_host']}api/#{request_filename}?meta=true", options)
 
-            data_files.each do |file_name|
-              update_data = true
-              data = nil
+              #if (filename.match(/yaml$/) || data.is_a?(Hash) && !data['error']) || data.is_a?(Array)
+              if (!response.nil? && response.response.is_a?(Net::HTTPOK))
+                Jekyll.logger.info "[Attendease] Saving #{filename} data..."
 
-              file = File.join(@attendease_data_path, file_name)
-              if File.exists?(file) && use_cache?(file)
-                update_data = false
-
-                if file_name.match(/json$/)
-                  begin
-                    data = JSON.parse(File.read(file))
-                  rescue => e
-                    raise "Error parsing #{file}: #{e.inspect}"
-                  end
-                else
-                  data = File.read(file)
+                if filename.match(/json$/)
+                  data = response.parsed_response
+                  File.open(file, 'w') { |f| f.write(data.to_json) }
+                else # yaml
+                  File.open(file, 'w') { |f| f.write(response.body) }
                 end
+              else
+                raise "Request failed for #{site.config.attendease['api_host']}api/#{request_filename}. Is your Attendease api_host site properly in _config.yml?"
               end
+            end
 
-              key = "has_#{file_name.split('.')[0]}"
+            # make this data available to anything that wants it
+            site.config['attendease'][File.basename(filename, '.*')] = data
+            site.data[File.basename(filename, '.*')] = data
 
-              # don't bother making a request for resources that don't exist in the event
-              if !@attendease_config[key].nil? && !@attendease_config[key]
-                update_data = false
-                data = []
-              end
+            if data.is_a?(Hash)
+              if filename == 'site.json'
+                # Adding to site config so we can access these variables globally wihtout using a Liquid Tag so we can use if/else
+                site.config['attendease']['data'] = {}
 
-              if update_data
-                options = {}
-                options.merge!(:headers => {'X-Event-Token' => @attendease_config['access_token']}) if @attendease_config['access_token']
-
-                request_filename = file_name.gsub(/yml$/, 'yaml')
-                response = get("#{@attendease_config['api_host']}api/#{request_filename}?meta=true", options)
-
-                #if (file_name.match(/yaml$/) || data.is_a?(Hash) && !data['error']) || data.is_a?(Array)
-                if (!response.nil? && response.response.is_a?(Net::HTTPOK))
-                  Jekyll.logger.info "[Attendease] Saving #{file_name} data..."
-
-                  if file_name.match(/json$/)
-                    data = response.parsed_response
-                    File.open(file, 'w+') { |f| f.write(data.to_json) }
-                  else # yaml
-                    File.open(file, 'w+') { |f| f.write(response.body) }
-                  end
-                else
-                  raise "Request failed for #{@attendease_config['api_host']}api/#{request_filename}. Is your Attendease api_host site properly in _config.yml?"
-                end
-              end
-
-              # make this data available to anything that wants it
-              site.config['attendease'][File.basename(file_name, '.*')] = data
-              site.data[File.basename(file_name, '.*')] = data
-
-              if data.is_a?(Hash)
-                if file_name == 'site.json'
-                  # Adding to site config so we can access these variables globally wihtout using a Liquid Tag so we can use if/else
-                  site.config['attendease']['data'] = {}
-
-                  data.keys.each do |tag|
-                    site.config['attendease']['data'][tag] = data[tag]
-                    # memorandum from the department of redundancy department:
-                    # --------------------------------------------------------
-                    # support accessing the attendease_* variables without the
-                    # attendease_ prefix because they're already namespaced in
-                    # site.attendease.data
-                    #
-                    # TODO: update all themes to not use attendease_ variables
-                    #       and then retire them from the ThemeManager.
-                    if tag.match(/^attendease_/)
-                      site.config['attendease']['data'][tag.gsub(/^attendease_/, '')] = data[tag]
-                    end
+                data.keys.each do |tag|
+                  site.config['attendease']['data'][tag] = data[tag]
+                  # memorandum from the department of redundancy department:
+                  # --------------------------------------------------------
+                  # support accessing the attendease_* variables without the
+                  # attendease_ prefix because they're already namespaced in
+                  # site.attendease.data
+                  #
+                  # TODO: update all themes to not use attendease_ variables
+                  #       and then retire them from the ThemeManager.
+                  if tag.match(/^attendease_/)
+                    site.config['attendease']['data'][tag.gsub(/^attendease_/, '')] = data[tag]
                   end
                 end
               end
             end
+          end
 
-            # provide a structure of session instances (timeslots) grouped
-            # by day (suitable for displaying a schedule)
+          # provide a structure of session instances (timeslots) grouped
+          # by day (suitable for displaying a schedule)
+          unless site.config.cms_theme?
             site.config['attendease']['days'] = []
             schedule_data = ScheduleDataParser.new(site)
             site.config['attendease']['event']['dates'].each do |day|
@@ -133,34 +139,31 @@ module Jekyll
               day['instances'] = instances.sort {|x,y| [x['time'], x['session']['name']] <=> [y['time'], y['session']['name']]}
               site.config['attendease']['days'] << day
             end
-
-            # make the event available to anyone
-            event = JSON.parse(File.read("#{@attendease_data_path}/event.json"))
-            site.config['attendease']['event'] = event
-
-            if @attendease_config['copy_data']
-              data_dir = File.join(site.source, 'attendease_data')
-              FileUtils.mkdir(data_dir) unless File.exists?(data_dir)
-              site.config['attendease']['data_files'] = {}
-
-              Dir.chdir(@attendease_data_path) do
-                extension = '.json'
-                Dir.glob('*.json').each do |f|
-                  base_name = File.basename(f, extension)
-                  digest = Digest::SHA2.file(f).hexdigest
-                  digest_file = "#{base_name}-#{digest}.json"
-                  FileUtils.cp(f, File.join(data_dir, digest_file))
-                  site.config['attendease']['data_files'][base_name] = digest_file
-                end
-              end
-
-              # tell Jekyll about these new static files to publish
-              site.reader.read_directories 'attendease_data'
-            end
           end
 
-        else
-          raise "Please set the Attendease event data in your _config.yml"
+          # make the event available to anyone
+          event = JSON.parse(File.read("#{@attendease_data_path}/event.json"))
+          site.config['attendease']['event'] = event
+
+          if site.config.attendease['copy_data']
+            data_dir = File.join(site.source, 'attendease_data')
+            FileUtils.mkdir(data_dir) unless File.exists?(data_dir)
+            site.config['attendease']['data_files'] = {}
+
+            Dir.chdir(@attendease_data_path) do
+              extension = '.json'
+              Dir.glob('*.json').each do |f|
+                base_name = File.basename(f, extension)
+                digest = Digest::SHA2.file(f).hexdigest
+                digest_file = "#{base_name}-#{digest}.json"
+                FileUtils.cp(f, File.join(data_dir, digest_file))
+                site.config['attendease']['data_files'][base_name] = digest_file
+              end
+            end
+
+            # tell Jekyll about these new static files to publish
+            site.reader.read_directories 'attendease_data'
+          end
         end
       end
     end

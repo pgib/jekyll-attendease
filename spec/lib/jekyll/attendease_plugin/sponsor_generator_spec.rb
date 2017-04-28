@@ -1,12 +1,21 @@
 require 'spec_helper'
 
 RSpec.describe Jekyll::AttendeasePlugin::SponsorGenerator do
+  context 'event site' do
+    let (:site) { build_site }
 
-  it 'creates the sponsor listing page' do
-    template_files = Dir.chdir(@template_root) { Dir.glob('*/**.html') }
+    it 'creates the sponsor listing page' do
+      expect(File.exists?(File.join(site.config['destination'], 'sponsors', 'index.html'))).to eq(true)
+      expect(File.read(File.join(site.config['destination'], 'sponsors', 'index.html'))).to include "<h1>Sponsors</h1>"
+    end
+  end
 
-    expect(File.exists?(File.join(@site.config['destination'], 'sponsors', 'index.html'))).to eq(true)
-    expect(File.read(File.join(@site.config['destination'], 'sponsors', 'index.html'))).to include "<h1>Sponsors</h1>"
+  context 'organization site' do
+    let (:org_site) { build_org_site }
+
+    it 'does not create the sponsor listing page' do
+      expect(File.exists?(File.join(org_site.config['destination'], 'sponsors', 'index.html'))).to eq(false)
+    end
   end
 
 end

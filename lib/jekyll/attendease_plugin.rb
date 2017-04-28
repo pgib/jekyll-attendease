@@ -3,6 +3,7 @@ require 'jekyll/attendease_plugin/schedule_data_parser'
 
 # Generators:
 require 'jekyll/attendease_plugin/event_data_generator'
+require 'jekyll/attendease_plugin/organization_data_generator'
 require 'jekyll/attendease_plugin/event_layout_generator'
 require 'jekyll/attendease_plugin/event_template_generator'
 require 'jekyll/attendease_plugin/home_page_generator'
@@ -35,3 +36,19 @@ require 'jekyll/attendease_plugin/site_page'
 
 # Ve.rs.ion
 require 'jekyll/attendease_plugin/version'
+
+# Register our config hook
+require 'jekyll/attendease_plugin/config_mixin'
+
+Jekyll::Hooks.register :site, :after_reset do |site|
+  default = YAML.load_file(File.join(File.expand_path(File.dirname(__FILE__)), 'attendease_plugin', '_config.yaml'))
+
+  site.config['attendease'] = site.config['attendease'].nil? ? default : Jekyll::Utils.deep_merge_hashes(default['attendease'], site.config['attendease'])
+
+  site.config.extend(AttendeaseJekyllConfigMixin)
+
+  if site.config.attendease['api_host'].nil?
+    raise 'Fatal: You must configure attendease:api_host in your _config.yml to point to the API host of your event or organization.'
+  end
+end
+
