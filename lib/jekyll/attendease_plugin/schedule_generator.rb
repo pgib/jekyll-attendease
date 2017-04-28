@@ -6,7 +6,9 @@ module Jekyll
       attr_reader :schedule_data
 
       def generate(site)
-        if site.config['attendease'] && site.config['attendease']['api_host'] && site.config['attendease']['generate_schedule_pages']
+        return if !site.config.event? || (site.config.event? && site.config.cms_theme?)
+
+        if site.config['attendease']['api_host'] && site.config['attendease']['generate_schedule_pages']
 
           @schedule_data = ScheduleDataParser.new(site)
 

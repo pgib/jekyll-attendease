@@ -1,0 +1,19 @@
+---
+attendease:
+  mode:                 'event'
+  locale:               'en'
+  base_layout:          'layout'
+  base_email_layout:    'email'
+  schedule_path_name:   'schedule'
+  presenters_path_name: 'presenters'
+  sponsors_path_name:   'sponsors'
+  venue_path_name:      'venue'
+  venues_path_name:     'venues'
+  generate_schedule_pages: true
+  generate_sponsor_pages:  true
+  has_sessions:            false
+  has_presenters:          false
+  has_sponsors:            false
+  has_rooms:               false
+  has_filters:             false
+  has_venues:              false
