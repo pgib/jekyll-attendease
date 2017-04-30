@@ -2,10 +2,16 @@ require 'spec_helper'
 
 RSpec.describe "Jekyll Attendease tags" do
   let(:site) { build_site }
+  let(:cms_site) { build_site({ 'attendease' => { 'jekyll33' => true } }) }
   let(:context) { { :registers => { :site => site, :page => {} } } }
+  let(:cms_context) { { :registers => { :site => cms_site, :page => {} } } }
 
   def render(content)
     ::Liquid::Template.parse(content).render({}, context)
+  end
+
+  def cms_render(content)
+    ::Liquid::Template.parse(content).render({}, cms_context)
   end
 
   context "{% attendease_auth_script %}" do
@@ -54,8 +60,16 @@ RSpec.describe "Jekyll Attendease tags" do
   end
 
   context "{% attendease_nav %}" do
-    subject { render("{% attendease_nav %}{% raw %}<li><a href=\"/{{ page.slug }}/\">{{ page.name }}</a></li>{% endraw %}{% endattendease_nav %}") }
+    subject { render("{% attendease_nav %}{% raw %}<li><a href=\"{{ page.href }}\">{{ page.name }}</a></li>{% endraw %}{% endattendease_nav %}") }
     it { is_expected.to match(/<li><a href="\/schedule\/"/) }
+
+    # hidden page
+    it { is_expected.to_not match(/<li><a href="\/test\/"/) }
+  end
+
+  context "{% attendease_portal_nav %}" do
+    subject { cms_render("{% attendease_portal_nav %}{% raw %}<li><a href=\"{{ page.href }}\">{{ page.name }}</a></li>{% endraw %}{% endattendease_portal_nav %}") }
+    it { is_expected.to match(/<li><a href="\/"/) }
 
     # hidden page
     it { is_expected.to_not match(/<li><a href="\/test\/"/) }
