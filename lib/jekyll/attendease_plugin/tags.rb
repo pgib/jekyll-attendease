@@ -94,23 +94,16 @@ module Jekyll
       end
 
       def render(context)
-        portal_pages = context.registers[:site].data['porta_pages']
-
-        config = context.registers[:site].config['attendease']
+        portal_pages = context.registers[:site].data['portal_pages']
 
         nav = []
         if portal_pages.is_a?(Array)
           portal_pages.sort! { |a, b| a['weight'] <=> b['weight'] }
-          key_mapping = { 'schedule' => 'sessions' }
           portal_pages.select { |p| p['top_level'] }.each do |page|
             if page['active'] && !page['hidden']
-              # only activate nav links if there is content
-              config_key = "has_#{key_mapping[page['page_key']] || page['page_key']}"
-              if config[config_key].nil? || (!config[config_key].nil? && config[config_key] == true)
-                template = Liquid::Template.parse(super)
-                template.assigns['page'] = page
-                nav << template.render
-              end
+              template = Liquid::Template.parse(super)
+              template.assigns['page'] = page
+              nav << template.render
             end
           end
           nav.join("\n")
@@ -133,21 +126,14 @@ module Jekyll
       def render(context)
         pages = context.registers[:site].data['pages']
 
-        config = context.registers[:site].config['attendease']
-
         nav = []
         if pages.is_a?(Array)
           pages.sort! { |a, b| a['weight'] <=> b['weight'] }
-          key_mapping = { 'schedule' => 'sessions' }
           pages.select { |p| p['top_level'] }.each do |page|
             if page['active'] && !page['hidden']
-              # only activate nav links if there is content
-              config_key = "has_#{key_mapping[page['page_key']] || page['page_key']}"
-              if config[config_key].nil? || (!config[config_key].nil? && config[config_key] == true)
-                template = Liquid::Template.parse(super)
-                template.assigns['page'] = page
-                nav << template.render
-              end
+              template = Liquid::Template.parse(super)
+              template.assigns['page'] = page
+              nav << template.render
             end
           end
           nav.join("\n")
