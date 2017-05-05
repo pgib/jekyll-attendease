@@ -36,7 +36,7 @@ module Jekyll
           FileUtils.mkdir_p(@attendease_data_path)
 
           if site.config.cms_theme?
-            data_files = %w{ site event pages site_settings }.map { |m| "#{m}.json"} << 'lingo.yml'
+            data_files = %w{ site event pages portal_pages site_settings }.map { |m| "#{m}.json"} << 'lingo.yml'
           else
             data_files = %w{ site event sessions presenters rooms filters venues sponsors pages site_settings }.map { |m| "#{m}.json"} << 'lingo.yml'
           end

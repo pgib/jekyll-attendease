@@ -14,5 +14,6 @@ Liquid::Template.register_tag('attendease_auth_account',     Jekyll::AttendeaseP
 Liquid::Template.register_tag('attendease_auth_action',      Jekyll::AttendeasePlugin::AuthActionTag)
 Liquid::Template.register_tag('attendease_t',                Jekyll::AttendeasePlugin::TranslateTag)
 Liquid::Template.register_tag('attendease_nav',              Jekyll::AttendeasePlugin::NavigationTag)
+Liquid::Template.register_tag('attendease_portal_nav',       Jekyll::AttendeasePlugin::PortalNavigationTag)
 
 Liquid::Template.register_filter(Jekyll::AttendeasePlugin::Filters)
