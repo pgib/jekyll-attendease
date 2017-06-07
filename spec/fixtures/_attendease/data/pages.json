@@ -84,7 +84,7 @@
                 "content": {
                     "text": "Hello world"
                 },
-                "properties": {
+                "preferences": {
                     "heading": "h1"
                 },
                 "weight": 0,
