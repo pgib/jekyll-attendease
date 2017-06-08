@@ -9,6 +9,24 @@ Status](https://coveralls.io/repos/attendease/jekyll-attendease/badge.svg?branch
 
 ## Changes
 
+### 0.6.26
+* Exclude external pages. Fix the way HTTParty is used so it works in extended classes.
+* For event sites, interpolate the `{{ event.foo }}` variables.
+* Support for organization sites.
+* Skip the generation of old resource pages for organization or new CMS sites.
+* Add a means to specify default configuration values by way of lib/jekyll/attendease_plugin/_config.yaml.
+* Add portal pages to event_data_generator
+* Add generate_sponsor_page option
+* Ensure hidden pages don't show up in the nav
+* Ensure the attendease_locales_script uses the api_host setting.
+* Add site_settings to the data structure.
+* Ensure titles are passed to pages properly.
+* Generate pre-rendered layouts for all CMS layouts.
+* Fix page title.
+* Fix the sorting of block instances.
+* Page blocks are now stored in a corresponding JSON file
+* Test that our data gets generated.
+
 ### 0.6.24
 
 * expose `site.attendease.days` which allows any page to access the days and

@@ -98,15 +98,18 @@ RSpec.configure do |config|
     build_site({ 'attendease' => { 'mode' => 'organization', 'jekyll33' => true } })
   end
 
-  config.after(:each) do
+  config.after(:each) do |foo|
+    puts "Removing #{dest}"
     dest.rmtree if dest.exist?
     fixtures_path.join('_attendease', 'templates').rmtree if File.exists?(fixtures_path.join('_attendease', 'templates'))
     fixtures_path.join('attendease_layouts').rmtree if File.exists?(fixtures_path.join('attendease_layouts'))
     unless @site.nil?
       Dir.glob(File.join(@site.source, '**', 'index.json')).map do |i|
-        puts "Removing #{Pathname.new(i).parent}"
-
-        FileUtils.rm_r Pathname.new(i).parent
+        if (Pathname.new(i).parent == fixtures_path)
+          FileUtils.rm i
+        else
+          FileUtils.rm_r Pathname.new(i).parent
+        end
       end
     end
   end
