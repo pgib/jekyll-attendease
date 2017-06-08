@@ -2,34 +2,38 @@
     {
         "active": true,
         "layout": "layout",
-        "description": "Schedule",
+        "description": "Home",
         "hidden": false,
         "id": "48b9c3da-e172-4de1-96b4-7807bb0e4ee4",
-        "page_key": "schedule",
-        "permanent": true,
-        "href": "/schedule/",
-        "slug": "schedule",
-        "title": "Schedule",
+        "page_key": "",
+        "permanent": false,
+        "href": "/",
+        "slug": "",
+        "title": "Home",
         "top_level": true,
         "updated_at": "2016-10-21T18:06:53Z",
         "weight": 0,
-        "block_instances": []
+        "block_instances": [],
+        "external": false,
+        "external_url": null
     },
     {
         "active": true,
         "layout": "layout",
-        "description": "Session Listing",
+        "description": "Agenda",
         "hidden": false,
         "id": "3d3d2ee9-3994-46b9-9ae4-b12a672e74dc",
-        "page_key": "sessions",
-        "permanent": true,
-        "href": "/sessions/",
-        "slug": "sessions",
-        "title": "Schedule: Sessions",
-        "top_level": false,
+        "page_key": "",
+        "permanent": false,
+        "href": "/agenda/",
+        "slug": "agenda",
+        "title": "Agenda",
+        "top_level": true,
         "updated_at": "2016-10-21T18:06:53Z",
         "weight": 1,
-        "block_instances": []
+        "block_instances": [],
+        "external": false,
+        "external_url": null
     },
     {
         "active": true,
@@ -45,7 +49,9 @@
         "top_level": true,
         "updated_at": "2016-10-21T18:06:53Z",
         "weight": 5,
-        "block_instances": []
+        "block_instances": [],
+        "external": false,
+        "external_url": null
     },
     {
         "active": true,
@@ -61,7 +67,9 @@
         "top_level": true,
         "updated_at": "2016-10-21T18:06:53Z",
         "weight": 7,
-        "block_instances": []
+        "block_instances": [],
+        "external": false,
+        "external_url": null
     },
     {
         "active": true,
@@ -90,7 +98,27 @@
                 "weight": 0,
                 "zone": "dropzone1"
             }
-        ]
+        ],
+        "external": false,
+        "external_url": null
+    },
+    {
+        "active": true,
+        "layout": "layout",
+        "description": "External Link",
+        "hidden": false,
+        "id": "je541a28-f62c-435e-a1c0-477a6120f9b7",
+        "page_key": "",
+        "permanent": true,
+        "href": "",
+        "slug": "",
+        "title": "",
+        "top_level": true,
+        "updated_at": "2016-10-21T18:06:53Z",
+        "weight": 8,
+        "block_instances": [],
+        "external": true,
+        "external_url": "https://attendease.com"
     }
 
 ]
