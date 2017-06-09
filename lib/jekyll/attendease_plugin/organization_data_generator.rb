@@ -40,10 +40,14 @@ module Jekyll
             end
 
             if update_data
-              options = {}
-              options.merge!(:headers => {'X-Organization-Token' => site.config.attendease['access_token']}) if site.config.attendease['access_token']
+              unless site.config.attendease['access_token']
+                raise "Missing user access_token in the attendease section of _config.yml"
+              end
 
-              response = get("#{site.config.attendease['api_host']}api/v2/#{filename}", options)
+              options = {}
+              options.merge!(:headers => {'X-User-Token' => site.config.attendease['access_token']})
+
+              response = get("#{site.config.attendease['api_host']}api/#{filename}", options)
 
               if (!response.nil? && response.response.is_a?(Net::HTTPOK))
                 Jekyll.logger.info "[Attendease] Saving #{filename} data..."
@@ -55,7 +59,12 @@ module Jekyll
                   File.open(file, 'w') { |f| f.write(response.body) }
                 end
               else
-                raise "Request failed for #{site.config.attendease['api_host']}api/v2/#{filename}. Is your Attendease api_host site properly in _config.yml?"
+                case response.code
+                when 403
+                  raise "#{response.code} Access token invalid for #{site.config.attendease['api_host']}api/#{filename}"
+                else
+                  raise "#{response.code} Request failed for #{site.config.attendease['api_host']}api/#{filename}. Is your Attendease api_host site properly in _config.yml?"
+                end
               end
             end
 
