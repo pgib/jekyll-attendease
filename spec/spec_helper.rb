@@ -76,13 +76,21 @@ RSpec.configure do |config|
       'source'               => fixtures_path.to_s,
       'destination'          => dest.to_s,
       'attendease'           => {
-        'api_host'                => 'https://foobar/',
-        'has_sessions'            => true,
-        'has_presenters'          => true,
-        'has_sponsors'            => true,
-        'has_rooms'               => true,
-        'has_filters'             => true,
-        'has_venues'              => true
+        'api_host'                 => 'https://foobar/',
+        'has_sessions'             => true,
+        'has_presenters'           => true,
+        'has_sponsors'             => true,
+        'has_rooms'                => true,
+        'has_filters'              => true,
+        'has_venues'               => true,
+        'environment'              => 'test',
+        'locale'                   => 'en',
+        'source_id'                => 'foobar',
+        'auth_host'                => 'https://foobar.auth/',
+        'organization_url'         => 'https://foobar.org/',
+        'organization_id'          => 'batbaz',
+        'organization_name'        => 'Foo Bar Widgets',
+        'available_portal_locales' => %w{ en fr it es de }
       }
     }), overrides)
   end

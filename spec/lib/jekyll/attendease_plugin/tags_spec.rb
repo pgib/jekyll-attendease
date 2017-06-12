@@ -5,6 +5,8 @@ RSpec.describe "Jekyll Attendease tags" do
   let(:cms_site) { build_site({ 'attendease' => { 'jekyll33' => true } }) }
   let(:context) { { :registers => { :site => site, :page => {} } } }
   let(:cms_context) { { :registers => { :site => cms_site, :page => {} } } }
+  let(:org_site) { build_org_site }
+  let(:org_context) { { :registers => { :site => org_site, :page => {} } } }
 
   def render(content)
     ::Liquid::Template.parse(content).render({}, context)
@@ -12,6 +14,10 @@ RSpec.describe "Jekyll Attendease tags" do
 
   def cms_render(content)
     ::Liquid::Template.parse(content).render({}, cms_context)
+  end
+
+  def org_render(content)
+    ::Liquid::Template.parse(content).render({}, org_context)
   end
 
   context "{% attendease_auth_script %}" do
@@ -74,6 +80,40 @@ RSpec.describe "Jekyll Attendease tags" do
     # hidden page
     it { is_expected.to_not match(/<li><a href="\/test\/"/) }
   end
+
+  context "{% attendease_block_renderer %} for event" do
+    subject { render("{% attendease_block_renderer %}") }
+
+    it { is_expected.to match(/locale: "en"/) }
+    it { is_expected.to match(/eventApiEndpoint: "https:\/\/foobar\/api"/) }
+    it { is_expected.to match(/eventId: "foobar"/) }
+    it { is_expected.to match(/orgApiEndpoint: "https:\/\/foobar\.org\/api"/) }
+    it { is_expected.to match(/orgId: "batbaz"/) }
+    it { is_expected.to match(/authApiEndpoint: "https:\/\/foobar.auth\/"/) }
+    it { is_expected.to match(/dashboard.attendease.com\/webpack_assets\/blockrenderer.bundle.js/) }
+    it { is_expected.to_not match(/orgLocales/) }
+  end
+
+  context "{% attendease_block_renderer %} with custom bundle URL" do
+    subject { render("{% attendease_block_renderer https://foobar.cdn/blockrenderer.js %}") }
+
+    it { is_expected.to match(/https:\/\/foobar.cdn\/blockrenderer.js/) }
+  end
+
+  context "{% attendease_block_renderer %} for an org portal" do
+    subject { org_render("{% attendease_block_renderer %}") }
+
+    it { is_expected.to match(/locale: "en"/) }
+    it { is_expected.to match(/orgApiEndpoint: "https:\/\/foobar\/api"/) }
+    it { is_expected.to match(/orgId: "foobar"/) }
+    it { is_expected.to match(/authApiEndpoint: "https:\/\/foobar.auth\/"/) }
+    it { is_expected.to match(/dashboard.attendease.com\/webpack_assets\/blockrenderer.bundle.js/) }
+    it { is_expected.to match(/orgLocales: \["en", "fr", "it", "es", "de"\]/) }
+
+    it { is_expected.to_not match(/eventApiEndpoint/) }
+    it { is_expected.to_not match(/eventId/) }
+  end
+
 end
 
 def schedule_widget_data
