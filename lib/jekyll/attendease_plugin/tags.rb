@@ -162,7 +162,7 @@ module Jekyll
     locale: "en",
     orgApiEndpoint: "#{ config['api_host'] }api",
     orgId: "#{ config['source_id'] }",
-    authApiEndpoint: "#{ config['auth_host'] }",
+    authApiEndpoint: "#{ config['auth_host'] }api",
     orgLocales: #{ config['available_portal_locales'] }
   }
 })(window)
@@ -179,7 +179,7 @@ _EOT
     eventId: "#{ config['source_id'] }",
     orgApiEndpoint: "#{ config['organization_url'] }api",
     orgId: "#{ config['organization_id'] }",
-    authApiEndpoint: "#{ config['auth_host'] }"
+    authApiEndpoint: "#{ config['auth_host'] }api"
   }
 })(window)
 </script>
