@@ -52,3 +52,16 @@ Jekyll::Hooks.register :site, :after_reset do |site|
   end
 end
 
+Jekyll::Hooks.register :site, :post_write do |site|
+  if pages = site.data['pages']
+    pages.each do |page|
+      if File.exists?(file = File.join(site.config['source'], page['slug'], 'index.html'))
+        File.unlink(file)
+      end
+
+      if File.exists?(file = File.join(site.config['source'], page['slug'], 'index.json'))
+        File.unlink(file)
+      end
+    end
+  end
+end
