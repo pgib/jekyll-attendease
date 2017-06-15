@@ -142,5 +142,70 @@ module Jekyll
         end
       end
     end
+
+    class BlockRendererTag < Liquid::Tag
+      def initialize(tag_name, url_override, tokens)
+        super
+        @url_override = url_override
+      end
+
+      def render(context)
+        config = context.registers[:site].config['attendease']
+        #data = context.registers[:site].data
+        env = config['environment']
+
+        if config['mode'] == 'organization'
+          script = <<_EOT
+<script type="text/javascript">
+(function(w) {
+  w.AttendeaseConstants = {
+    locale: "en",
+    orgApiEndpoint: "#{ config['api_host'] }api",
+    orgId: "#{ config['source_id'] }",
+    authApiEndpoint: "#{ config['auth_host'] }",
+    orgLocales: #{ config['available_portal_locales'] }
+  }
+})(window)
+</script>
+
+_EOT
+        else
+          script = <<_EOT
+<script type="text/javascript">
+(function(w) {
+  w.AttendeaseConstants = {
+    locale: "#{ config['locale'] }",
+    eventApiEndpoint: "#{ config['api_host'] }api",
+    eventId: "#{ config['source_id'] }",
+    orgApiEndpoint: "#{ config['organization_url'] }api",
+    orgId: "#{ config['organization_id'] }",
+    authApiEndpoint: "#{ config['auth_host'] }"
+  }
+})(window)
+</script>
+
+_EOT
+        end
+
+        if @url_override.match(/^(https:)?\/\/.+/)
+          url = @url_override
+        else
+          case env
+          when 'development'
+            url = '//dashboard.localhost.attendease.com/webpack_assets/blockrenderer.bundle.js'
+          when 'preview'
+            url = '//cdn.attendease.com/blockrenderer/ci-latest.js'
+          else
+            url = '//dashboard.attendease.com/webpack_assets/blockrenderer.bundle.js'
+          end
+        end
+
+        script << <<_EOT
+<script type="text/javascript" src="#{ url }"></script>
+_EOT
+
+        script
+      end
+    end
   end
 end

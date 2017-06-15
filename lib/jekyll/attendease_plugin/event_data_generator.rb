@@ -96,8 +96,9 @@ module Jekyll
             site.data[File.basename(filename, '.*')] = data
 
             if data.is_a?(Hash)
+              # DEPRECATED
               if filename == 'site.json'
-                # Adding to site config so we can access these variables globally wihtout using a Liquid Tag so we can use if/else
+                # Adding to site config so we can access these variables globally without using a Liquid Tag so we can use if/else
                 site.config['attendease']['data'] = {}
 
                 data.keys.each do |tag|

@@ -26,6 +26,8 @@ Status](https://coveralls.io/repos/attendease/jekyll-attendease/badge.svg?branch
 * Fix the sorting of block instances.
 * Page blocks are now stored in a corresponding JSON file
 * Test that our data gets generated.
+* Add {% attendease_block_renderer %} tag to inject all of the code needed for
+  the block renderer.
 
 ### 0.6.24
 
@@ -154,6 +156,14 @@ This script tag sets up lingo so your event can sound like you want it to sound 
 A quick way to use our lingo stuff in our jekyll templates.
 
 `{% attendease_t %}`
+
+Output the supporting code to load in the Attendease CMS block renderer.
+
+`{% attendease_block_renderer %}`
+
+You can pass in an optional URL to override where the bundle is found:
+
+`{% attendease_block_renderer https://foobar.cdn/blockrenderer-latest.js %}`
 
 ## Listening for the auth callback
 
