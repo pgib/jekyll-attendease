@@ -89,7 +89,7 @@ RSpec.describe "Jekyll Attendease tags" do
     it { is_expected.to match(/eventId: "foobar"/) }
     it { is_expected.to match(/orgApiEndpoint: "https:\/\/foobar\.org\/api"/) }
     it { is_expected.to match(/orgId: "batbaz"/) }
-    it { is_expected.to match(/authApiEndpoint: "https:\/\/foobar.auth\/"/) }
+    it { is_expected.to match(/authApiEndpoint: "https:\/\/foobar.auth\/api"/) }
     it { is_expected.to match(/dashboard.attendease.com\/webpack_assets\/blockrenderer.bundle.js/) }
     it { is_expected.to_not match(/orgLocales/) }
   end
@@ -106,7 +106,7 @@ RSpec.describe "Jekyll Attendease tags" do
     it { is_expected.to match(/locale: "en"/) }
     it { is_expected.to match(/orgApiEndpoint: "https:\/\/foobar\/api"/) }
     it { is_expected.to match(/orgId: "foobar"/) }
-    it { is_expected.to match(/authApiEndpoint: "https:\/\/foobar.auth\/"/) }
+    it { is_expected.to match(/authApiEndpoint: "https:\/\/foobar.auth\/api"/) }
     it { is_expected.to match(/dashboard.attendease.com\/webpack_assets\/blockrenderer.bundle.js/) }
     it { is_expected.to match(/orgLocales: \["en", "fr", "it", "es", "de"\]/) }
 
