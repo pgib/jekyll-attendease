@@ -71,6 +71,11 @@ RSpec.describe Jekyll::AttendeasePlugin::EventDataGenerator do
       expect(site.data['site_settings']['look_and_feel']['body_font_family']).to eq('serif')
     end
 
+    it 'populates a site wide organization settings object' do
+      expect(site.data['organization_site_settings'].class).to eq(Hash)
+      expect(site.data['organization_site_settings']['look_and_feel']['heading_color']['h1']).to eq('rgba(55,27,184,1)')
+    end
+
     it 'does not populate a site wide sponsors array' do
       expect(site.data['sponsors']).to be_nil
     end

@@ -1,0 +1,23 @@
+{
+    "look_and_feel": {
+        "background_color": "",
+        "background_image": "",
+        "body_color": "",
+        "body_font_family": "serif",
+        "body_font_size": "10",
+        "body_font_style": "",
+        "custom_css": "",
+        "favicon": "",
+        "heading_color": {
+            "h1": "rgba(55,27,184,1)"
+        },
+        "heading_font_family": {
+            "h1": "sans-serif"
+        },
+        "heading_font_size": {
+            "h1": "18"
+        },
+        "heading_font_style": {},
+        "logo": ""
+    }
+}
