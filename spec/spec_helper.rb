@@ -15,7 +15,7 @@ RSpec.configure do |config|
 
   config.before(:all) do
     if Gem::Version.new('2') <= Gem::Version.new(Jekyll::VERSION)
-      Jekyll.logger.log_level = :warn
+      Jekyll.logger.log_level = ENV['debug'].nil? ? :warn : :debug
     else
       Jekyll.logger.log_level = Jekyll::Stevenson::WARN
     end
