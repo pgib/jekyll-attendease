@@ -6,6 +6,8 @@ module Jekyll
       def generate(site)
         site.data['pages'].each do |page|
           if !page['permanent'] && !page['external']
+            require 'cgi'
+            page['name'] = CGI.escapeHTML(page['name']) if page['name']
             site.pages << SitePage.new(site, site.source, page)
 
             zones = {}

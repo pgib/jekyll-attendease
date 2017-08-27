@@ -6,6 +6,7 @@ RSpec.describe Jekyll::AttendeasePlugin::SitePagesGenerator do
   let(:index_file) { 'index.html' }
   let(:page) { site.data['pages'].detect { |p| p['slug'] == 'test' } }
   let(:external_page) { site.data['pages'].detect { |p| p['external'] == true } }
+  let(:xss_page) { site.data['pages'].detect { |p| p['slug'] == 'agenda' } }
 
   context 'regular page' do
     it 'creates a page using the provided slug' do
@@ -22,6 +23,17 @@ RSpec.describe Jekyll::AttendeasePlugin::SitePagesGenerator do
       expect(File.exists?(file)).to eq(true)
       expect(File.file?(file)).to eq(true)
     end
+  end
+
+  context 'page with XSS' do
+    it 'escapes HTML in the page title' do
+      slug = xss_page['slug']
+      file = File.join(site.config['destination'], slug, 'index.html')
+      expect(File.exists?(file)).to eq(true)
+      expect(File.file?(file)).to eq(true)
+      expect(File.read(file)).to include '<title>Agenda &lt;script&gt;alert()&lt;/script&gt;</title>'
+    end
+
   end
 
   context 'external page' do
