@@ -60,7 +60,7 @@ RSpec.configure do |config|
   end
 
   def find_page(site, page_class, lambda_matcher = false)
-    site.pages.select do |m|
+    site.pages.detect do |m|
       if m.class == page_class
         match = true
         if lambda_matcher
@@ -68,7 +68,7 @@ RSpec.configure do |config|
         end
         m if match
       end
-    end.first
+    end
   end
 
   def site_configuration(overrides = {})
