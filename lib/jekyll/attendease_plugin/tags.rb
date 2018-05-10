@@ -164,7 +164,8 @@ module Jekyll
     orgId: "#{ config['source_id'] }",
     privateSite: #{ config['private_site'] },
     authApiEndpoint: "#{ config['auth_host'] }api",
-    orgLocales: #{ config['available_portal_locales'] }
+    orgLocales: #{ config['available_portal_locales'] },
+    features: #{ config['features'].to_json }
   }
 })(window)
 </script>
@@ -181,7 +182,8 @@ _EOT
     orgApiEndpoint: "#{ config['organization_url'] }api",
     orgId: "#{ config['organization_id'] }",
     privateSite: #{ config['private_site'] },
-    authApiEndpoint: "#{ config['auth_host'] }api"
+    authApiEndpoint: "#{ config['auth_host'] }api",
+    features: #{ config['features'].to_json }
   }
 })(window)
 </script>
