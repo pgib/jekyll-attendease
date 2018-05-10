@@ -9,6 +9,9 @@ Status](https://coveralls.io/repos/attendease/jekyll-attendease/badge.svg?branch
 
 ## Changes
 
+### 0.6.35
+* Expose public features for use with event sites and org portals (bypass_pii_consent is the only one for now).
+
 ### 0.6.26
 * Exclude external pages. Fix the way HTTParty is used so it works in extended classes.
 * For event sites, interpolate the `{{ event.foo }}` variables.
