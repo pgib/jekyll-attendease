@@ -5,17 +5,17 @@ require 'jekyll/attendease_plugin/version'
 Gem::Specification.new do |s|
   s.name          = 'jekyll-attendease'
   s.version       = Jekyll::AttendeasePlugin::VERSION
-  s.date          = '2017-10-27'
+  s.date          = '2018-07-16'
   s.summary       = 'Attendease event helper for Jekyll'
   s.description   = 'Bring your event data into Jekyll for amazing event websites.'
   s.authors       = [ 'Michael Wood', 'Patrick Gibson', 'Jamie Lubiner', 'Antoine Censi' ]
   s.email         = 'support@attendease.com'
   s.files         = (Dir.glob('lib/**/*.{rb,yaml}') + Dir.glob('templates/**/*.html'))
   s.test_files    = Dir.glob('spec/**/*.rb').grep(/^(test|spec|features)\//)
-  s.require_paths = [ 'lib' ]
+  s.require_paths = ['lib']
 
   s.homepage    = 'https://attendease.com/'
-  s.licenses    = [ 'MIT' ]
+  s.licenses    = ['MIT']
 
   s.add_runtime_dependency 'httparty',  '~> 0.13'
   s.add_runtime_dependency 'json',      '~> 1.8'
