@@ -9,6 +9,9 @@ Status](https://coveralls.io/repos/attendease/jekyll-attendease/badge.svg?branch
 
 ## Changes
 
+### 0.6.38.1
+* Expose site settings and portal pages to the event and organization websites
+
 ### 0.6.37
 * Filter root pages so only root page can be listed in the navigation menu
 
@@ -277,7 +280,6 @@ Filter            | Description
 1. Bump the version
 2. Tag the release
 3. Build and push the gem
-4. Push the tags to the upstream
 
 
 ## Contributing
