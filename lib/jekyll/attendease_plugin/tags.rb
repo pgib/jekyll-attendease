@@ -198,7 +198,10 @@ module Jekyll
 
 
         env = config['environment']
-
+        
+        # IMPORTANT NOTE: The script variables below must NOT be changed without making sure that blockrenderer.js and other 
+        # related code in the platform is backwards-compatible.
+        
         if config['mode'] == 'organization'
           script = <<_EOT
 <script type="text/javascript">
