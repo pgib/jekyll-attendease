@@ -275,7 +275,6 @@ _EOT
 
     class AnalyticsGoogleTagManagerHeadTag < Liquid::Tag
       def render(context)
-        require 'pry'
         site_settings = context.registers[:site].data['site_settings'].clone
         analytics = site_settings['analytics']
 
