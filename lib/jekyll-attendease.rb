@@ -16,5 +16,10 @@ Liquid::Template.register_tag('attendease_t',                Jekyll::AttendeaseP
 Liquid::Template.register_tag('attendease_nav',              Jekyll::AttendeasePlugin::NavigationTag)
 Liquid::Template.register_tag('attendease_portal_nav',       Jekyll::AttendeasePlugin::PortalNavigationTag)
 Liquid::Template.register_tag('attendease_block_renderer',   Jekyll::AttendeasePlugin::BlockRendererTag)
+Liquid::Template.register_tag('attendease_analytics_gtm_head', Jekyll::AttendeasePlugin::AnalyticsGoogleTagManagerHeadTag)
+Liquid::Template.register_tag('attendease_analytics_gtm_body', Jekyll::AttendeasePlugin::AnalyticsGoogleTagManagerBodyTag)
+Liquid::Template.register_tag('attendease_analytics_ga_gtag',  Jekyll::AttendeasePlugin::AnalyticsGoogleAnalyticsGtagTag)
+Liquid::Template.register_tag('attendease_analytics_facebook', Jekyll::AttendeasePlugin::AnalyticsFacebookPixelTag)
+Liquid::Template.register_tag('attendease_analytics_linkedin', Jekyll::AttendeasePlugin::AnalyticsLinkedInTag)
 
 Liquid::Template.register_filter(Jekyll::AttendeasePlugin::Filters)

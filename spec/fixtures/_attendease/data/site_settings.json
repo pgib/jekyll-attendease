@@ -19,5 +19,11 @@
         },
         "heading_font_style": {},
         "logo": ""
+    },
+    "analytics": {
+      "googleTagManagerId": "foo",
+      "googleAnalyticsTrackingId": "foo",
+      "linkedinInsightsId": "foo",
+      "facebookPixelId": "foo"
     }
 }
