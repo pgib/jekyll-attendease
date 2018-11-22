@@ -151,13 +151,14 @@ module Jekyll
 
       def render(context)
         config = context.registers[:site].config['attendease']
-        siteSettings = context.registers[:site].data['site_settings'].clone
-        siteSettings.delete_if {|key, value| ['analytics', 'meta', 'general'].include? key }
+        site_settings = context.registers[:site].data['site_settings'].clone
+        analytics = site_settings.delete 'analytics'
+        site_settings.delete_if {|key, value| ['analytics', 'meta', 'general'].include? key }
 
-        organizationSiteSettings = {}
+        organization_site_settings = {}
         if context.registers[:site].data['organization_site_settings']
-          organizationSiteSettings = context.registers[:site].data['organization_site_settings'].clone
-          organizationSiteSettings.delete_if {|key, value| ['analytics', 'meta', 'general'].include? key }
+          organization_site_settings = context.registers[:site].data['organization_site_settings'].clone
+          organization_site_settings.delete_if {|key, value| ['analytics', 'meta', 'general'].include? key }
         end
 
         parent_pages_are_clickable = config['parent_pages_are_clickable']
@@ -205,49 +206,49 @@ module Jekyll
         # related code in the platform is backwards-compatible.
 
         if config['mode'] == 'organization'
-          script = <<_EOT
-<script type="text/javascript">
-(function(w) {
-  w.AttendeaseConstants = {
-    locale: "en",
-    orgURL: "#{ config['api_host'] }",
-    orgId: "#{ config['source_id'] }",
-    privateSite: #{ config['private_site'] },
-    authApiEndpoint: "#{ config['auth_host'] }api",
-    orgLocales: #{ config['available_portal_locales'] },
-    features: #{ config['features'].to_json },
-    pages: #{ pages.to_json },
-    settings: { parentPagesAreClickable: #{!!parent_pages_are_clickable} },
-    siteSettings: #{ siteSettings.to_json }
-  }
-})(window)
-</script>
-
-_EOT
+          constants = {
+            'locale' => 'en',
+            'siteName' => config['organization_name'],
+            'orgURL' => config['api_host'],
+            'orgId' => config['source_id'],
+            'privateSite' => config['private_site'],
+            'authApiEndpoint' => "#{config['auth_host']}api",
+            'orgLocales' => config['available_portal_locales'],
+            'features' => config['features'],
+            'pages' => pages,
+            'settings' => { parentPagesAreClickable: !!parent_pages_are_clickable },
+            'siteSettings' => site_settings,
+            'analytics' => analytics
+          }
         else
-          script = <<_EOT
+          constants = {
+            'locale' => config['locale'],
+            'siteName' => config['data']['event_name'],
+            'eventApiEndpoint' => "#{config['api_host']}api",
+            'eventId' => config['source_id'],
+            'orgURL' => config['organization_url'],
+            'orgId' => config['organization_id'],
+            'privateSite' => config['private_site'],
+            'authApiEndpoint' => "#{config['auth_host']}api",
+            'features' => config['features'],
+            'pages' => pages,
+            'portalPages' => portal_pages,
+            'settings' => { parentPagesAreClickable: !!parent_pages_are_clickable },
+            'siteSettings' => site_settings,
+            'organizationSiteSettings' => organization_site_settings,
+            'analytics' => analytics
+        }
+        end
+        script = <<_EOT
 <script type="text/javascript">
 (function(w) {
   w.AttendeaseConstants = {
-    locale: "#{ config['locale'] }",
-    eventApiEndpoint: "#{ config['api_host'] }api",
-    eventId: "#{ config['source_id'] }",
-    orgURL: "#{ config['organization_url'] }",
-    orgId: "#{ config['organization_id'] }",
-    privateSite: #{ config['private_site'] },
-    authApiEndpoint: "#{ config['auth_host'] }api",
-    features: #{ config['features'].to_json },
-    pages: #{ pages.to_json },
-    portalPages: #{ portal_pages.to_json },
-    settings: { parentPagesAreClickable: #{!!parent_pages_are_clickable} },
-    siteSettings: #{ siteSettings.to_json },
-    organizationSiteSettings: #{ organizationSiteSettings.to_json }
+#{ constants.map{ |k, v| "    #{k}: #{v.to_json}," }.join("\n") }
   }
 })(window)
 </script>
 
 _EOT
-        end
 
         if @url_override.match(/^(https:)?\/\/.+/)
           url = @url_override
