@@ -140,7 +140,7 @@ RSpec.describe "Jekyll Attendease tags" do
     it { is_expected.to match(/_linkedin_partner_id = "foo";/) }
   end
 
-  describe "{% attendease_analytics_fackebook %}" do
+  describe "{% attendease_analytics_facebook %}" do
     subject { cms_render("{% attendease_analytics_facebook %}") }
 
     it { is_expected.to match(/Facebook Pixel Code/) }
