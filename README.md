@@ -9,6 +9,19 @@ Status](https://coveralls.io/repos/attendease/jekyll-attendease/badge.svg?branch
 
 ## Changes
 
+### 0.6.43
+* DRYed up how the AttendeaseConstants gets set up for organization and event sites
+* Add the following analytics tags:
+
+Tag                                   | Description
+------------------------------------- | -----------
+`{% attendease_analtyics_gtm_head %}` | Google Tag Manager (head portion)
+`{% attendease_analtyics_gtm_body %}` | Google Tag Manager (noscript body portion)
+`{% attendease_analtyics_ga_gtag %}`  | Google Analtytics gtag.js
+`{% attendease_analtyics_facebook %}` | Facebook Pixel
+`{% attendease_analtyics_linkedin %}` | LinkedIn Insights
+
+
 ### 0.6.40.1
 * Don't include the general site settings (i.e. inline script code) in the block renderer tag
 
@@ -271,10 +284,10 @@ Filter            | Description
 ## Preparing for a release
 
 1. Start with a pre-release version. Adding non-numeric characters achieves
-   this. (e.g. 0.6.13.pre in `lib/jekyll/attendease_plugin/version.rb`)
+   this. (e.g. 0.6.13a, 0.6.13b, etc. in `lib/jekyll/attendease_plugin/version.rb`)
 2. Update the gem's release date in `jekyll-attendease.gemspec`
 3. `gem build jekyll-attendease.gemspec`
-4. `gem push jekyll-attendease-0.6.13.pre.gem`
+4. `gem push jekyll-attendease-0.6.13a.gem`
 5. Update Attendease respectively to test.
 
 
