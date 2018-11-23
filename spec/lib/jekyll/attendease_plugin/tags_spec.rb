@@ -85,6 +85,7 @@ RSpec.describe "Jekyll Attendease tags" do
     subject { render("{% attendease_block_renderer %}") }
 
     it { is_expected.to match(/locale: "en"/) }
+    it { is_expected.to match(/siteName: "My Attendease Test Event"/) }
     it { is_expected.to match(/eventApiEndpoint: "https:\/\/foobar\/api"/) }
     it { is_expected.to match(/eventId: "foobar"/) }
     it { is_expected.to match(/orgURL: "https:\/\/foobar.org\/"/) }
@@ -104,16 +105,46 @@ RSpec.describe "Jekyll Attendease tags" do
     subject { org_render("{% attendease_block_renderer %}") }
 
     it { is_expected.to match(/locale: "en"/) }
+    it { is_expected.to match(/siteName: "Foo Bar Widgets"/) }
     it { is_expected.to match(/orgURL: "https:\/\/foobar\/"/) }
     it { is_expected.to match(/orgId: "foobar"/) }
     it { is_expected.to match(/authApiEndpoint: "https:\/\/foobar.auth\/api"/) }
     it { is_expected.to match(/dashboard.attendease.com\/webpack_assets\/blockrenderer.bundle.js/) }
-    it { is_expected.to match(/orgLocales: \["en", "fr", "it", "es", "de"\]/) }
+    it { is_expected.to match(/orgLocales: \["en","fr","it","es","de"\]/) }
 
     it { is_expected.to_not match(/eventApiEndpoint/) }
     it { is_expected.to_not match(/eventId/) }
   end
 
+  describe "{% attendease_analytics_gtm_head %}" do
+    subject { cms_render("{% attendease_analytics_gtm_head %}") }
+
+    it { is_expected.to match(/Google Tag Manager/) }
+  end
+
+  describe "{% attendease_analytics_gtm_body %}" do
+    subject { cms_render("{% attendease_analytics_gtm_body %}") }
+
+    it { is_expected.to match(/Google Tag Manager \(noscript\)/) }
+  end
+
+  describe "{% attendease_analytics_ga_gtag %}" do
+    subject { cms_render("{% attendease_analytics_ga_gtag %}") }
+
+    it { is_expected.to match(/Global Site Tag \(gtag.js\)/) }
+  end
+
+  describe "{% attendease_analytics_linked_in %}" do
+    subject { cms_render("{% attendease_analytics_linkedin %}") }
+
+    it { is_expected.to match(/_linkedin_partner_id = "foo";/) }
+  end
+
+  describe "{% attendease_analytics_facebook %}" do
+    subject { cms_render("{% attendease_analytics_facebook %}") }
+
+    it { is_expected.to match(/Facebook Pixel Code/) }
+  end
 end
 
 def schedule_widget_data
