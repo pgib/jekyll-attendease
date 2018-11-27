@@ -9,6 +9,9 @@ Status](https://coveralls.io/repos/attendease/jekyll-attendease/badge.svg?branch
 
 ## Changes
 
+### 0.6.44
+
+* Fix to the analytics tags to ensure they don't output anything if the corresponding values are missing or empty.
 ### 0.6.43
 * DRYed up how the AttendeaseConstants gets set up for organization and event sites
 * Add the following analytics tags:
