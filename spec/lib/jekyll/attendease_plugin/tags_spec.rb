@@ -120,30 +120,35 @@ RSpec.describe "Jekyll Attendease tags" do
     subject { cms_render("{% attendease_analytics_gtm_head %}") }
 
     it { is_expected.to match(/Google Tag Manager/) }
+    it { is_expected.to match(/foo/) }
   end
 
   describe "{% attendease_analytics_gtm_body %}" do
     subject { cms_render("{% attendease_analytics_gtm_body %}") }
 
     it { is_expected.to match(/Google Tag Manager \(noscript\)/) }
+    it { is_expected.to match(/foo/) }
   end
 
   describe "{% attendease_analytics_ga_gtag %}" do
     subject { cms_render("{% attendease_analytics_ga_gtag %}") }
 
     it { is_expected.to match(/Global Site Tag \(gtag.js\)/) }
+    it { is_expected.to match(/foo/) }
   end
 
   describe "{% attendease_analytics_linked_in %}" do
     subject { cms_render("{% attendease_analytics_linkedin %}") }
 
     it { is_expected.to match(/_linkedin_partner_id = "foo";/) }
+    it { is_expected.to match(/foo/) }
   end
 
   describe "{% attendease_analytics_facebook %}" do
     subject { cms_render("{% attendease_analytics_facebook %}") }
 
     it { is_expected.to match(/Facebook Pixel Code/) }
+    it { is_expected.to match(/foo/) }
   end
 end
 

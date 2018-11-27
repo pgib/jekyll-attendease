@@ -278,8 +278,10 @@ _EOT
         site_settings = context.registers[:site].data['site_settings'].clone
         analytics = site_settings['analytics']
 
+        return '' if analytics.nil? \
+          || analytics['googleTagManagerId'].nil? \
+          || analytics['googleTagManagerId'].empty?
 
-        return '' if analytics.nil? || !analytics['googleTagManagerId']
         script = <<_EOT
 <script>
   window.dataLayer = [];
@@ -301,7 +303,10 @@ _EOT
         site_settings = context.registers[:site].data['site_settings'].clone
         analytics = site_settings['analytics']
 
-        return '' if analytics.nil? || !analytics['googleTagManagerId']
+        return '' if analytics.nil? \
+          || analytics['googleTagManagerId'].nil? \
+          || analytics['googleTagManagerId'].empty?
+
         script = <<_EOT
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=#{analytics['googleTagManagerId']}"
@@ -316,6 +321,10 @@ _EOT
       def render(context)
         site_settings = context.registers[:site].data['site_settings'].clone
         analytics = site_settings['analytics']
+
+        return '' if analytics.nil? \
+          || analytics['googleAnalyticsTrackingId'].nil? \
+          || analytics['googleAnalyticsTrackingId'].empty?
 
         return '' if analytics.nil? || !analytics['googleAnalyticsTrackingId']
 
@@ -341,7 +350,10 @@ _EOT
         site_settings = context.registers[:site].data['site_settings'].clone
         analytics = site_settings['analytics']
 
-        return '' if analytics.nil? || !analytics['linkedinInsightsId']
+        return '' if analytics.nil? \
+          || analytics['linkedinInsightsId'].nil? \
+          || analytics['linkedinInsightsId'].empty?
+
         script = <<_EOT
   <script type="text/javascript">
   _linkedin_partner_id = "#{analytics['linkedinInsightsId']}";
@@ -368,6 +380,9 @@ _EOT
         analytics = site_settings['analytics']
 
         return '' if analytics.nil? || !analytics['facebookPixelId']
+        return '' if analytics.nil? \
+          || analytics['facebookPixelId'].nil? \
+          || analytics['facebookPixelId'].empty?
         script = <<_EOT
 <!-- Facebook Pixel Code -->
 <script>
