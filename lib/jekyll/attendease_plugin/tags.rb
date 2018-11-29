@@ -409,14 +409,17 @@ _EOT
         analytics = site_settings['analytics']
 
         return '' if analytics.nil? \
-          || analytics['googleAnalyticsTrackingId'].nil? \
-          || analytics['googleAnalyticsTrackingId'].empty?
+          || analytics['googleAnalyticsTrackingId'].nil?
+
+        # the id keys we want to expose
+        keys = %w[ googleAnalyticsTrackingId ]
+        analytic_ids = analytics.select { |k, v| keys.include?(k) }
 
         script = <<_EOT
 <!-- Global Analytics Settings -->
 <script>
   window.AnalyticsSettings = {
-    googleAnalyticsTrackingId: '#{analytics['googleAnalyticsTrackingId']}'
+    #{ analytic_ids.map { |k, v| "#{k}: #{v.to_json}" }.join("\n")}
   }
 </script>
 _EOT
