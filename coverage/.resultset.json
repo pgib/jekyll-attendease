@@ -1,0 +1,16 @@
+{
+  "RSpec": {
+    "coverage": {
+      "/Users/Adrian/Projects/Attendease/jekyll-attendease/spec/support/fixtures_helpers.rb": [
+        1,
+        null,
+        1,
+        1,
+        270,
+        null,
+        null
+      ]
+    },
+    "timestamp": 1543447473
+  }
+}
