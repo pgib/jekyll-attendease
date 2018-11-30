@@ -417,7 +417,9 @@ _EOT
         script = <<_EOT
 <!-- Global Analytics Settings -->
 <script>
-  window.AnalyticsSettings = #{analytics_ids.to_json}
+  window.AnalyticsSettings = {
+#{ analytic_ids.map { |k, v| "    #{k}: #{v.to_json}" }.join(",\n")}
+  }
 </script>
 _EOT
         script
