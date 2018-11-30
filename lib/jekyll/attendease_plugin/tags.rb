@@ -326,8 +326,6 @@ _EOT
           || analytics['googleAnalyticsTrackingId'].nil? \
           || analytics['googleAnalyticsTrackingId'].empty?
 
-        return '' if analytics.nil? || !analytics['googleAnalyticsTrackingId']
-
         adwordsId = analytics['googleAnalyticsAdwordsId']
         script = <<_EOT
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
@@ -379,7 +377,6 @@ _EOT
         site_settings = context.registers[:site].data['site_settings'].clone
         analytics = site_settings['analytics']
 
-        return '' if analytics.nil? || !analytics['facebookPixelId']
         return '' if analytics.nil? \
           || analytics['facebookPixelId'].nil? \
           || analytics['facebookPixelId'].empty?
@@ -401,6 +398,29 @@ _EOT
   src="https://www.facebook.com/tr?id=#{analytics['facebookPixelId']}&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Facebook Pixel Code -->
+_EOT
+        script
+      end
+    end
+
+    class AnalyticsSettingsTag < Liquid::Tag
+      def render(context)
+        site_settings = context.registers[:site].data['site_settings'].clone
+        analytics = site_settings['analytics']
+
+        return '' if analytics.nil? \
+
+        # the id keys we want to expose
+        keys = %w[ googleAnalyticsTrackingId ]
+        analytic_ids = analytics.select { |k, v| keys.include?(k) }
+
+        script = <<_EOT
+<!-- Global Analytics Settings -->
+<script>
+  window.AnalyticsSettings = {
+#{ analytic_ids.map { |k, v| "    #{k}: #{v.to_json}" }.join(",\n")}
+  }
+</script>
 _EOT
         script
       end

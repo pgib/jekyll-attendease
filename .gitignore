@@ -2,3 +2,4 @@
 *.gem
 **.DS_Store
 spec/fixtures/_attendease/layouts/*
+coverage/
