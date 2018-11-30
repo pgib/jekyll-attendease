@@ -155,6 +155,7 @@ RSpec.describe "Jekyll Attendease tags" do
     subject { cms_render("{% attendease_analytics_settings %}") }
 
     it { is_expected.to match(/Global Analytics Settings/) }
+    it { is_expected.to match(/googleAnalyticsTrackingId: "foo"/) }
     it { is_expected.to match(/window.AnalyticsSettings = /) }
   end
 end

@@ -409,7 +409,6 @@ _EOT
         analytics = site_settings['analytics']
 
         return '' if analytics.nil? \
-          || analytics['googleAnalyticsTrackingId'].nil?
 
         # the id keys we want to expose
         keys = %w[ googleAnalyticsTrackingId ]
