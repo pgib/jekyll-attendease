@@ -322,23 +322,22 @@ _EOT
         site_settings = context.registers[:site].data['site_settings'].clone
         analytics = site_settings['analytics']
 
-        return '' if analytics.nil? \
-          || (analytics['googleAnalyticsTrackingId'].nil? && analytics['googleAnalyticsAdwordsId'].nil?) \
-          || (analytics['googleAnalyticsTrackingId'].empty? && analytics['googleAnalyticsAdwordsId'].empty?)
+        has_analytics_id = !analytics.nil? && !analytics['googleAnalyticsTrackingId'].nil? && !analytics['googleAnalyticsTrackingId'].empty?
+        has_adwords_id = !analytics.nil? && !analytics['googleAnalyticsAdwordsId'].nil? && !analytics['googleAnalyticsAdwordsId'].empty?
+        return '' if analytics.nil? || (!has_analytics_id && !has_adwords_id)
 
-        analyticsId = analytics['googleAnalyticsTrackingId'] ? analytics['googleAnalyticsTrackingId'] : false
-        adwordsId = analytics['googleAnalyticsAdwordsId'] ? analytics['googleAnalyticsAdwordsId'] : false
+        gtag_id = has_analytics_id ? analytics['googleAnalyticsTrackingId'] : analytics['googleAnalyticsAdwordsId']
 
         script = <<_EOT
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=#{analytics['googleAnalyticsTrackingId']}"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=#{gtag_id}"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-#{ analyticsId ? "  gtag('config', '#{analyticsId}');" : ''}
-#{ adwordsId ? "  gtag('config', '#{adwordsId}');" : ''}
+#{ has_analytics_id ? "  gtag('config', '#{analytics['googleAnalyticsTrackingId']}');" : ''}
+#{ has_adwords_id ? "  gtag('config', '#{analytics['googleAnalyticsAdwordsId']}');" : ''}
 </script>
 _EOT
         script
