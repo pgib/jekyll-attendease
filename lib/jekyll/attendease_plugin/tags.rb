@@ -323,20 +323,22 @@ _EOT
         analytics = site_settings['analytics']
 
         return '' if analytics.nil? \
-          || analytics['googleAnalyticsTrackingId'].nil? \
-          || analytics['googleAnalyticsTrackingId'].empty?
+          || (analytics['googleAnalyticsTrackingId'].nil? && analytics['googleAnalyticsAdwordsId'].nil?) \
+          || (analytics['googleAnalyticsTrackingId'].empty? && analytics['googleAnalyticsAdwordsId'].empty?)
 
-        adwordsId = analytics['googleAnalyticsAdwordsId']
+        analyticsId = analytics['googleAnalyticsTrackingId'] ? analytics['googleAnalyticsTrackingId'] : false
+        adwordsId = analytics['googleAnalyticsAdwordsId'] ? analytics['googleAnalyticsAdwordsId'] : false
+
         script = <<_EOT
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id={{ site.data.site_settings.analytics.googleAnalyticsTrackingId }}"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=#{analytics['googleAnalyticsTrackingId']}"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', '#{analytics['googleAnalyticsTrackingId']}');
-#{ adwordsId ? "gtag('config', '#{adwordsId}');" : ''}
+#{ analyticsId ? "  gtag('config', '#{analyticsId}');" : ''}
+#{ adwordsId ? "  gtag('config', '#{adwordsId}');" : ''}
 </script>
 _EOT
         script
