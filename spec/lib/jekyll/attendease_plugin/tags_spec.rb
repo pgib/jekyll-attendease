@@ -134,7 +134,9 @@ RSpec.describe "Jekyll Attendease tags" do
     subject { cms_render("{% attendease_analytics_ga_gtag %}") }
 
     it { is_expected.to match(/Global Site Tag \(gtag.js\)/) }
-    it { is_expected.to match(/foo/) }
+    it { is_expected.to match(/js\?id=google_analytics/) }
+    it { is_expected.to match(/gtag\('config'\, 'google_analytics'\)/) }
+    it { is_expected.to match(/gtag\('config'\, 'adwords'\)/) }
   end
 
   describe "{% attendease_analytics_linked_in %}" do

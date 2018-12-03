@@ -22,7 +22,8 @@
     },
     "analytics": {
       "googleTagManagerId": "foo",
-      "googleAnalyticsTrackingId": "foo",
+      "googleAnalyticsTrackingId": "google_analytics",
+      "googleAnalyticsAdwordsId": "adwords",
       "linkedinInsightsId": "foo",
       "facebookPixelId": "foo"
     }
