@@ -16,7 +16,7 @@ module Jekyll
         self.data['layout'] = base_layout
         self.data['base_layout'] = base_layout
 
-        title_prefix = 'Hello' if title_prefix == 'Layout' # Use "Hello" for the title of the main layout page.
+        title_prefix = '{{ page.title }}' if title_prefix == 'Layout' # Use a Liquid placeholder for the title of the main layout page.
 
         self.data['title'] = title_prefix
 

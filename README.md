@@ -9,6 +9,10 @@ Status](https://coveralls.io/repos/attendease/jekyll-attendease/badge.svg?branch
 
 ## Changes
 
+### 0.6.45
+
+* Event layout pages will have {{ page.title }} as a title
+
 ### 0.6.44
 
 * Include the home page in the `AttendeaseConstants.pages` array even if it is hidden.
