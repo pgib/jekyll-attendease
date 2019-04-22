@@ -119,6 +119,15 @@ RSpec.configure do |config|
           FileUtils.rm_r Pathname.new(i).parent
         end
       end
+
+      Dir.glob(File.join(@site.source, '**', 'index-private.json')).map do |i|
+        if (Pathname.new(i).parent == fixtures_path)
+          FileUtils.rm i
+        else
+          FileUtils.rm_r Pathname.new(i).parent
+        end
+      end
     end
   end
 end
+

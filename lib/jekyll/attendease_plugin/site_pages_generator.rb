@@ -15,8 +15,6 @@ module Jekyll
             page['name'] = CGI.escapeHTML(page['name']) if page['name']
             site.pages << SitePage.new(site, site.source, page)
 
-            next if site.config.attendease['private_site']
-
             zones = {}
             keys = [ 'content', 'preferences' ]
 
@@ -47,12 +45,14 @@ module Jekyll
               page_source_path = File.join(site.source, page['slug'])
               FileUtils.mkdir_p(page_source_path) unless File.exists?(page_source_path)
 
-              File.open(File.join(page_source_path, 'index.json'), 'w') do |f|
+              json_filename = site.config.attendease['private_site'] ? 'index-private.json' : 'index.json'
+
+              File.open(File.join(page_source_path, json_filename), 'w') do |f|
                 f.write zones.to_json
                 f.close
               end
 
-              site.static_files << StaticFile.new(site, site.source, File.join('', page['slug']), 'index.json')
+              site.static_files << StaticFile.new(site, site.source, File.join('', page['slug']), json_filename)
             end
           end
         end
