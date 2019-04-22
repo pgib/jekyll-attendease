@@ -9,6 +9,10 @@ Status](https://coveralls.io/repos/attendease/jekyll-attendease/badge.svg?branch
 
 ## Changes
 
+### 0.7.0
+
+* Page data for private sites will be published to index-private.json and will require web server configuration to prevent files from being served.
+
 ### 0.6.45
 
 * Event layout pages will have {{ page.title }} as a title
