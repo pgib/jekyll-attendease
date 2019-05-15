@@ -160,6 +160,13 @@ RSpec.describe "Jekyll Attendease tags" do
     it { is_expected.to match(/googleAnalyticsTrackingId: "google_analytics"/) }
     it { is_expected.to match(/window.AnalyticsSettings = /) }
   end
+
+  describe "{% attendease_sentry %}" do
+    subject { cms_render("{% attendease_sentry %}") }
+
+    it { is_expected.to match(/https:\/\/browser.sentry-cdn.com\/5.2.0\/bundle.min.js/) }
+    it { is_expected.to match(/dsn: 'https:\/\/foobar@sentry.io\/baz'/) }
+  end
 end
 
 def schedule_widget_data

@@ -90,7 +90,10 @@ RSpec.configure do |config|
         'organization_url'         => 'https://foobar.org/',
         'organization_id'          => 'batbaz',
         'organization_name'        => 'Foo Bar Widgets',
-        'available_portal_locales' => %w{ en fr it es de }
+        'available_portal_locales' => %w{ en fr it es de },
+        'features'                 => { 'sentry' => true },
+        'sentry_client_version'    => '5.2.0',
+        'sentry_dsn'               => 'https://foobar@sentry.io/baz'
       }
     }), overrides)
   end

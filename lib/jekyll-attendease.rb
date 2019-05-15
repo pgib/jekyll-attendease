@@ -22,5 +22,6 @@ Liquid::Template.register_tag('attendease_analytics_ga_gtag',  Jekyll::Attendeas
 Liquid::Template.register_tag('attendease_analytics_facebook', Jekyll::AttendeasePlugin::AnalyticsFacebookPixelTag)
 Liquid::Template.register_tag('attendease_analytics_linkedin', Jekyll::AttendeasePlugin::AnalyticsLinkedInTag)
 Liquid::Template.register_tag('attendease_analytics_settings', Jekyll::AttendeasePlugin::AnalyticsSettingsTag)
+Liquid::Template.register_tag('attendease_sentry', Jekyll::AttendeasePlugin::SentryTag)
 
 Liquid::Template.register_filter(Jekyll::AttendeasePlugin::Filters)
