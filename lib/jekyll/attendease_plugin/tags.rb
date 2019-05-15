@@ -392,5 +392,22 @@ _EOT
         script
       end
     end
+
+    class SentryTag < Liquid::Tag
+      def render(context)
+        config = context.registers[:site].config['attendease']
+        sentry_enabled = config['features']['sentry']
+        sentry_client_version = config['sentry_client_version']
+        sentry_dsn = config['sentry_dsn']
+
+        return '' unless sentry_enabled
+
+        script = <<_EOT
+<script src="https://browser.sentry-cdn.com/#{sentry_client_version}/bundle.min.js" crossorigin="anonymous"></script>
+<script>try { Sentry.init({ dsn: '#{sentry_dsn}' });} catch (e) {}</script>
+_EOT
+        script
+      end
+    end
   end
 end

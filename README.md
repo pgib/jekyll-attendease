@@ -9,6 +9,10 @@ Status](https://coveralls.io/repos/attendease/jekyll-attendease/badge.svg?branch
 
 ## Changes
 
+### 0.8.1
+
+* Add an {% attendease_sentry %} tag to bootstrap Sentry when desired
+
 ### 0.7.0
 
 * Page data for private sites will be published to index-private.json and will require web server configuration to prevent files from being served.
