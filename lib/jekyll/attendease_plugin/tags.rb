@@ -227,7 +227,7 @@ _EOT
           when 'preview'
             url = '//cdn.attendease.com/blockrenderer/ci-latest.js'
           else
-            url = '//dashboard.attendease.com/webpack_assets/blockrenderer.bundle.js'
+            url = '//cdn.attendease.com/blockrenderer/latest.js'
           end
         end
 
