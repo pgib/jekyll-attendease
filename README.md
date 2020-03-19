@@ -9,6 +9,12 @@ Status](https://coveralls.io/repos/attendease/jekyll-attendease/badge.svg?branch
 
 ## Changes
 
+### 0.9.0
+
+* Add ability to interpolate mappable fields
+
+### 0.8.2
+
 ### 0.8.1
 
 * Add an {% attendease_sentry %} tag to bootstrap Sentry when desired

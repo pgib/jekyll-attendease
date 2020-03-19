@@ -16,7 +16,7 @@ module Jekyll
             site.pages << SitePage.new(site, site.source, page)
 
             zones = {}
-            keys = [ 'content', 'preferences' ]
+            keys = %w[content preferences]
 
             if page['block_instances'].length
               # create zone buckets
@@ -28,7 +28,7 @@ module Jekyll
                       if v.is_a?(String) && v.match(/\{\{/)
                         # maintain the {{ t.foo }} variables
                         v.gsub!(/(\{\{\s*t\.[a-z_.]+\s*\}\})/, '{% raw %}\1{% endraw %}')
-                        i[key][k] = Liquid::Template.parse(v).render({ 'event' => site.data['event'] })
+                        i[key][k] = Liquid::Template.parse(v).render('event' => site.data['event'], 'mappable' => site.data['mappable'])
                       end
                     end
                   end
@@ -60,3 +60,4 @@ module Jekyll
     end
   end
 end
+
