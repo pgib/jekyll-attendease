@@ -5,10 +5,10 @@ require 'jekyll/attendease_plugin/version'
 Gem::Specification.new do |s|
   s.name          = 'jekyll-attendease'
   s.version       = Jekyll::AttendeasePlugin::VERSION
-  s.date          = '2018-11-30'
+  s.date          = '2020-03-20'
   s.summary       = 'Attendease event helper for Jekyll'
   s.description   = 'Bring your event data into Jekyll for amazing event websites.'
-  s.authors       = [ 'Michael Wood', 'Patrick Gibson', 'Jamie Lubiner', 'Antoine Censi', 'Adrian Jones' ]
+  s.authors       = [ 'Michael Wood', 'Patrick Gibson', 'Jamie Lubiner', 'Antoine Censi', 'Adrian Jones', 'Reegan Grace' ]
   s.email         = 'support@attendease.com'
   s.files         = (Dir.glob('lib/**/*.{rb,yaml}') + Dir.glob('templates/**/*.html'))
   s.test_files    = Dir.glob('spec/**/*.rb').grep(/^(test|spec|features)\//)
