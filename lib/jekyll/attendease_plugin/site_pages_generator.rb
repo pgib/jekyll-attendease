@@ -32,7 +32,20 @@ module Jekyll
                       end
                     end
                   end
+
+                  unless site.data['mappable'].nil? || site.data['mappable'].empty?
+                    if i['content'].has_key?('cards') && i['content']['cards'].any?
+                      i['content']['cards'].each do |card|
+                        card.each_pair do |k, v|
+                          if v.is_a?(String) && v.match(/\{\{/)
+                            card[k] = Liquid::Template.parse(v).render('mappable' => site.data['mappable'])
+                          end
+                        end
+                      end
+                    end
+                  end
                 end
+
                 zones[i['zone']] = [] if zones[i['zone']].nil?
                 zones[i['zone']] << i
               end

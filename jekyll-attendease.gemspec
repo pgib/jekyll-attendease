@@ -5,7 +5,7 @@ require 'jekyll/attendease_plugin/version'
 Gem::Specification.new do |s|
   s.name          = 'jekyll-attendease'
   s.version       = Jekyll::AttendeasePlugin::VERSION
-  s.date          = '2020-03-20'
+  s.date          = '2020-03-30'
   s.summary       = 'Attendease event helper for Jekyll'
   s.description   = 'Bring your event data into Jekyll for amazing event websites.'
   s.authors       = [ 'Michael Wood', 'Patrick Gibson', 'Jamie Lubiner', 'Antoine Censi', 'Adrian Jones' ]
@@ -29,5 +29,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'jekyll', '~> 3.1'
   s.add_development_dependency 'coveralls'
   s.add_development_dependency 'pry'
-
 end
+
