@@ -25,24 +25,16 @@ module Jekyll
                 if site.config.event?
                   keys.each do |key|
                     i[key].each do |k, v|
-                      if v.is_a?(String) && v.match(/\{\{/)
+                      if placeholder?(v)
                         # maintain the {{ t.foo }} variables
                         v.gsub!(/(\{\{\s*t\.[a-z_.]+\s*\}\})/, '{% raw %}\1{% endraw %}')
-                        i[key][k] = Liquid::Template.parse(v).render('event' => site.data['event'], 'mappable' => site.data['mappable'])
+                        i[key][k] = render_with_substitutions(v, 'event' => site.data['event'], 'mappable' => site.data['mappable'])
                       end
                     end
                   end
 
                   unless site.data['mappable'].nil? || site.data['mappable'].empty?
-                    if i['content'].has_key?('cards') && i['content']['cards'].any?
-                      i['content']['cards'].each do |card|
-                        card.each_pair do |k, v|
-                          if v.is_a?(String) && v.match(/\{\{/)
-                            card[k] = Liquid::Template.parse(v).render('mappable' => site.data['mappable'])
-                          end
-                        end
-                      end
-                    end
+                    perform_substitution!(i['content'], 'mappable' => site.data['mappable'])
                   end
                 end
 
@@ -69,6 +61,36 @@ module Jekyll
             end
           end
         end
+      end
+
+      private
+
+      def perform_substitution!(object, substitution_lookup)
+        if object.is_a?(Hash)
+          object.each_pair do |k, v|
+            if placeholder?(v)
+              object[k] = render_with_substitutions(v, substitution_lookup)
+            else
+              perform_substitution!(v, substitution_lookup)
+            end
+          end
+        elsif object.is_a?(Array)
+          object.each_with_index do |e, i|
+            if placeholder?(e)
+              object[i] = render_with_substitutions(e, substitution_lookup)
+            else
+              perform_substitution!(e, substitution_lookup)
+            end
+          end
+        end
+      end
+
+      def placeholder?(object)
+        object.is_a?(String) && !object.match(/\{\{/).nil?
+      end
+
+      def render_with_substitutions(template_string, substitution_lookup)
+        Liquid::Template.parse(template_string).render(substitution_lookup)
       end
     end
   end
