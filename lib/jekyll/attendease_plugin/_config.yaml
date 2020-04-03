@@ -17,4 +17,3 @@ attendease:
   has_rooms:                false
   has_filters:              false
   has_venues:               false
-  has_mappable:             false
