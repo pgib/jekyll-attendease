@@ -16,20 +16,7 @@ module Jekyll
       def generate(site)
         Jekyll.logger.debug "[Attendease] Generating theme layouts..."
 
-        attendease_precompiled_theme_layouts_path = File.join(site.source, 'attendease_layouts') # These are compiled to the html site.
-        attendease_precompiled_theme_email_layouts_path = File.join(site.source, 'attendease_layouts', 'emails') # These are compiled for email.
         layouts_path = File.join(site.source, '_layouts')
-
-        FileUtils.mkdir_p(attendease_precompiled_theme_layouts_path)
-
-        # Precompiled layouts for attendease app and jekyll generated pages.
-        base_layout = site.config['attendease']['base_layout'] || 'layout'
-
-        base_layout_file = File.join(layouts_path, "#{base_layout}.html")
-        unless File.exists?(base_layout_file)
-          # Generate an extremely simple base layout if it does not exist.
-          File.open(base_layout_file, 'w+') { |f| f.write("{{ content }}") }
-        end
 
         cms_layouts = []
         begin
@@ -45,6 +32,26 @@ module Jekyll
         rescue
         end
 
+        cms_layouts.each do |layout|
+          site.pages << EventLayoutPage.new(site, site.source, 'attendease_layouts', "cms-#{layout}.html", layout, layout.capitalize)
+        end
+
+        return unless site.config.live_mode?
+
+        attendease_precompiled_theme_layouts_path = File.join(site.source, 'attendease_layouts') # These are compiled to the html site.
+        attendease_precompiled_theme_email_layouts_path = File.join(site.source, 'attendease_layouts', 'emails') # These are compiled for email.
+
+        FileUtils.mkdir_p(attendease_precompiled_theme_layouts_path)
+
+        # Precompiled layouts for attendease app and jekyll generated pages.
+        base_layout = site.config['attendease']['base_layout'] || 'layout'
+
+        base_layout_file = File.join(layouts_path, "#{base_layout}.html")
+        unless File.exists?(base_layout_file)
+          # Generate an extremely simple base layout if it does not exist.
+          File.open(base_layout_file, 'w+') { |f| f.write("{{ content }}") }
+        end
+
         layouts_to_precompile = %w{ layout register surveys } # These are compiled to the html site.
         layouts_to_precompile.each do |layout|
           # create a layout file if it already doesn't exist.
@@ -54,10 +61,6 @@ module Jekyll
           unless File.exists?(File.join(attendease_precompiled_theme_layouts_path, "#{layout}.html"))
             site.pages << EventLayoutPage.new(site, site.source, 'attendease_layouts', "#{layout}.html", base_layout, layout.capitalize)
           end
-        end
-
-        cms_layouts.each do |layout|
-          site.pages << EventLayoutPage.new(site, site.source, 'attendease_layouts', "cms-#{layout}.html", layout, layout.capitalize)
         end
 
         # Precompiled layouts for attendease email

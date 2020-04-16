@@ -79,7 +79,7 @@ module Jekyll
       end
 
       def data_path
-        File.join(site.config['source'], '_attendease', 'data')
+        File.join(site.config['attendease_source'], '_attendease', 'data')
       end
 
       def populate_sessions_with_related_data!(sessions)

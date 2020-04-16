@@ -22,6 +22,7 @@ module Jekyll
       priority :high
 
       def generate(site)
+        return false if site.config.cms_theme?
         Jekyll.logger.info "[Attendease] Generating theme templates..."
 
         # Generate the template files if they don't yet exist.

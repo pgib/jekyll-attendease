@@ -85,6 +85,7 @@ RSpec.configure do |config|
         'has_venues'               => true,
         'has_mappable'             => true,
         'environment'              => 'test',
+        'live_mode'                => true,
         'locale'                   => 'en',
         'source_id'                => 'foobar',
         'auth_host'                => 'https://foobar.auth/',
@@ -104,6 +105,10 @@ RSpec.configure do |config|
     @site = Jekyll::Site.new(site_configuration(config))
     @site.process
     @site
+  end
+
+  def build_cms_site
+    build_site({ 'attendease' => { 'jekyll33' => true } })
   end
 
   def build_org_site

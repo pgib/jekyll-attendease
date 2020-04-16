@@ -14,4 +14,8 @@ module AttendeaseJekyllConfigMixin
   def cms_theme?
     attendease['jekyll33'] == true
   end
+
+  def live_mode?
+    !!attendease['live_mode']
+  end
 end
