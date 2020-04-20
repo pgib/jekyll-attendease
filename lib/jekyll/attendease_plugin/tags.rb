@@ -3,7 +3,7 @@ module Jekyll
     class ScheduleWidgetTag < Liquid::Tag
       def render(context)
         schedule_data = ScheduleDataParser.new(context.registers[:site])
-        base = File.join(context.registers[:site].config['source'])
+        base = File.join(context.registers[:site].config['attendease_source'])
 
         instances = schedule_data.sessions.inject([]) do |memo, s|
           s['instances'].each do |instance|
@@ -63,7 +63,7 @@ module Jekyll
       def render(context)
         I18n::Backend::Simple.include(I18n::Backend::Pluralization)
         I18n.enforce_available_locales = false
-        i18n_path = File.join(context.registers[:site].config['source'], '_attendease', 'data', 'lingo.yml')
+        i18n_path = File.join(context.registers[:site].config['attendease_source'], '_attendease', 'data', 'lingo.yml')
         I18n.load_path << i18n_path unless I18n.load_path.include?(i18n_path)
         I18n.locale = context.registers[:page]['lang'] || context.registers[:site].config['attendease']['locale'] || context.registers[:site].config['attendease']['lang'] || :en
         I18n.t(@key, :count => @options['t_size'])
@@ -224,6 +224,8 @@ _EOT
             url = '//dashboard.localhost.attendease.com/webpack_assets/blockrenderer.bundle.js'
           when 'prerelease'
             url = '//cdn.attendease.com/blockrenderer/prerelease-latest.js'
+          when 'staging'
+            url = '//cdn.attendease.com/blockrenderer/staging-latest.js'
           when 'preview'
             url = '//cdn.attendease.com/blockrenderer/ci-latest.js'
           else

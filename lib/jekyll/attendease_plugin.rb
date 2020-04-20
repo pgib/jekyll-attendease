@@ -45,6 +45,8 @@ Jekyll::Hooks.register :site, :after_reset do |site|
 
   site.config['attendease'] = site.config['attendease'].nil? ? default : Jekyll::Utils.deep_merge_hashes(default['attendease'], site.config['attendease'])
 
+  site.config['attendease_source'] ||= site.config['source']
+
   site.config.extend(AttendeaseJekyllConfigMixin)
 
   if site.config.attendease['api_host'].nil?
@@ -55,11 +57,11 @@ end
 Jekyll::Hooks.register :site, :post_write do |site|
   if pages = site.data['pages']
     pages.each do |page|
-      if File.exists?(file = File.join(site.config['source'], page['slug'], 'index.html'))
+      if File.exists?(file = File.join(site.config['attendease_source'], page['slug'], 'index.html'))
         File.unlink(file)
       end
 
-      if File.exists?(file = File.join(site.config['source'], page['slug'], 'index.json'))
+      if File.exists?(file = File.join(site.config['attendease_source'], page['slug'], 'index.json'))
         File.unlink(file)
       end
     end

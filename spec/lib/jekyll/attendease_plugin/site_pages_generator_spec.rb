@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Jekyll::AttendeasePlugin::SitePagesGenerator do
-  let(:site) { build_site }
+  let(:site) { build_cms_site }
   let(:site_pages_generator) { find_generator(site, described_class) }
   let(:index_file) { 'index.html' }
   let(:page) { site.data['pages'].detect { |p| p['slug'] == 'test' } }
