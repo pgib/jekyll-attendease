@@ -14,7 +14,7 @@ module Jekyll
             site.config.attendease['api_host'] += '/'
           end
 
-          @attendease_data_path = File.join(site.source, '_attendease', 'data')
+          @attendease_data_path = File.join(site.config['attendease_source'], '_attendease', 'data')
 
           FileUtils.mkdir_p(@attendease_data_path) unless File.exists?(@attendease_data_path)
 
