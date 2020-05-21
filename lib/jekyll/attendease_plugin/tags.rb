@@ -183,7 +183,8 @@ module Jekyll
             'pages' => pages,
             'settings' => { parentPagesAreClickable: !!parent_pages_are_clickable },
             'siteSettings' => site_settings,
-            'analytics' => analytics
+            'analytics' => analytics,
+            'basePath' => config['base_path']
           }
         else
           constants = {
@@ -201,7 +202,8 @@ module Jekyll
             'settings' => { parentPagesAreClickable: !!parent_pages_are_clickable },
             'siteSettings' => site_settings,
             'organizationSiteSettings' => organization_site_settings,
-            'analytics' => analytics
+            'analytics' => analytics,
+            'basePath' => config['base_path']
         }
         end
 
